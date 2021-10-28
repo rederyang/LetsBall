@@ -7,31 +7,14 @@ Page({
   data: {
     info_content: {},
     intro: "",
+    chat_list: [],
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
-    var data = {
-      info_content: {
-        day: '2021年9月10日',
-        time: '11:00 - 13:00',
-        place: '清华大学气膜馆',
-        type: '击剑',
-        level: '高手',
-        offer_place: '是',
-        offer_tool: '否',
-        other: '男生优先；本科生优先',
-      },
-      intro: "这是一个面向高手开展的击剑活动，欢迎大家来找我练剑。",
-    }
 
-    that.setData({
-      info_content: data.info_content,
-      intro: data.intro,
-    })
   },
 
   /**
@@ -45,7 +28,41 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    var that = this
+    var data = {
+      info_content: {
+        day: '2021年9月10日',
+        time: '11:00 - 13:00',
+        place: '清华大学气膜馆',
+        type: '击剑',
+        level: '高手',
+        offer_place: '是',
+        offer_tool: '否',
+        other: '男生优先；本科生优先',
+      },
+      intro: "这是一个面向高手开展的击剑活动，欢迎大家来找我练剑。",
+      chat_list: [
+        {
+          name: "杨昆达",
+          avatar: "/images/avatar.png",
+          history: "想你的夜",
+          noti: 3,
+          time: "昨天11:30",
+        },
+        {
+          name: "张泽",
+          avatar: "/images/avatar.png",
+          history: "想你的夜",
+          noti: 3,
+          time: "昨天11:30",
+        },
+      ],
+    }
 
+    that.setData({
+      info_content: data.info_content,
+      intro: data.intro,
+    })
   },
 
   /**

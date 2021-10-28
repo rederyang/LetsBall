@@ -27,11 +27,34 @@
     <text>{{info_content.other}}</text>
   </view>
 </view>
+
+<view class="area">
+  <view class="subtitle">活动简介</view>
+  <view class="intro_content">{{intro}}</view>
+</view>
 <view class="line_full"></view>
 
-<view class="intro">
-  <view class="subtitle">
-    活动简介
+<view class="area">
+  <view class="subtitle">报名列表</view>
+  <view class="area_chat">
+    <view class="chat_card">
+      <image class="avatar" src="/images/avatar.png"></image>
+      <view class="chat_content">
+        <view class="chat_row">
+          <view class="chat_name">张泽</view>
+          <text class="chat_gray">昨天11:30</text>
+        </view>
+        <view class="chat_row">
+          <view class="chat_gray">想你的夜</view>
+          <view class="chat_noti">3</view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>
-<!-- <text>pages/detail_pub_1/detail_pub_1.wxml</text> -->
+
+<view class="button_cancel">取消活动</view>
+
+<view class="button_float">
+  <image class="icon_img" src="/images/write.svg"></image>
+</view>
