@@ -1,0 +1,45 @@
+<!--pages/main/main.wxml-->
+
+<view class="poster">
+  <view class="page-body">
+    <view class="page-section page-section-spacing swiper">
+      <swiper indicator-dots="{{true}}" autoplay="{ture}">
+        <block wx:for="{{images}}" wx:key="*this">
+          <swiper-item>
+            <view>
+            <image src='{{item}}'/>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+  </view>
+</view>
+
+<view class="tab-wrapper">
+<view class='tab-center-wrapper'>
+  <button class="{{status==0?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapNew">最新活动</button>
+ <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapHot">热门活动</button>
+</view>
+
+<view class="tab-right-wrapper">
+  <button class='tap-right-button'>更多</button>
+</view>
+</view>
+
+<view class="activity-wrapper" wx:for="{{activities}}" wx:for-item="itemName" wx:for-index="idx">
+  <view class="item-line">
+    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="widthFix" src="{{itemName.picture_url}}"></image>
+    <view class="item-words">
+      <view class="item-title">{{itemName.title}}</view>
+      <view class="item-leader">{{itemName.leader}}</view>
+      <view class="item-loc">{{itemName.loc}}</view>
+    </view>
+  </view>
+  <view class="item-time">{{itemName.time}}</view>
+</view>
+
+<view bindtap='add'>
+ <image class="add-icon" src="/images/add.png"></image>
+</view>
+ 
