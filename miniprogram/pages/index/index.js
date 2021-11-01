@@ -14,6 +14,12 @@ Page({
     })
   },
 
+  detail2: function(e) {
+    wx.navigateTo({
+      url: '../detail_pub_2/detail_pub_2',
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */

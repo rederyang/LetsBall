@@ -57,7 +57,7 @@ page {
 .tag {
   width: 120rpx;
   line-height: 70rpx;
-  background-color: #FF0A6B;
+  background-color: #9966CC;
   border-radius: 80rpx;
   text-align: center;
   font-size: 40rpx;

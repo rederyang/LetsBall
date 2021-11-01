@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/detail_pub_1/detail_pub_1"
+    "pages/detail_pub_1/detail_pub_1",
+    "pages/detail_pub_2/detail_pub_2"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

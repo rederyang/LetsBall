@@ -1,7 +1,6 @@
-<!--pages/detail_pub_1/detail_pub_1.wxml-->
 <view class='head'> 
   <view class="title">击♂剑</view>
-  <view class="tag">未满</view>
+  <view class="tag">满员</view>
 </view>
 <view class="line_title"></view>
 
@@ -35,8 +34,15 @@
 <view class="line_full"></view>
 
 <view class="area">
+  <view class="subtitle">参与者</view>
+  <view class="area_chat">
+  </view>
+</view>
+<view class="line_full"></view>
+
+<view class="area">
   <view class="subtitle">报名列表</view>
-  <view class="area_chat" >
+  <view class="area_chat">
     <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" >
       <view class="chat_card">
         <image class="avatar" src="{{item.avatar}}"></image>
@@ -58,6 +64,3 @@
 
 <view class="button_cancel">取消活动</view>
 
-<view class="button_float">
-  <image class="icon_img" src="/images/write.svg"></image>
-</view>

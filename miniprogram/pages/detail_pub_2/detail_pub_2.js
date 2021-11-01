@@ -1,4 +1,4 @@
-// pages/detail_pub_1/detail_pub_1.js
+// pages/detail_pub_2/detail_pub_2.js
 Page({
 
   /**
