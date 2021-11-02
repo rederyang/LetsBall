@@ -1,19 +1,13 @@
 <!--pages/main/main.wxml-->
 
 <view class="poster">
-  <view class="page-body">
-    <view class="page-section page-section-spacing swiper">
-      <swiper indicator-dots="{{true}}" autoplay="{ture}">
-        <block wx:for="{{images}}" wx:key="*this">
-          <swiper-item>
-            <view>
-            <image src='{{item}}'/>
-            </view>
-          </swiper-item>
-        </block>
-      </swiper>
-    </view>
-  </view>
+    <swiper class='poster-swiper' indicator-dots="{{false}}" circular="{{true}}"autoplay="{ture}">
+      <block wx:for="{{images}}" wx:key="*this">
+        <swiper-item>
+          <image class='poster-image' src='{{item}}'  mode='scaleToFill' />
+        </swiper-item>
+      </block>
+    </swiper>
 </view>
 
 <view class="tab-wrapper">
@@ -22,14 +16,17 @@
  <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapHot">热门活动</button>
 </view>
 
-<view class="tab-right-wrapper">
-  <button class='tap-right-button'>更多</button>
+<view class="tab-right-wrapper" bindtap="onTapMore">
+  <view class='tab-right-button'>更多</view>
+  <view class='tab-right-icon'>
+    <image class='tab-right-image' src='/images/arrow.png' mode='center'></image>
+  </view>  
 </view>
 </view>
 
-<view class="activity-wrapper" wx:for="{{activities}}" wx:for-item="itemName" wx:for-index="idx">
+<view class="activity-wrapper" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx">
   <view class="item-line">
-    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="widthFix" src="{{itemName.picture_url}}"></image>
+    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
     <view class="item-words">
       <view class="item-title">{{itemName.title}}</view>
       <view class="item-leader">{{itemName.leader}}</view>
@@ -39,7 +36,7 @@
   <view class="item-time">{{itemName.time}}</view>
 </view>
 
-<view bindtap='add'>
+<view class="button_float" bindtap='onTapAdd'>
  <image class="add-icon" src="/images/add.png"></image>
 </view>
  
