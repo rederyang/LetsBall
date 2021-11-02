@@ -37,7 +37,7 @@
     "showES6CompileOption": false
   },
   "appid": "wx76817da29e02b285",
-  "projectname": "jinyici",
+  "projectname": "letsball",
   "libVersion": "2.14.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {
