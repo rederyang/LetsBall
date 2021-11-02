@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/mine/mine",
     "pages/main/main"
   ],
   "window": {
@@ -30,7 +31,7 @@
       {
         "selectedIconPath": "images/mine_.png",
         "iconPath": "images/mine.png",
-        "pagePath": "pages/main/main",
+        "pagePath": "pages/mine/mine",
         "text": "我的"
       }
     ],
