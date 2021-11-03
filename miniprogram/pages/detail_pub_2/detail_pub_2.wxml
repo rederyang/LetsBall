@@ -36,6 +36,21 @@
 <view class="area">
   <view class="subtitle">参与者</view>
   <view class="area_chat">
+    <view class="chat_card">
+      <image class="avatar" src="{{subs_info.avatar}}"></image>
+      <view class="chat_content">
+        <view class="chat_row">
+          <view class="chat_name">{{subs_info.name}}</view>
+          <text class="subs_badge">{{subs_info.fame}}</text>
+        </view>
+        <view class="chat_row">
+          <view class="chat_gray">{{subs_info.intro}}</view>
+        </view>
+        <view class="chat_row">
+          <view class="chat_gray">{{subs_info.sport}}</view>
+        </view>
+      </view>
+    </view>
   </view>
 </view>
 <view class="line_full"></view>

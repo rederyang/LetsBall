@@ -62,6 +62,9 @@ page {
   text-align: center;
   font-size: 40rpx;
   color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .line_title {
@@ -122,6 +125,20 @@ page {
   box-shadow: 2rpx 2rpx 2rpx 2rpx gray;
 }
 
+.subs_badge {
+  width: 140rpx;
+  height: 38rpx;
+  background-color: #00CBFF;
+  border-radius: 24rpx;
+  text-align: center;
+  font-size: 28rpx;
+  align-self: right;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .chat_line {
   display: flex;
   flex-direction: column;
@@ -139,6 +156,7 @@ page {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
 }
 
 .chat_cut {
@@ -154,6 +172,7 @@ page {
 }
 
 .chat_content {
+  height: 120rpx;
   width: 70%;
   margin-left: 15rpx;
   display: flex;

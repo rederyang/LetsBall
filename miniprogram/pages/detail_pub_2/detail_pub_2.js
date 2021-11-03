@@ -8,6 +8,7 @@ Page({
     info_content: {},
     intro: "",
     chat_list: [],
+    subs_info: {},
   },
 
   /**
@@ -30,10 +31,10 @@ Page({
       chat_list: [
         {
           name: "杨昆达",
-          avatar: "/images/avatar.png",
-          history: "想你的夜",
+          avatar: "/images/kunda.png",
+          history: "约吗",
           noti: 3,
-          time: "昨天11:30",
+          time: "今天9:30",
         },
         {
           name: "张泽",
@@ -43,12 +44,20 @@ Page({
           time: "昨天11:30",
         },
       ],
+      subs_info: {
+        name: "杨昆达",
+        avatar: "/images/kunda.png",
+        intro: "男；医学院；大四；",
+        sport: "足球",
+        fame: "一般用户"
+      }
     }
 
     that.setData({
       info_content: data.info_content,
       intro: data.intro,
       chat_list: data.chat_list,
+      subs_info: data.subs_info,
     })
     console.log(that.data.chat_list)
   },
