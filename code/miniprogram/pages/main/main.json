@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "mp-tabs": "@miniprogram-component-plus/tabs"
+  },
+  "navigationBarTitleText": "约个ball"
+}
