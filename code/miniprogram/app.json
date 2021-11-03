@@ -1,13 +1,17 @@
 {
   "pages": [
     "pages/mine/mine",
-    "pages/main/main"
+    "pages/main/main",
+    "pages/index/index",
+    "pages/detail_pub_1/detail_pub_1",
+    "pages/detail_pub_2/detail_pub_2",
+    "pages/detail_sub_1/detail_sub_1",
+    "pages/detail_sub_2/detail_sub_2"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -37,6 +41,7 @@
     ],
     "position": "bottom"
   },
+  "navigationBarTitleText": "约个球",
   "sitemapLocation": "sitemap.json",
   "style": "v2"
 }

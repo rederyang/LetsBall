@@ -1,4 +1,3 @@
-
 <!--miniprogram/components/cloudTipModal/index.wxml-->
 <view class="install_tip" wx:if="{{showUploadTip}}">
   <view class="install_tip_back"></view>
