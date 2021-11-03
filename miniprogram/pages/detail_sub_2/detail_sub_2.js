@@ -8,7 +8,7 @@ Page({
     info_content: {},
     intro: "",
     chat_list: [],
-    sub_info: {},
+    pub_info: {},
   },
 
   /**
@@ -44,12 +44,12 @@ Page({
           time: "昨天11:30",
         },
       ],
-      sub_info: {
-        name: "杨昆达",
-        avatar: "/images/kunda.png",
+      pub_info: {
+        name: "张泽",
+        avatar: "/images/avatar.png",
         intro: "男；医学院；大四；",
         sport: "足球",
-        fame: "一般用户"
+        fame: "优质用户"
       }
     }
 
@@ -57,7 +57,7 @@ Page({
       info_content: data.info_content,
       intro: data.intro,
       chat_list: data.chat_list,
-      sub_info: data.sub_info,
+      pub_info: data.pub_info,
     })
     console.log(that.data.chat_list)
   },

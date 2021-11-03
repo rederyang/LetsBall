@@ -1,3 +1,5 @@
 <!--pages/index/index.wxml-->
 <text bindtap="toDetail" class="tap">点击进入详情页</text>
 <text bindtap="detail2" class="tap">发布者已确认</text>
+<text bindtap="detail3" class="tap">参与者未确认</text>
+<text bindtap="detail4" class="tap">参与者已确认</text>

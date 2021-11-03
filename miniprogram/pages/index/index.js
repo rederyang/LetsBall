@@ -20,6 +20,18 @@ Page({
     })
   },
 
+  detail3: function(e) {
+    wx.navigateTo({
+      url: '../detail_sub_1/detail_sub_1',
+    })
+  },
+
+  detail4: function(e) {
+    wx.navigateTo({
+      url: '../detail_sub_2/detail_sub_2',
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */

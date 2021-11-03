@@ -1,6 +1,6 @@
 <view class='head'> 
   <view class="title">击♂剑</view>
-  <view class="tag">满员</view>
+  <view class="tag">已确认</view>
 </view>
 <view class="line_title"></view>
 
@@ -34,45 +34,28 @@
 <view class="line_full"></view>
 
 <view class="area">
-  <view class="subtitle">参与者</view>
+  <view class="subtitle">发起人</view>
   <view class="area_chat">
     <view class="chat_card">
-      <image class="avatar" src="{{sub_info.avatar}}"></image>
+      <image class="avatar" src="{{pub_info.avatar}}"></image>
       <view class="chat_content">
         <view class="chat_row">
-          <view class="chat_name">{{sub_info.name}}</view>
-          <text class="user_badge">{{sub_info.fame}}</text>
+          <view class="chat_name">{{pub_info.name}}</view>
+          <text class="user_badge">{{pub_info.fame}}</text>
         </view>
         <view class="chat_row">
-          <view class="chat_gray">{{sub_info.intro}}</view>
+          <view class="chat_gray">{{pub_info.intro}}</view>
         </view>
       </view>
     </view>
   </view>
 </view>
-<view class="line_full"></view>
 
-<view class="area">
-  <view class="subtitle">历史聊天</view>
-  <view class="area_chat">
-    <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" >
-      <view class="chat_card">
-        <image class="avatar" src="{{item.avatar}}"></image>
-        <view class="chat_content">
-          <view class="chat_row">
-            <view class="chat_name">{{item.name}}</view>
-            <text class="chat_gray">{{item.time}}</text>
-          </view>
-          <view class="chat_row">
-            <view class="chat_gray">{{item.history}}</view>
-            <view class="chat_noti">{{item.noti}}</view>
-          </view>
-        </view>
-      </view>
-      <view class="chat_cut" wx:if="{{chat_list.length > idx + 1}}"></view>
-    </view>
-  </view>
+<view class="button_float">
+  <image class="icon_img" src="/images/msg1.png"></image>
 </view>
 
-<view class="button_cancel">取消活动</view>
-
+<view class="noti_float">
+  3
+  <!-- <image class="icon_img" src="/images/msg1.png"></image> -->
+</view>

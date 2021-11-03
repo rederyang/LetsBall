@@ -55,7 +55,7 @@ page {
 }
 
 .tag {
-  width: 120rpx;
+  width: 160rpx;
   line-height: 70rpx;
   background-color: #9966CC;
   border-radius: 80rpx;
@@ -128,7 +128,7 @@ page {
 .user_badge {
   width: 140rpx;
   height: 38rpx;
-  background-color: #00CBFF;
+  background-color: #40E0D0;
   border-radius: 24rpx;
   text-align: center;
   font-size: 28rpx;
@@ -238,7 +238,23 @@ page {
   justify-content: center;
 }
 
+.noti_float {
+  position: fixed;
+  bottom: 247rpx;
+  right: 68rpx;
+  width: 42rpx;
+  height: 42rpx;
+  border-radius: 50%;
+  background-color: #F29908;
+  font-size: 20;
+  color: white;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .icon_img {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 80rpx;
 }
