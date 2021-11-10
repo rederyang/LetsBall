@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/activity/activity",
     "pages/main/main",
     "pages/main-more/main-more",          
     "pages/mine/mine"    
@@ -8,7 +9,7 @@
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarTitleText": "约个ball",
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
@@ -26,7 +27,7 @@
       {
         "selectedIconPath": "images/act_.png",
         "iconPath": "images/act.png",
-        "pagePath": "pages/main/main",
+        "pagePath": "pages/activity/activity",
         "text": "活动"
       },
       {
