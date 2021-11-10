@@ -27,9 +27,17 @@ Page({
     })
   },
 
+  //进入详情页
+  onTapDetail: function (event) {
+    
+  },
+
   // 点击增加按钮
   onTapAdd: function (event) {
     console.log('点击增加按钮')
+    wx.navigateTo({
+      url: '../publish/publish',
+    })
     // TODO
     // wx.navigateTo({
     //   url: 'addPage',
@@ -67,6 +75,7 @@ Page({
         loc: "氣膜館",
         time: "10月1日",
         leader: "令狐沖",
+        actid: "1234567",
       },
       {
         picture_url: "/images/test3.jpg",

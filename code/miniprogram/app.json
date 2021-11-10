@@ -1,14 +1,12 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/mine/mine",
     "pages/main/main",
+    "pages/mine/mine",
     "pages/detail_pub_1/detail_pub_1",
     "pages/detail_pub_2/detail_pub_2",
     "pages/detail_sub_1/detail_sub_1",
     "pages/detail_sub_2/detail_sub_2",
     "pages/publish/publish",
-    "pages/main/main",
     "pages/main-more/main-more"
   ],
   "window": {
