@@ -1,0 +1,246 @@
+/* pages/main-more/main-more.wxss */
+
+page {
+  background-color: white;
+}
+
+.search-bar{
+  width: 100%;
+  height: 100rpx;
+  background-color: white;
+  display:flex; 
+  justify-content: center;
+  align-items: center;
+  position: sticky;
+  background-color: #FAFAFA;
+  position: sticky;
+  top: 0;
+}
+
+.search-input-wrapper {
+  width: 80%;
+  height: 80%; 
+}
+
+.search-input-outline{
+  width: 95%;
+  height: 90%;
+  border: 3rpx solid #FE6559;
+  border-radius: 30rpx;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.search-input-image{
+  height: 80%;
+  margin-left: 20rpx;
+}
+
+.search-input{
+  width: 80%;
+  height:80%;
+  margin-left: 10rpx;  
+  font-size: 36rpx;
+  color: #a9b7b7;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.search-button-wrapper {
+  width: 15%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.search-button{
+  height: 95%;
+  width: 130rpx;
+  padding: 20%;
+  border-radius: 10rpx;
+  background-color: #FE6559;
+  color: white;
+  line-height: 95%;
+  font-size: 32rpx;
+}
+
+.tab-wrapper {
+  position: relative;
+  display: flex;
+  height: 80rpx;
+  justify-content: center;
+  width: 100%;
+  background-color: #FAFAFA;
+}
+
+.tab-right-wrapper {
+  position: absolute;
+  display: flex;
+  width: 15%;
+  height: 100%;
+  right: 0;
+}
+
+.tab-right-button {
+  color: #a9b7b7;
+  padding: 2%;
+  margin: 0 !important;
+  font-size: 36rpx;
+  font-weight: 400;
+  border-radius: 0rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-right-icon {
+  height: 100%;
+  width: 30rpx;
+  padding: 2%;
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-right-image {
+  height: 100%;
+}
+
+.tab-center-wrapper {
+  position: absolute;
+  display: flex;
+  width: 55%;
+  height: 100%;
+}
+
+.tab-button-normal {
+  color:#a9b7b7;
+  padding: 2%;
+  font-size: 36rpx;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0rpx;
+  width: 50% !important;
+}
+
+.tab-button-selected {
+  padding: 2%;
+  font-size: 36rpx;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 0rpx;
+  width: 50% !important;
+  color: #FE6559;
+  border-bottom: 2px solid #FE6559;
+}
+
+.activity-wrapper {
+  width: 86%;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  margin-left: 7%;
+  margin-right: 7%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  border-radius: 10rpx;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 5px 5px 5px 5px;
+  background-color: rgba(250, 250, 250, 100);
+  color: rgba(16, 16, 16, 100);
+  font-size: 14px;
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.4);
+  font-family: Arial;
+  border: 1px solid #FE6559;
+}
+
+.item-time {
+  width: 80%;
+  margin-left: 5%;
+  margin-right: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: gray;
+  font-size: 30rpx;
+}
+
+.item-line {
+  width: 80%;
+  margin-left: 5%;
+  margin-right: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.item-picture {
+  width: 30%;
+  height: 150rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-words {
+  width: 70%;
+  height: 150rpx;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.item-title {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 10rpx;
+  font-size: 40rpx;
+  font-weight: 800;
+}
+
+.item-leader {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 10rpx;
+  font-size: 30rpx;
+}
+
+.item-loc {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  font-size: 30rpx;
+}
+
+
+.add-icon {
+  width: 80rpx;
+  height: 80rpx;
+  bottom: 50rpx;
+  right: 80rpx;
+}
+
+.button_float {
+  position: fixed;
+  bottom: 150rpx;
+  right: 60rpx;
+  width: 135rpx;
+  height: 135rpx;
+  border-radius: 50%;
+  background-color: #FF0A6B;
+  box-shadow: 3rpx 3rpx 3rpx 3rpx gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

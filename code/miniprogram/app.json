@@ -1,7 +1,8 @@
 {
   "pages": [
-    "pages/mine/mine",
-    "pages/main/main"
+    "pages/main/main",
+    "pages/main-more/main-more",          
+    "pages/mine/mine"    
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
