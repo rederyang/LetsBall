@@ -74,5 +74,5 @@
   </view>
 </view>
 
-<view class="button_cancel">取消活动</view>
+<view class="button_cancel" bindtap="onCancel">取消活动</view>
 

@@ -41,7 +41,7 @@
   },
   "appid": "wx7f272505648ac3a8",
   "projectname": "LetsBall",
-  "libVersion": "2.20.0",
+  "libVersion": "2.20.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {
     "search": {

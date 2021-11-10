@@ -11,6 +11,43 @@ Page({
     pub_info: {},
   },
 
+  onChat: function(e) {
+    var that = this
+    wx.showModal({
+      title: '报名活动',
+      content: '确定要报名这个活动吗~',
+      confirmColor: '#FF0A6B',
+      cancelColor: '#81838F',
+      cancelText: '再想想',
+      confirmText: '报名！',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+          that.applyAct()
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
+  applyAct: function(e) {
+    console.log('用户点击报名')
+    wx.showModal({
+      title: '报名成功',
+      content: '请等待发起者的确认',
+      confirmText: "我知道了",
+      confirmColor: '#FE6559',
+      showCancel: false,
+      success(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */

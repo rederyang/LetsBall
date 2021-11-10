@@ -26,7 +26,6 @@ page {
 .area {
   width: var(--width);
   margin-left: var(--margin-left);
-  margin-right: 10%;
   margin-top: var(--margin-top);
   display: flex;
   flex-direction: column;

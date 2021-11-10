@@ -10,6 +10,90 @@ Page({
     chat_list: [],
   },
 
+  onPickSub: function(e) {
+    var openid = e.currentTarget.dataset.openid
+    var that = this
+    wx.showModal({
+      title: '确认活动',
+      content: '您确定要让该用户参加您的活动吗？',
+      confirmColor: '#FE6559',
+      cancelColor: '#81838F',
+      cancelText: '取消',
+      confirmText: '确认',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户确认活动')
+          that.confirmAct({
+            openid: openid,
+          })
+        } else if (res.cancel) {
+        }
+      }
+    })
+  },
+
+  confirmAct: function(e) {
+    console.log(e.openid)
+    return
+    wx.cloud.callFunction({
+      name: 'get_hot_words',
+      data: {
+        openid: e.openid,
+      },
+      success: res => {
+        if (res.result.errCode == 0) {
+        } else {
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [get_hot_words] 调用失败', err)
+        wx.showModal({
+          title: '调用失败',
+          content: '请检查云函数是否已部署',
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    })
+  },
+
+  onEdit: function(e) {
+    wx.navigateTo({
+      url: '../publish/publish',
+    })
+  },
+
+  cancelAct: function(e) {
+    console.log('cancelAct')
+  },
+
+  // cancel activity
+  onCancel: function(e) {
+    var that = this
+    wx.showModal({
+      title: '取消活动',
+      content: '您确定要取消这次活动吗？',
+      cancelColor: '#FE6559',
+      confirmColor: '#81838F',
+      cancelText: '再想想',
+      confirmText: '要取消',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+          that.cancelAct()
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -34,6 +118,7 @@ Page({
           history: "想你的夜",
           noti: 3,
           time: "昨天11:30",
+          openid: "123454321ykd",
         },
         {
           name: "张泽",
@@ -41,6 +126,7 @@ Page({
           history: "想你的夜",
           noti: 5,
           time: "昨天11:30",
+          openid: "543212345zz",
         },
       ],
     }

@@ -11,6 +11,31 @@ Page({
     sub_info: {},
   },
 
+  cancelAct: function(e) {
+    console.log('cancelAct')
+  },
+
+  // cancel activity
+  onCancel: function(e) {
+    var that = this
+    wx.showModal({
+      title: '取消活动',
+      content: '目前活动已满员，直接取消会记违约一次，确认取消？',
+      cancelColor: '#FE6559',
+      confirmColor: '#81838F',
+      cancelText: '再想想',
+      confirmText: '要取消',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户点击确定')
+          that.cancelAct()
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */

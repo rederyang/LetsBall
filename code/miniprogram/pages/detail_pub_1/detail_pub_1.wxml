@@ -38,7 +38,7 @@
   <view class="subtitle">报名列表</view>
   <view class="area_chat" >
     <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" >
-      <view class="chat_card">
+      <view class="chat_card" data-openid="{{item.openid}}" bindtap="onPickSub">
         <image class="avatar" src="{{item.avatar}}"></image>
         <view class="chat_content">
           <view class="chat_row">
@@ -56,8 +56,8 @@
   </view>
 </view>
 
-<view class="button_cancel">取消活动</view>
+<view class="button_cancel" bindtap="onCancel">取消活动</view>
 
-<view class="button_float">
+<view class="button_float" bindtap="onEdit">
   <image class="icon_img" src="/images/write.svg"></image>
 </view>

@@ -51,11 +51,10 @@
   </view>
 </view>
 
+<view class="button_cancel" bindtap="onCancel">取消活动</view>
+
 <view class="button_float">
   <image class="icon_img" src="/images/msg1.png"></image>
 </view>
 
-<view class="noti_float">
-  3
-  <!-- <image class="icon_img" src="/images/msg1.png"></image> -->
-</view>
+<view class="noti_float">3</view>

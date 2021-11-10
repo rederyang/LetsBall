@@ -8,6 +8,18 @@ Page({
 
   },
 
+  main: function(e) {
+    wx.switchTab({
+      url: '../main/main',
+    })
+  },
+
+  mine: function(e) {
+    wx.navigateTo({
+      url: '../mine/mine',
+    })
+  },
+
   toDetail: function(e) {
     wx.navigateTo({
       url: '../detail_pub_1/detail_pub_1',
@@ -29,6 +41,12 @@ Page({
   detail4: function(e) {
     wx.navigateTo({
       url: '../detail_sub_2/detail_sub_2',
+    })
+  },
+
+  publish: function(e) {
+    wx.navigateTo({
+      url: '../publish/publish',
     })
   },
 
