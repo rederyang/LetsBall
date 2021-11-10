@@ -29,7 +29,10 @@ Page({
 
   //进入详情页
   onTapDetail: function (event) {
-    
+    var actid = event.currentTarget.dataset.actid
+    wx.navigateTo({
+      url: '../detail_pub_1/detail_pub_1?actid=' + actid,
+    })
   },
 
   // 点击增加按钮

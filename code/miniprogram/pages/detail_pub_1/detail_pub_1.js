@@ -8,6 +8,7 @@ Page({
     info_content: {},
     intro: "",
     chat_list: [],
+    actid: "",
   },
 
   onPickSub: function(e) {
@@ -64,6 +65,7 @@ Page({
   },
 
   onEdit: function(e) {
+    return
     wx.navigateTo({
       url: '../publish/publish',
     })
@@ -98,6 +100,10 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      actid: options.actid,
+    })
+    console.log(this.data.actid)
     var that = this
     var data = {
       info_content: {
