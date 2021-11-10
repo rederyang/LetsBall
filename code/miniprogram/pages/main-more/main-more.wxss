@@ -59,7 +59,7 @@ page {
   height: 95%;
   width: 130rpx;
   padding: 20%;
-  border-radius: 10rpx;
+  border-radius: 30rpx;
   background-color: #FE6559;
   color: white;
   line-height: 95%;

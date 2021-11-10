@@ -108,7 +108,8 @@ Page({
     var data = {
       info_content: {
         day: '2021年9月10日',
-        time: '11:00 - 13:00',
+        start_time: '11:00',
+        duration: '2hr',
         place: '清华大学气膜馆',
         type: '击剑',
         level: '高手',

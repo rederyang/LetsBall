@@ -8,7 +8,7 @@
 </view>
 
 <block >
-<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx">
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" >
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
     <view class="item-words">

@@ -46,6 +46,29 @@ Page({
     // })
   },
 
+  onTapDetail(event) {
+    console.log("点击详情")
+    var actid = event.currentTarget.dataset.actid
+    var confirmed = event.currentTarget.dataset.confirmed
+    if (this.data.status == 0 && !confirmed) {
+      wx.navigateTo({
+        url: '../detail_sub_1/detail_sub_1?actid=' + actid,
+      })
+    } else if (this.data.status == 0 && confirmed){
+      wx.navigateTo({
+        url: '../detail_sub_2/detail_sub_2?actid=' + actid,
+      })
+    } else if (this.data.status == 1 && !confirmed){
+      wx.navigateTo({
+        url: '../detail_pub_1/detail_pub_1?actid=' + actid,
+      }) }else {
+      wx.navigateTo({
+        url: '../detail_pub_2/detail_pub_2?actid=' + actid,
+      })
+    }
+
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -59,6 +82,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: true,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test3.jpg",
@@ -67,6 +91,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: true,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test3.jpg",
@@ -75,6 +100,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test3.jpg",
@@ -83,6 +109,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test2.jpg",
@@ -91,6 +118,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
     ]
     var activitiesPub =  [
@@ -101,6 +129,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test3.jpg",
@@ -109,6 +138,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test4.jpg",
@@ -117,6 +147,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: false,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test4.jpg",
@@ -125,6 +156,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: true,
+        actid: "1234567",
       },
       {
         picture_url: "/images/test2.jpg",
@@ -133,6 +165,7 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
         confirmed: true,
+        actid: "1234567",
       },
     ]
     this.setData({
