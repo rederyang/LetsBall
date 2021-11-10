@@ -1,4 +1,4 @@
-// pages/main/main.js
+// pages/main-more/main-more.js
 Page({
   data: {
     status: 0,
@@ -49,10 +49,6 @@ Page({
   onTapMore: function(event) {
     //TODO
     console.log("点击更多按钮")
-
-    wx.navigateTo({
-      url: '/pages/main-more/main-more',
-    })
   },
 
   /**
@@ -96,6 +92,27 @@ Page({
         time: "10月1日",
         leader: "令狐沖",
       },
+      {
+        picture_url: "/images/test4.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
+      {
+        picture_url: "/images/test4.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
+      {
+        picture_url: "/images/test4.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
     ]
     var hotActivities =  [
       {
@@ -107,6 +124,27 @@ Page({
       },
       {
         picture_url: "/images/test3.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
+      {
+        picture_url: "/images/test4.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
+      {
+        picture_url: "/images/test4.jpg",
+        title: '击剑',
+        loc: "氣膜館",
+        time: "10月1日",
+        leader: "令狐沖",
+      },
+      {
+        picture_url: "/images/test4.jpg",
         title: '击剑',
         loc: "氣膜館",
         time: "10月1日",
