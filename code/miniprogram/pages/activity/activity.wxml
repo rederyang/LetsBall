@@ -8,7 +8,7 @@
 </view>
 
 <block >
-<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" >
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.TaskId}}" data-confirmed="{{itemName.confirmed}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
     <view class="item-words">
@@ -24,7 +24,7 @@
   </view>
     <view class="item-time">{{itemName.time}}</view>
 </view>
-></block>
+</block>
 <!-- 
 <block wx:if="{{status == 1}}">
 <view class="activity-wrapper-pub" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx">

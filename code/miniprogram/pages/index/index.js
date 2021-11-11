@@ -15,12 +15,42 @@ Page({
   },
 
   mine: function(e) {
-    wx.navigateTo({
+    wx.switchTab({
       url: '../mine/mine',
     })
   },
 
+  activity: function(e) {
+    wx.switchTab({
+      url: '../activity/activity',
+    })
+  },
+
   toDetail: function(e) {
+    wx.navigateTo({
+      url: '../detail_pub_1/detail_pub_1',
+    })
+  },
+
+  toNewDetail: function(e) {
+    wx.navigateTo({
+      url: '../detail/detail',
+    })
+  },
+
+  detail_pub: function(e) {
+    wx.navigateTo({
+      url: '../detail_pub/detail_pub',
+    })
+  },
+
+  detail_sub: function(e) {
+    wx.navigateTo({
+      url: '../detail_sub/detail_sub',
+    })
+  },
+
+  detail1: function(e) {
     wx.navigateTo({
       url: '../detail_pub_1/detail_pub_1',
     })
@@ -41,6 +71,12 @@ Page({
   detail4: function(e) {
     wx.navigateTo({
       url: '../detail_sub_2/detail_sub_2',
+    })
+  },
+
+  detail5: function(e) {
+    wx.navigateTo({
+      url: '../detail_sub_3/detail_sub_3',
     })
   },
 

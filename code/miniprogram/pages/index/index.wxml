@@ -1,8 +1,14 @@
 <!--pages/index/index.wxml-->
 <text bindtap="main" class="tap">首页</text>
-<text bindtap="mine" class="tap">我的</text>
+<text bindtap="activity" class="tap">活动</text>
 <text bindtap="toDetail" class="tap">点击进入详情页</text>
+<text bindtap="toNewDetail" class="tap">新详情页</text>
+<text bindtap="detail_pub" class="tap">发布者统一形式</text>
+<text bindtap="detail_sub" class="tap">报名者统一形式</text>
+<text bindtap="detail1" class="tap">发布者未确认</text>
 <text bindtap="detail2" class="tap">发布者已确认</text>
 <text bindtap="detail3" class="tap">参与者未确认</text>
-<text bindtap="detail4" class="tap">参与者已确认</text>
+<text bindtap="detail4" class="tap">参与者自己已确认</text>
+<text bindtap="detail5" class="tap">参与者非自己已确认</text>
 <text bindtap="publish" class="tap">发布页面</text>
+<text bindtap="mine" class="tap">我的</text>

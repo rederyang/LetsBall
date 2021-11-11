@@ -1,6 +1,6 @@
 <view class='head'> 
   <view class="title">击♂剑</view>
-  <view class="tag">已确认</view>
+  <view class="tag">已满员</view>
 </view>
 <view class="line_title"></view>
 
@@ -50,8 +50,6 @@
     </view>
   </view>
 </view>
-
-<view class="button_cancel" bindtap="onCancel">取消确认</view>
 
 <view class="button_float">
   <image class="icon_img" src="/images/msg1.png"></image>

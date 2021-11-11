@@ -14,7 +14,13 @@ App({
       })
     }
 
-    this.globalData = {}
+    this.globalData = {
+      logged: false,
+      userInfo: {},
+      user: {},
+      taskSub: {},  // 当前用户报名的所有活动
+      taskPub: {}  // 当前用户发布的所有活动
+    }
   }
 })
 

@@ -1,7 +1,4 @@
-// pages/publish/publish.js
-
-const app = getApp()
-
+// pages/edit/edit.js
 Page({
 
   /**
@@ -156,82 +153,8 @@ Page({
     })
   },
 
-  // 调用云函数进行活动发布
   pubAct: function(e) {
-    console.log("发布任务")
     console.log(this.data)
-    var that = this
-    var startTime = new Date(this.data.date + ' ' + this.data.time )
-
-    console.log(startTime)
-    // 获取最新活动并按照时间筛选
-    wx.cloud.callFunction({
-      name: 'add_tasks',
-      data: {
-        TaskName: this.data.name,
-        TaskPic: "",
-        Publisher: app.globalData.userInfo.OPENID,
-        TotalNum: 1,
-        StartTime: startTime,
-        Duration: this.data.duration,
-        Place: this.data.place,
-        Type: this.data.level_array[this.data.level_idx],
-        Sport: this.data.sport_array[this.data.sport_array],  // TODO这里后端要加这个参数
-        Details: this.data.detail,
-        SpaceProvided: false,
-        EquipmentProvided: false, 
-        SignProvided: false,
-        OtherRequirements: this.data.other,
-      },
-      success: res => {
-        console.log(res);
-        if (res.result.errCode == 0) {
-          wx.showModal({
-            title: '发布成功！',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
-      },
-      fail: err => {
-        console.error('[云函数] [wechat_sign] 调用失败', err)
-        wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-      }
-    })
-
   },
 
   /**

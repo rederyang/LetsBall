@@ -1,6 +1,7 @@
+<!--pages/detail_sub/detail_sub.wxml-->
 <view class='head'> 
   <view class="title">击♂剑</view>
-  <view class="tag">已确认</view>
+  <view class="{{confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}}">{{confirmed ? (confirmedByUser ? "已确认": "满员") : "未满"}}</view>
 </view>
 <view class="line_title"></view>
 
@@ -51,10 +52,12 @@
   </view>
 </view>
 
+<block wx:if="{{confirmedByUser && confirmed}}">
 <view class="button_cancel" bindtap="onCancel">取消确认</view>
+</block>
 
 <view class="button_float">
-  <image class="icon_img" src="/images/msg1.png"></image>
+  <image class="icon_img" src="/images/msg1.png" bindtap="onChat"></image>
 </view>
 
 <view class="noti_float">3</view>
