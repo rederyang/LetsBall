@@ -2,6 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/detail/detail",
+    "pages/activity/activity",
     "pages/main/main",
     "pages/publish/publish",
     "pages/activity/activity",    

@@ -19,6 +19,10 @@ Page({
     name: "",
     duration: "",
     other: "",
+    place: "",
+    place_idx: 0,
+    tool_idx: 0,
+    if_array: ['否', '是']
   },
 
   bindNameChange: function(e) {
@@ -75,6 +79,20 @@ Page({
     console.log('其他picker发送选择改变，携带值为', e.detail.value)
     this.setData({
       other: e.detail.value
+    })
+  },
+
+  bindOfferPlace: function(e) {
+    console.log('提供场地picker发送选择改变，携带值为', e.detail.value)
+    this.setData({
+      place_idx: e.detail.value
+    })
+  },
+
+  bindOfferTool: function(e) {
+    console.log('提供场地picker发送选择改变，携带值为', e.detail.value)
+    this.setData({
+      tool_idx: e.detail.value
     })
   },
 
