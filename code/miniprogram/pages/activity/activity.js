@@ -5,14 +5,6 @@ const app = getApp()
 Page({
   data: {
     status: 0,
-    images: [ '/images/test1.jpg', '/images/test2.jpg'],
-    tabs: [
-      {
-        title: '最新活动'
-      },
-      {
-        title: '热门活动'
-      }],
     activities: []
   },
 
@@ -51,7 +43,8 @@ Page({
                 console.log("获取用户信息成功")
                 console.log(res.userInfo)
                 app.globalData.userInfo = res.userInfo
-                that.onUpdateUserInfo()
+                app.globalData.logged = true
+                that.onUpdateUserInfo()  // TODO 更新用户信息
               },
               })
           } else if (res.cancel) {
@@ -60,6 +53,7 @@ Page({
         }
       })
     } else {
+      console.log("已经登录")
       wx.navigateTo({
         url: '../publish/publish',
       })
@@ -70,280 +64,242 @@ Page({
   onTapDetail(event) {
     console.log("点击详情")
     var taskId = event.currentTarget.dataset.taskid
-    var confirmed = event.currentTarget.dataset.confirmed
     console.log(taskId)
-    console.log(app.globalData)
-    // 如果是当前用户发布的
-    if (app.globalData.taskPub.includes(taskId)) {
+    if (this.data.pubTaskId.includes(taskId)) {  // 如果是当前用户发布的
       wx.navigateTo({
-        url: '../detail_pub_1/detail_pub_1?taskId=' + taskId,
+        url: '../detail_pub/detail_pub?taskId=' + taskId,
       })
     } else {
       wx.navigateTo({
-        url: '../detail_sub_1/detail_sub_1?taskId=' + taskId,
+        url: '../detail_sub/detail_sub?taskId=' + taskId,
       })
     }
   },
+
+  loadData: function () {
+    var that = this
+
+    // 获取用户发布的所有活动
+    wx.cloud.callFunction({
+      name: 'get_user_published',
+      data: {},
+      success: res => {
+        console.log(res);
+        if (res.result.errCode == 0) {
+          let taskPub = res.result.data.taskId
+          app.globalData.taskPub = taskPub
+        } else {
+          wx.showModal({
+            title: '抱歉，出错了呢~',
+            content: res.result.errMsg,
+            confirmText: "我知道了",
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [wechat_sign] 调用失败', err)
+        wx.showModal({
+          title: '调用失败',
+          content: '请检查云函数是否已部署',
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    })
+
+    // 获取用户报名的所有活动
+    wx.cloud.callFunction({
+      name: 'get_user_signed',
+      data: {},
+      success: res => {
+        console.log(res);
+        if (res.result.errCode == 0) {
+          let taskSub = res.result.data.taskId
+          app.globalData.taskSub = taskSub
+        } else {
+          wx.showModal({
+            title: '抱歉，出错了呢~',
+            content: res.result.errMsg,
+            confirmText: "我知道了",
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [wechat_sign] 调用失败', err)
+        wx.showModal({
+          title: '调用失败',
+          content: '请检查云函数是否已部署',
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    })
+
+    // 根据taskID查询得到任务的详情信息，具体形式待定
+    // TODO
+    
+    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了taskId和confirmed两个字段
+    // TODO
+
+    // FAKE data 假设已经构造好了
+    var subTaskId = [
+      'testTask1', 'testTask2', 'testTask3'
+    ]
+    var pubTaskId = [
+      'testTask4', 'testTask5', 'testTask6'
+    ]
+    var activitiesSub =  [
+      {
+        details: "xiangqing",
+        duration: "shichang",
+        equipmentProvided: false,
+        level: "初学",
+        otherRequirements: "qitayaoqiu",
+        place: "didian",
+        publisher: 'testPublisher',
+        signProvided: false,
+        spaceProvided: false,
+        startTime: "Mon Nov 15 2021 11:47:00",
+        taskName: "mingcheng",
+        taskPic: "/images/cover.jpg",
+        totalNum: 1,
+        type: "跑步",
+        taskId: 'testTask1',
+        confirmed: true
+      },
+      {
+        details: "xiangqing",
+        duration: "shichang",
+        equipmentProvided: false,
+        level: "初学",
+        otherRequirements: "qitayaoqiu",
+        place: "didian",
+        publisher: 'testPublisher',
+        signProvided: false,
+        spaceProvided: false,
+        startTime: "Mon Nov 15 2021 11:47:00",
+        taskName: "mingcheng",
+        taskPic: "/images/cover.jpg",
+        totalNum: 1,
+        type: "跑步",
+        taskId: "testTask2",
+        confirmed: true
+      },
+      {
+        details: "xiangqing",
+        duration: "shichang",
+        equipmentProvided: false,
+        level: "初学",
+        otherRequirements: "qitayaoqiu",
+        place: "didian",
+        publisher: 'testPublisher',
+        signProvided: false,
+        spaceProvided: false,
+        startTime: "Mon Nov 15 2021 11:47:00",
+        taskName: "mingcheng",
+        taskPic: "/images/cover.jpg",
+        totalNum: 1,
+        type: "跑步",
+        taskId: "testTask3",
+        confirmed: false
+      }
+    ]
+    var activitiesPub =  [{
+      details: "xiangqing",
+      duration: "shichang",
+      equipmentProvided: false,
+      level: "初学",
+      otherRequirements: "qitayaoqiu",
+      place: "didian",
+      publisher: 'testPublisher',
+      signProvided: false,
+      spaceProvided: false,
+      startTime: "Mon Nov 15 2021 11:47:00",
+      taskName: "mingcheng",
+      taskPic: "/images/cover.jpg",
+      totalNum: 1,
+      type: "跑步",
+      taskId: "testTask4",
+      confirmed: false
+    },
+    {
+      details: "xiangqing",
+      duration: "shichang",
+      equipmentProvided: false,
+      level: "初学",
+      otherRequirements: "qitayaoqiu",
+      place: "didian",
+      publisher: 'testPublisher',
+      signProvided: false,
+      spaceProvided: false,
+      startTime: "Mon Nov 15 2021 11:47:00",
+      taskName: "mingcheng",
+      taskPic: "/images/cover.jpg",
+      totalNum: 1,
+      type: "跑步",
+      taskId: "testTask5",
+      confirmed: true
+    },
+    {
+      details: "xiangqing",
+      duration: "shichang",
+      equipmentProvided: false,
+      level: "初学",
+      otherRequirements: "qitayaoqiu",
+      place: "didian",
+      publisher: 'testPublisher',
+      signProvided: false,
+      spaceProvided: false,
+      startTime: "Mon Nov 15 2021 11:47:00",
+      taskName: "mingcheng",
+      taskPic: "/images/cover.jpg",
+      totalNum: 1,
+      type: "跑步",
+      taskId: "testTask6",
+      confirmed: true
+    }]
+
+    that.setData({
+      status: 0,
+      activitiesSub: activitiesSub,
+      activitiesPub: activitiesPub,
+      pubTaskId: pubTaskId,
+      subTaskId: subTaskId
+    })
+},
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-        // TODO 根据用户报名和发布的任务id获取任务信息
-        var that = this
-        // 获取最新活动并按照时间筛选
-        wx.cloud.callFunction({
-          name: 'get_latest_task',
-          data: {
-            num: 30,
-          },
-          success: res => {
-            console.log(res);
-            if (res.result.errCode == 0) {
-              let activities = res.result.data.activities
-              // 根据时间筛选          
-              activities = activities.filter(this.filterByTime)
-              that.setData({
-                newActivities: activities
-              })
-            } else {
-              wx.showModal({
-                title: '抱歉，出错了呢~',
-                content: res.result.errMsg,
-                confirmText: "我知道了",
-                showCancel: false,
-                success(res) {
-                  if (res.confirm) {
-                    console.log('用户点击确定')
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                  }
-                }
-              })
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [wechat_sign] 调用失败', err)
-            wx.showModal({
-              title: '调用失败',
-              content: '请检查云函数是否已部署',
-              showCancel: false,
-              success(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
-          }
-        })
-    
-        // 获取热门活动并按照时间筛选
-        wx.cloud.callFunction({
-          name: 'get_hot_task',
-          data: {
-            num: 30,
-          },
-          success: res => {
-            console.log(res);
-            if (res.result.errCode == 0) {
-              let activities = res.result.data.activities
-              // 根据时间筛选          
-              activities = activities.filter(this.filterByTime)
-              that.setData({
-                hotActivities: activities
-              })
-            } else {
-              wx.showModal({
-                title: '抱歉，出错了呢~',
-                content: res.result.errMsg,
-                confirmText: "我知道了",
-                showCancel: false,
-                success(res) {
-                  if (res.confirm) {
-                    console.log('用户点击确定')
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                  }
-                }
-              })
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [wechat_sign] 调用失败', err)
-            wx.showModal({
-              title: '调用失败',
-              content: '请检查云函数是否已部署',
-              showCancel: false,
-              success(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
-          }
-        })
-    
-        // 获取用户发布的所有活动
-        wx.cloud.callFunction({
-          name: 'get_user_published',
-          data: {},
-          success: res => {
-            console.log(res);
-            if (res.result.errCode == 0) {
-              let taskPub = res.result.data.taskId
-              app.globalData.taskPub = taskPub
-            } else {
-              wx.showModal({
-                title: '抱歉，出错了呢~',
-                content: res.result.errMsg,
-                confirmText: "我知道了",
-                showCancel: false,
-                success(res) {
-                  if (res.confirm) {
-                    console.log('用户点击确定')
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                  }
-                }
-              })
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [wechat_sign] 调用失败', err)
-            wx.showModal({
-              title: '调用失败',
-              content: '请检查云函数是否已部署',
-              showCancel: false,
-              success(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
-          }
-        })
-    
-        // 获取用户报名的所有活动
-        wx.cloud.callFunction({
-          name: 'get_user_signed',
-          data: {},
-          success: res => {
-            console.log(res);
-            if (res.result.errCode == 0) {
-              let taskSub = res.result.data.taskId
-              app.globalData.taskSub = taskSub
-            } else {
-              wx.showModal({
-                title: '抱歉，出错了呢~',
-                content: res.result.errMsg,
-                confirmText: "我知道了",
-                showCancel: false,
-                success(res) {
-                  if (res.confirm) {
-                    console.log('用户点击确定')
-                  } else if (res.cancel) {
-                    console.log('用户点击取消')
-                  }
-                }
-              })
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [wechat_sign] 调用失败', err)
-            wx.showModal({
-              title: '调用失败',
-              content: '请检查云函数是否已部署',
-              showCancel: false,
-              success(res) {
-                if (res.confirm) {
-                  console.log('用户点击确定')
-                } else if (res.cancel) {
-                  console.log('用户点击取消')
-                }
-              }
-            })
-          }
-        })
-        
-        // some dummy data
-        var activitiesSub =  [
-          {
-            picture_url: "/images/test3.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "1",
-            confirmed: false,
-          },
-          {
-            picture_url: "/images/test3.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "2",
-            confirmed: false,
-          },
-          {
-            picture_url: "/images/test3.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "3",
-            confirmed: true,
-          },
-        ]
-        var activitiesPub =  [
-          {
-            picture_url: "/images/test3.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "4",
-            confirmed: false,
-          },
-          {
-            picture_url: "/images/test2.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "5",
-            confirmed: true,
-          },
-          {
-            picture_url: "/images/test2.jpg",
-            title: '足球运动',
-            loc: "氣膜館",
-            time: "10月1日",
-            leader: "令狐沖",
-            TaskId: "6",
-            confirmed: false,
-          },
-        ]
-        var taskSub = [
-          '1', '2', '3'
-        ]
-        var taskPub = [
-          '4', '5', '6'
-        ]
-        this.setData({
-          status: 0,
-          activitiesSub: activitiesSub,
-          activitiesPub: activitiesPub,
-        })
-        app.globalData.taskSub = taskSub
-        app.globalData.taskPub = taskPub
-        app.globalData.logged = true
   },
 
   /**
@@ -357,17 +313,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if (this.data.status == 0) {
-      this.setData({
-        activities: this.data.newActivities
-      })
-      console.log("当前状态是0")
-    } else {
-      this.setData({
-        activities: this.data.hotActivities
-      })
-      console.log("当前状态是1")
-    }
+    this.loadData()
   },
 
   /**
@@ -396,27 +342,6 @@ Page({
    */
   onReachBottom: function () {
 
-  },
-
-  onTabClick(e) {
-    const index = e.detail.index
-    this.setData({ 
-      activeTab: index 
-    })
-
-    console.log(index)
-  },
-
-  onChange(e) {
-    const index = e.detail.index
-    this.setData({ 
-      activeTab: index 
-    })
-  },
-  handleClick(e) {
-    wx.navigateTo({
-      url: './webview',
-    })
   },
 
   onShareAppMessage() {

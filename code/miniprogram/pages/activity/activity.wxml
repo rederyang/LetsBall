@@ -8,13 +8,13 @@
 </view>
 
 <block >
-<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.TaskId}}" data-confirmed="{{itemName.confirmed}}">
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.confirmed}}" data-content="{{itemName}}">
   <view class="item-line">
-    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
+    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
     <view class="item-words">
-      <view class="item-title">{{itemName.title}}</view>
-      <view class="item-leader">{{itemName.leader}}</view>
-      <view class="item-loc">{{itemName.loc}}</view>
+      <view class="item-title">{{itemName.taskName}}</view>
+      <view class="item-leader">{{itemName.publisher}}</view>
+      <view class="item-loc">{{itemName.place}}</view>
     </view>
     <view class="item-status-area">
      <view class="{{itemName.confirmed ? 'item-status-confirmed' : 'item-status-unconfirmed'}}">
@@ -22,7 +22,7 @@
      </view>
     </view>
   </view>
-    <view class="item-time">{{itemName.time}}</view>
+    <view class="item-time">{{itemName.startTime}}</view>
 </view>
 </block>
 <!-- 

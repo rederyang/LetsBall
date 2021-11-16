@@ -161,6 +161,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    // 设置时间输入默认值
     if (this.data.time_init) {
       var myDate = new Date()
       var hour = myDate.getHours()
@@ -180,6 +181,19 @@ Page({
         date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
       })
     }
+    // 获取任务原本的信息
+    var original_info_content = options.info_content
+    this.setData({
+      time: original_info_content.time,
+      date: original_info_content.date,
+      time_init: original_info_content.time_init,
+      level_idx: original_info_content.level_idx,
+      sport_idx: original_info_content.sport_idx,
+      intro: original_info_content.intro,
+      name: original_info_content.date.name,
+      duration: original_info_content.date.duration,
+      other: original_info_content.date.other,
+    })
   },
 
   /**

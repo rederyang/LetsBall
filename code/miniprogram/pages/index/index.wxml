@@ -11,4 +11,5 @@
 <text bindtap="detail4" class="tap">参与者自己已确认</text>
 <text bindtap="detail5" class="tap">参与者非自己已确认</text>
 <text bindtap="publish" class="tap">发布页面</text>
+<text bindtap="edit" class="tap">编辑页面</text>
 <text bindtap="mine" class="tap">我的</text>

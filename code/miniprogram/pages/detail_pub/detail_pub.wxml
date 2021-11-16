@@ -1,6 +1,6 @@
 <!--pages/detail_pub/detail_pub.wxml-->
 <view class='head'> 
-  <view class="title">击♂剑</view>
+  <view class="title">{{info_content.taskName}}</view>
   <view class="{{confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}}">{{confirmed ? "满员" : "未满"}}</view>
 </view>
 <view class="line_title"></view>
@@ -17,14 +17,14 @@
     <text>其他要求：</text>
   </view>
   <view class="info_content">
-    <text>{{info_content.day}}</text>
-    <text>{{info_content.time}}</text>
+    <text>{{date}}</text>
+    <text>{{time}}</text>
     <text>{{info_content.place}}</text>
     <text>{{info_content.type}}</text>
     <text>{{info_content.level}}</text>
-    <text>{{info_content.offer_place}}</text>
-    <text>{{info_content.offer_tool}}</text>
-    <text>{{info_content.other}}</text>
+    <text>{{info_content.spaceProvided}}</text>
+    <text>{{info_content.equipmentProvided}}</text>
+    <text>{{info_content.otherRequirements}}</text>
   </view>
 </view>
 
@@ -39,14 +39,14 @@
   <view class="subtitle">参与者</view>
   <view class="area_chat">
     <view class="chat_card">
-      <image class="avatar" src="{{sub_info.avatar}}"></image>
+      <image class="avatar" src="{{sub_info.userPic}}"></image>
       <view class="chat_content">
         <view class="chat_row">
-          <view class="chat_name">{{sub_info.name}}</view>
-          <text class="user_badge">{{sub_info.fame}}</text>
+          <view class="chat_name">{{sub_info.nickName}}</view>
+          <text class="user_badge">一般用户</text>
         </view>
         <view class="chat_row">
-          <view class="chat_gray">{{sub_info.intro}}</view>
+          <view class="chat_gray">{{sub_info.gender ? "男" : "女"}}</view>
         </view>
       </view>
     </view>
@@ -58,7 +58,7 @@
 <view class="area">
   <view class="subtitle">聊天</view>
   <view class="area_chat">
-    <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" bindtap="onPickSub">
+    <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" bindtap="onPickSub" data-openid="{{item.openId}}">
       <view class="chat_card">
         <image class="avatar" src="{{item.avatar}}"></image>
         <view class="chat_content">

@@ -179,27 +179,46 @@ Page({
     console.log("发布任务")
     console.log(this.data)
     var that = this
-    var startTime = new Date(this.data.date + ' ' + this.data.time )
+    var startTime = new Date(that.data.date + ' ' + that.data.time )
 
-    console.log(startTime)
+    console.log("传入的参数：")
+    // 传入参数
+    var data = {
+      taskName: that.data.name,
+      taskPic: "/images/cover.jpg",
+      publisher: app.globalData.userInfo.OPENID,
+      totalNum: 1,
+      startTime: startTime,
+      duration: that.data.duration,
+      place: that.data.place,
+      level: that.data.level_array[that.data.level_idx],
+      type: that.data.sport_array[that.data.sport_idx],
+      details: that.data.intro,
+      spaceProvided: false,
+      equipmentProvided: false, 
+      signProvided: false,
+      otherRequirements: that.data.other
+    }
+    console.log(data)
+
     // 获取最新活动并按照时间筛选
     wx.cloud.callFunction({
       name: 'add_tasks',
       data: {
-        TaskName: this.data.name,
-        TaskPic: "",
-        Publisher: app.globalData.userInfo.OPENID,
-        TotalNum: 1,
-        StartTime: startTime,
-        Duration: this.data.duration,
-        Place: this.data.place,
-        Type: this.data.level_array[this.data.level_idx],
-        Sport: this.data.sport_array[this.data.sport_array],  // TODO这里后端要加这个参数
-        Details: this.data.detail,
-        SpaceProvided: false,
-        EquipmentProvided: false, 
-        SignProvided: false,
-        OtherRequirements: this.data.other,
+        taskName: that.data.name,
+        taskPic: "/images/cover.jpg",
+        publisher: app.globalData.userInfo.OPENID,
+        totalNum: 1,
+        startTime: startTime,
+        duration: that.data.duration,
+        place: that.data.place,
+        level: that.data.level_array[that.data.level_idx],
+        type: that.data.sport_array[that.data.sport_array],
+        details: that.data.detail,
+        spaceProvided: false,
+        equipmentProvided: false, 
+        signProvided: false,
+        otherRequirements: that.data.other,
       },
       success: res => {
         console.log(res);
@@ -216,6 +235,9 @@ Page({
                 console.log('用户点击取消')
               }
             }
+          })
+          wx.navigateBack({
+            delta: 1,
           })
         } else {
           wx.showModal({
@@ -249,7 +271,6 @@ Page({
         })
       }
     })
-
   },
 
   /**
