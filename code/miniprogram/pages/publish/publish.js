@@ -183,7 +183,7 @@ Page({
 
     console.log("传入的参数：")
     // 传入参数
-    var data = {
+    var submitData = {
       taskName: that.data.name,
       taskPic: "/images/cover.jpg",
       publisher: app.globalData.userInfo.OPENID,
@@ -194,32 +194,16 @@ Page({
       level: that.data.level_array[that.data.level_idx],
       type: that.data.sport_array[that.data.sport_idx],
       details: that.data.intro,
-      spaceProvided: false,
-      equipmentProvided: false, 
+      spaceProvided: that.data.place_idx == 1,
+      equipmentProvided: that.data.tool_idx == 1, 
       signProvided: false,
       otherRequirements: that.data.other
     }
-    console.log(data)
+    console.log(submitData)
 
-    // 获取最新活动并按照时间筛选
     wx.cloud.callFunction({
       name: 'add_tasks',
-      data: {
-        taskName: that.data.name,
-        taskPic: "/images/cover.jpg",
-        publisher: app.globalData.userInfo.OPENID,
-        totalNum: 1,
-        startTime: startTime,
-        duration: that.data.duration,
-        place: that.data.place,
-        level: that.data.level_array[that.data.level_idx],
-        type: that.data.sport_array[that.data.sport_array],
-        details: that.data.detail,
-        spaceProvided: false,
-        equipmentProvided: false, 
-        signProvided: false,
-        otherRequirements: that.data.other,
-      },
+      data: submitData,
       success: res => {
         console.log(res);
         if (res.result.errCode == 0) {

@@ -11,6 +11,7 @@ App({
         //   如不填则使用默认环境（第一个创建的环境）
         // env: 'my-env-id',
         traceUser: true,
+        env: 'cloud2-0g1qpznn8481602d',
       })
     }
 
@@ -19,7 +20,7 @@ App({
       userInfo: {},
       user: {},
       taskSub: {},  // 当前用户报名的所有活动
-      taskPub: {}  // 当前用户发布的所有活动
+      taskPub: {},  // 当前用户发布的所有活动
     }
   }
 })

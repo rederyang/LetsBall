@@ -104,7 +104,7 @@ Page({
     console.log("点击编辑键")
     var info_content= JSON.stringify(this.data.info_content);
     wx.navigateTo({
-      url: '../publish/publish?info_content=' + info_content,
+      url: '../edit/edit?info_content=' + info_content + "&taskId=" + this.data.taskId,
     })
   },
 
@@ -255,7 +255,7 @@ Page({
       details: "xiangqing",
       duration: "shichang",
       equipmentProvided: false,
-      level: "初学",
+      level: "中级",
       otherRequirements: "qitayaoqiu",
       place: "didian",
       publisher: "testPublisher",
@@ -265,7 +265,7 @@ Page({
       taskName: "mingcheng",
       taskPic: "/images/cover.jpg",
       totalNum: 1,
-      type: "跑步"
+      type: "网球"
     }
 
     that.setData({

@@ -7,7 +7,6 @@ Page({
   data: {
     time: "12:00",
     date: "2021-11-10",
-    time_init: true,
     level_array: ['初学', '中级', '进阶'],
     level_idx: 0,
     sport_array: ['跑步', '网球', '篮球', '网球', '游泳', '击剑', '其他'],
@@ -154,45 +153,148 @@ Page({
   },
 
   pubAct: function(e) {
+    console.log("发布任务")
     console.log(this.data)
+    var that = this
+    var startTime = new Date(that.data.date + ' ' + that.data.time )
+
+    console.log("传入的参数：")
+    // 传入参数
+    var data = {
+      taskId: that.data.taskId,
+      taskName: that.data.name,
+      taskPic: "/images/cover.jpg",
+      totalNum: 1,
+      startTime: startTime,
+      duration: that.data.duration,
+      place: that.data.place,
+      level: that.data.level_array[that.data.level_idx],
+      type: that.data.sport_array[that.data.sport_idx],
+      details: that.data.intro,
+      spaceProvided: false,
+      equipmentProvided: false, 
+      signProvided: false,
+      otherRequirements: that.data.other
+    }
+    console.log(data)
+
+    // 调用云函数修改
+    wx.cloud.callFunction({
+      name: 'modify_tasks',
+      data: {
+        taskId: that.data.taskId,
+        taskName: that.data.name,
+        taskPic: "/images/cover.jpg",
+        totalNum: 1,
+        startTime: startTime,
+        duration: that.data.duration,
+        place: that.data.place,
+        level: that.data.level_array[that.data.level_idx],
+        type: that.data.sport_array[that.data.sport_array],
+        details: that.data.detail,
+        spaceProvided: false,
+        equipmentProvided: false, 
+        signProvided: false,
+        otherRequirements: that.data.other,
+      },
+      success: res => {
+        console.log(res);
+        if (res.result.errCode == 0) {
+          wx.showModal({
+            title: '发布成功！',
+            content: res.result.errMsg,
+            confirmText: "我知道了",
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+          wx.navigateBack({
+            delta: 1,
+          })
+        } else {
+          wx.showModal({
+            title: '抱歉，出错了呢~',
+            content: res.result.errMsg,
+            confirmText: "我知道了",
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [wechat_sign] 调用失败', err)
+        wx.showModal({
+          title: '调用失败',
+          content: '请检查云函数是否已部署',
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    })
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    // 设置时间输入默认值
-    if (this.data.time_init) {
-      var myDate = new Date()
-      var hour = myDate.getHours()
-      var minu = myDate.getMinutes()
-      if (hour < 10) {
-        var str_hour = '0' + hour
-      } else {
-        var str_hour = hour
-      }
-      if (minu < 10) {
-        var str_minu = '0' + minu
-      } else {
-        var str_minu = minu
-      }
-      this.setData({
-        time: str_hour + ':' + str_minu,
-        date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
-      })
-    }
-    // 获取任务原本的信息
-    var original_info_content = options.info_content
+
+    console.log(options)
+
+    // 获取任务的id，后面调用云函数需要
     this.setData({
-      time: original_info_content.time,
-      date: original_info_content.date,
-      time_init: original_info_content.time_init,
-      level_idx: original_info_content.level_idx,
-      sport_idx: original_info_content.sport_idx,
-      intro: original_info_content.intro,
-      name: original_info_content.date.name,
-      duration: original_info_content.date.duration,
-      other: original_info_content.date.other,
+      taskId: options.taskId
+    })
+
+    // 获取任务的原始值
+    var infoContent = JSON.parse(options.info_content)
+
+    console.log(infoContent)
+
+    // 获取任务原本的时间
+    var myDate = new Date(infoContent.startTime)
+    var hour = myDate.getHours()
+    var minu = myDate.getMinutes()
+    if (hour < 10) {
+      var str_hour = '0' + hour
+    } else {
+      var str_hour = hour
+    }
+    if (minu < 10) {
+      var str_minu = '0' + minu
+    } else {
+      var str_minu = minu
+    }
+    this.setData({
+      time: str_hour + ':' + str_minu,
+      date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
+    })  
+
+    // 获取任务原本的其他信息
+    this.setData({
+      level_idx: this.data.level_array.indexOf(infoContent.level),
+      sport_idx: this.data.sport_array.indexOf(infoContent.type),
+      intro: infoContent.details,
+      name: infoContent.taskName,
+      place: infoContent.place,
+      duration: infoContent.duration,
+      other: infoContent.otherRequirements,
     })
   },
 
