@@ -2,12 +2,12 @@
 <view class="area">
   <view class="line-block">
     <view class="line-text">活动名称</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindNameChange" value="{{}}"/>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindNameChange" value="{{name}}"/>
   </view>
 
   <view class="line-block">
     <view class="line-text">活动日期</view>
-    <picker class="line-picker" mode="date" start="2021-11-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
+    <picker class="line-picker" mode="date" start="2021-11-01" end="2030-11-01" value="{{date}}" bindchange="bindDateChange">
       <view class="picker-view">
         <view class="time-view">{{date}}</view>
         <image class="picker-icon" src="/images/choose.png" />
@@ -27,12 +27,12 @@
 
   <view class="line-block">
     <view class="line-text">持续时长</view>
-    <input class="line-input" placeholder="30-200分钟" placeholder-style="color:#949494;" bindinput="bindDurationChange" />
+    <input class="line-input" placeholder="30-200分钟" placeholder-style="color:#949494;" bindinput="bindDurationChange" value="{{duration}}"/>
   </view>
 
   <view class="line-block">
     <view class="line-text">活动地点</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindPlaceChange" />
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindPlaceChange" value="{{place}}"/>
   </view>
 
   <view class="line-block">
@@ -57,7 +57,7 @@
 
   <view class="line-block">
     <view class="line-text">其他要求</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" />
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" value="{{other}}"/>
   </view>
 
   <view class="subtitle">活动详情</view>

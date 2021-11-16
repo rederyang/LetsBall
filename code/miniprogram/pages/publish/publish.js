@@ -201,7 +201,6 @@ Page({
     }
     console.log(data)
 
-    // 获取最新活动并按照时间筛选
     wx.cloud.callFunction({
       name: 'add_tasks',
       data: {
