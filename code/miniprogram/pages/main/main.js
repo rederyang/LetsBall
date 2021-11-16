@@ -39,19 +39,22 @@ Page({
     }
   },
 
-  onUpdateUserInfo: function() {
+  onUpdateUser: function() {
     var that = this
     // 调用云函数 TODO 这里输入参数不应该有openid和age，因为前端拿不到
     wx.cloud.callFunction({
-      name: 'Wechat_sign',
+      name: 'wechat_sign',
       data: {
-        UserPic: app.globalData.userInfo.avatarUrl,
-        NickName: app.globalData.userInfo.nickName,
-        Gender: app.globalData.userInfo.gender,
+        openId: app.globalData.openId,
+        userPic: app.globalData.userInfo.avatarUrl,
+        nickName: app.globalData.userInfo.nickName,
+        gender: app.globalData.userInfo.gender,
+        age: 18,
       },
       success: res => {
         console.log(res);
         if (res.result.errCode == 0) {
+          console.log('注册完美成功！')
           app.globalData.logged = true
           app.globalData.user = res.result.data.user
         } else {
@@ -60,13 +63,6 @@ Page({
             content: res.result.errMsg,
             confirmText: "我知道了",
             showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
           })
         }
       },
@@ -93,25 +89,26 @@ Page({
     console.log('点击增加按钮')
     // 判断用户是否登录
     if (!app.globalData.logged) {
+      var that = this
       wx.showModal({
         title: '提示',
         content: '请先登录哦~',
+        confirmColor: '#FF0A6B',
+        cancelColor: '#81838F',
         cancelText: '取消',
         confirmText: '登录',
-        showCancel: true,
         success(res) {
           if (res.confirm) {
-            console.log('用户点击确定')
-            var that = this
+            console.log('用户确认登录。')
             wx.getUserProfile({
               desc: '用于更新和完善用户资料', 
               success: (res) => {
                 console.log("获取用户信息成功")
                 console.log(res.userInfo)
                 app.globalData.userInfo = res.userInfo
-                that.onUpdateUserInfo()
+                that.onUpdateUser()
               },
-              })
+            })
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
@@ -146,6 +143,62 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {    
+    // 获取openId
+    var that = this
+    // 获取最新活动并按照时间筛选
+    wx.cloud.callFunction({
+      name: 'get_openid',
+      data: {},
+      success: res => {
+        if (res.result.errCode == 0) {
+          console.log('获取openId成功。')
+          app.globalData.openId = res.result.data.openId
+          console.log('openId: ', app.globalData.openId)
+          
+          // 静默注册
+          wx.cloud.callFunction({
+            name: 'check_user',
+            data: {
+              openId: app.globalData.openId,
+            },
+            success: res => {
+              if (res.result.errCode == 0) {
+                if (res.result.data.boolexist == 1) {
+                  console.log('查到了。')
+                  app.globalData.logged = true
+                  app.globalData.user = res.result.data.user
+                } else {
+                  console.log('查无此人。')
+                }
+              } else {
+                console.error('通过openid查用户失败。', err)
+              }
+            },
+            fail: err => {
+              console.error('查用户失败，离谱。', err)
+            }
+          })
+        } else {
+          console.log('获取openId失败，传参有问题。')
+        }
+      },
+      fail: err => {
+        console.error('获取openId失败，离谱。', err)
+      }
+    })
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
     // 这里将调用云函数获得最新和最热活动
     var that = this
     // 获取最新活动并按照时间筛选
@@ -427,19 +480,7 @@ Page({
     app.globalData.taskSub = taskSub
     app.globalData.taskPub = taskPub
     app.globalData.logged = true
-  },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
     if (this.data.status == 0) {
       this.setData({
         activities: this.data.newActivities
