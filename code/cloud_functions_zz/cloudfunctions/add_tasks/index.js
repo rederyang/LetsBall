@@ -9,7 +9,7 @@ cloud.init({
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
     /**检测前端是否传了参数 start */
-    if (event.taskName == undefined || event.details == undefined || event.taskPic == undefined || event.publisher == undefined || event.totalNum == undefined || event.startTime == undefined || event.duration == undefined || event.place == undefined || event.type == undefined || event.spaceProvided == undefined || event.equipmentProvided == undefined || event.signProvided == undefined || event.otherRequirements == undefined || event.level == undefined) {
+    if (event.taskName == undefined || event.details == undefined || event.taskPic == undefined || event.publisher == undefined || event.totalNum == undefined || event.startTime == undefined || event.duration == undefined || event.place == undefined || event.type == undefined || event.spaceProvided == undefined || event.equipmentProvided == undefined || event.signProvided == undefined || event.otherRequirements == undefined || event.level == undefined || event.publisherId == undefined ) {
         //返回执行结果
         var result = {}
         result.errCode = 1
@@ -59,7 +59,7 @@ exports.main = async (event, context) => {
     }
     /**计算新加入的任务的id end */
     /**计算end time */
-    var startTime = evnet.startTime
+    var startTime = new Date(event.startTime)
     endTime = new Date(startTime.getTime()+event.duration*60*1000)
     console.log(endTime)
     /**计算endtime end */
@@ -71,8 +71,9 @@ exports.main = async (event, context) => {
         taskPic: event.taskPic,
         publisherQuitStatus:false,
         publisher: event.publisher,
+        publisherId: event.publisherId,
         totalNum: event.totalNum,
-        startTime: event.startTime,
+        startTime: startTime,
         duration: event.duration,
         endTime:endTime,
         place: event.place,
@@ -98,6 +99,7 @@ exports.main = async (event, context) => {
             console.log('新增任务成功')
             console.log(res)
         })
+  
     await db.collection('CurrentTask')
         .where({
             taskId:taskid
@@ -107,12 +109,12 @@ exports.main = async (event, context) => {
             console.log(res)
             task=res.data[0]
         })
-
+    
     //在User表中维护已发布的任务的taskId
     var publishedtasks
     await db.collection('User')
     .where({
-        openId:wxContext.OPENID
+        openId:event.publisherId
     })
     .field({
         publishedTasks:true
@@ -120,7 +122,7 @@ exports.main = async (event, context) => {
     .get()
     .then(res=>{
         console.log('加油')
-        console.log(res)
+        console.log(res.data)
         publishedtasks=res.data[0].publishedTasks
     })
     publishedtasks.push(taskid)
@@ -128,7 +130,7 @@ exports.main = async (event, context) => {
 
     await db.collection('User')
     .where({
-        openId:wxContext.OPENID
+        openId:event.publisherId
     })
     .update({
         data:{
@@ -169,6 +171,6 @@ exports.main = async (event, context) => {
     result.errMsg = '新增任务成功'
     var data = {}
     data.task = task
-    result.data = data
+    result.data = add_data
     return result
 }

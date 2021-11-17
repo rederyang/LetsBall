@@ -17,7 +17,7 @@ exports.main = async (event, context) => {
   if (event.openId == undefined || (event.gender == undefined && event.age == undefined && event.tips == undefined)) {
 
     result.errMsg = '未传必要参数，请重试'
-    result.errcode = 1
+    result.errCode = 1
     return result
 
   }
@@ -52,11 +52,11 @@ exports.main = async (event, context) => {
           data:update_data
         })
         .then(res => {
-          result.errcode = 0
+          result.errCode = 0
           result.errMsg = '更新成功'
         })
     } else {
-      result.errcode = 2
+      result.errCode = 2
       result.errMsg = "未找到该数据或该数据不止一条"
     }
   } catch (e) {

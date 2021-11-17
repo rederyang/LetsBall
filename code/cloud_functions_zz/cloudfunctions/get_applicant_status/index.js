@@ -17,7 +17,7 @@ exports.main = async (event, context) => {
   if (event.taskId == undefined || event.applicantId== undefined) {
     
     result.errMsg = '未传必要参数，请重试'
-    result.errcode = 1
+    result.errCode = 1
     return result
 
   }
@@ -36,15 +36,15 @@ exports.main = async (event, context) => {
         query = res.data[0]
       })
       if (all_data.length>1){
-        result.errcode = 3
+        result.errCode = 3
         result.errMsg = '返回数量大于1！查一下错误'
       }
       if (query==undefined){
-        result.errcode = 2
+        result.errCode = 2
         result.errMsg = "未查到该信息"
       }
       else{
-        result.errcode = 0
+        result.errCode = 0
         result.errMsg = "查询成功"
         result.data.applicantId = query.applicantId
         result.data.taskId = query.taskId
@@ -52,7 +52,7 @@ exports.main = async (event, context) => {
         result.data.applicantStatus = query.applicantStatus
       }
   }catch(e){
-    result.errcode = 10086
+    result.errCode = 10086
     result.errMsg = e
 
   }

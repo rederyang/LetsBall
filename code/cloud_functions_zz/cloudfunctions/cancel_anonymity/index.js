@@ -17,7 +17,7 @@ exports.main = async (event, context) => {
   if (event.taskId == undefined || event.applicantId == undefined) {
 
     result.errMsg = '未传必要参数，请重试'
-    result.errcode = 1
+    result.errCode = 1
     return result
 
   }
@@ -47,17 +47,17 @@ exports.main = async (event, context) => {
           }
         })
         .then(res => {
-          result.errcode = 0
+          result.errCode = 0
           result.errMsg = "更新取匿成功"
 
         })
     } else {
-      result.errcode = 2
+      result.errCode = 2
       result.errMsg = "未找到该数据"
     }
 
   } catch (e) {
-    result.errcode = 10086
+    result.errCode = 10086
     result.errMsg = e
 
 
