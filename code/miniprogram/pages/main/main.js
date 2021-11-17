@@ -26,8 +26,8 @@ Page({
 
   // 点击进入详情页
   onTapDetail: function (event) {
-    var TaskId = event.currentTarget.dataset.taskid
-    console.log("获取到任务id:" + String(TaskId))
+    var taskId = event.currentTarget.dataset.taskid
+    console.log("获取到任务id:" + String(taskId))
     
     // 如果没有登录，就直接进入报名者界面，正常显示满员与否
     // if (!app.globalData.logged) {
@@ -42,7 +42,7 @@ Page({
 
     // 默认以报名者身份跳转
     wx.navigateTo({
-      url: '../detail_sub/detail_sub?TaskId=' + TaskId,
+      url: '../detail_sub/detail_sub?taskId=' + taskId,
     })
   },
 
@@ -117,7 +117,7 @@ Page({
         wx.cloud.callFunction({
           name: 'get_latest_task',
           data: {
-            num: 2,
+            num: 4,
           },
           success: res => {
             console.log(res);
