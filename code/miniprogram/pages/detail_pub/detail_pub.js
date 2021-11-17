@@ -69,12 +69,20 @@ Page({
         }
       },
       fail: err => {
-        console.error('[云函数] [get_hot_words] 调用失败', err)
         wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
+          title: '确认成功！',
+          confirmText: "我知道了",
           showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.loadData()
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
         })
+        console.error('[accept_registration] 调用失败', err)
       }
     })
     // FAKE action

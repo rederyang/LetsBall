@@ -117,6 +117,19 @@ Page({
         }
       },
       fail: err => {
+        wx.showModal({
+          title: '取消成功',
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.loadData()
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
         console.error('[云函数] [quit_commited_task] 调用失败', err)
       }
     })
