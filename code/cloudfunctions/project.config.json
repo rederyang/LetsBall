@@ -45,7 +45,7 @@
   "libVersion": "2.17.0",
   "appid": "wx7c72b9172bd3788e",
   "projectname": "miniprogram-1",
-  "cloudfunctionTemplateRoot": "",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "watchOptions": {
     "ignore": []
   },

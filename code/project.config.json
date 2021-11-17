@@ -4,12 +4,10 @@
     "ignore": []
   },
   "setting": {
-    "bundle": false,
-    "userConfirmedBundleSwitch": false,
     "urlCheck": true,
     "scopeDataCheck": false,
     "coverView": true,
-    "es6": true,
+    "es6": false,
     "postcss": true,
     "compileHotReLoad": false,
     "lazyloadPlaceholderEnable": false,
@@ -27,10 +25,9 @@
     "useApiHostProcess": true,
     "showShadowRootInWxmlPanel": true,
     "packNpmManually": false,
-    "enableEngineNative": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
-    "showES6CompileOption": false,
+    "disableUseStrict": false,
     "minifyWXML": true
   },
   "compileType": "miniprogram",

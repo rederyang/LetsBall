@@ -1,7 +1,9 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+  env: 'cloud2-0g1qpznn8481602d'
+})
 
 // 云函数入口函数
 exports.main = async (event, context) => {
@@ -12,8 +14,8 @@ exports.main = async (event, context) => {
   result.data = data
   /** 传递必要的参数 start */
 
-  if (event.taskId == undefined || event.applicantId== undefined) {
-    
+  if (event.taskId == undefined || event.applicantId == undefined) {
+
     result.errMsg = '未传必要参数，请重试'
     result.errcode = 1
     return result
@@ -28,23 +30,38 @@ exports.main = async (event, context) => {
         applicantId: event.applicantId,
         taskId: event.taskId
       })
-      .update({
-        data:{
-          applicantNickNameStatus:db.command.mul(-1).inc(1)
-        }
-      })
+      .get()
       .then(res => {
-        result.errcode = 0
-        result.errcode = "更新取匿成功"
-        result.data = res.data
-        return result
+        query = res.data
       })
-  }catch(e){
+
+    if (query.length  == 1) {
+      await db.collection('CurrentTaskApplicantsInfo')
+        .where({
+          applicantId: event.applicantId,
+          taskId: event.taskId
+        })
+        .update({
+          data: {
+            applicantNickNameStatus: true
+          }
+        })
+        .then(res => {
+          result.errcode = 0
+          result.errMsg = "更新取匿成功"
+
+        })
+    } else {
+      result.errcode = 2
+      result.errMsg = "未找到该数据或该数据不止一条"
+    }
+
+  } catch (e) {
     result.errcode = 10086
     result.errMsg = e
-    return result
+
 
   }
-
+  return result
 
 }
