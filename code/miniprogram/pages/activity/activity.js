@@ -84,13 +84,16 @@ Page({
     // 获取用户发布的所有活动
     try {
       res = await wx.cloud.callFunction({
-        name: 'get_user_published',
+        name: 'get_user_published_before_starttime',
         data: {
           openId: app.globalData.openId
         },
       })
       if (res.result.errCode == 0) {
-        let taskPub = res.result.data.tasks.publishedTasks
+        let taskPub = res.result.data.publishedTasks
+        if (taskPub == undefined) {
+          taskPub = []
+        }
         that.setData({
           pubTaskId: taskPub
         })
@@ -116,13 +119,16 @@ Page({
     // 获取用户报名的所有活动
     try {
       res = await wx.cloud.callFunction({
-        name: 'get_user_signed',
+        name: 'get_user_signed_before_starttime',
         data: {
           openId: app.globalData.openId
         }
       })
       if (res.result.errCode == 0) {
         let taskSub = res.result.data.registeredTasks
+        if (taskSub == undefined) {
+          taskSub = []
+        }
         that.setData({
           subTaskId: taskSub
         })
@@ -159,9 +165,8 @@ Page({
           taskId: that.data.pubTaskId.concat(that.data.subTaskId)
         }})
       if (res.result.errCode == 0) {
-        console.log(res)
         let taskSub = res.result.data.tasks.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
-        let taskPub = res.result.data.tasks.filter(item => that.data.pubTaskId.includes(item.taskId)) // 筛选得到用户发布的活动
+        let taskPub = res.result.data.tasks.filter(item => ((that.data.pubTaskId.includes(item.taskId)) && (!item.publisherQuitStatus))) // 筛选得到用户发布的活动，要求没有取消
         that.setData({
           activitiesSub: taskSub,
           activitiesPub: taskPub
@@ -193,8 +198,9 @@ Page({
           taskId: that.data.pubTaskId.concat(that.data.subTaskId)
         }})
       if (res.result.errCode == 0) {
-        let taskSubApplicants = res.result.data.tasks.filter(item => that.data.taskPub.includes(item.taskId))  // 筛选得到用户报名的活动
-        let taskPubApplicants = res.result.data.tasks.filter(item => that.data.taskSub.includes(item.taskId)) // 筛选得到用户发布的活动
+        let taskSubApplicants = res.result.data.info.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskPubApplicants = res.result.data.info.filter(item => that.data.pubTaskId.includes(item.taskId)) // 筛选得到用户发布的活动
+        console.log(taskSubApplicants)
         this.setData({
           activitiesSubApplicants: taskSubApplicants,
           activitiesPubApplicants: taskPubApplicants
@@ -218,10 +224,10 @@ Page({
       console.log(err)
     }
 
-    console.log("测试输出")
+    console.log("测试云函数获取后的结果")
     console.log(this.data)
 
-    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了confirmed字段
+    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了反应是否满员的字段
     try {
       var activitiesPub = this.data.activitiesPub.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
       var activitiesSub = this.data.activitiesSub.map(item => ({...item, ...this.data.activitiesSubApplicants.filter(s => s.taskId === item.taskId)[0]}))
@@ -229,137 +235,20 @@ Page({
         activitiesPub: activitiesPub,
         activitiesSub: activitiesSub
       })
+      console.log("最终结果")
+      console.log(that.data)
     } catch(err) {
       console.log(err)
     }
-
-    // FAKE data 假设已经构造好了
-    // var subTaskId = [
-    //   'testTask1', 'testTask2', 'testTask3'
-    // ]
-    // var pubTaskId = [
-    //   'testTask4', 'testTask5', 'testTask6'
-    // ]
-    // var activitiesSub =  [
-    //   {
-    //     details: "xiangqing",
-    //     duration: "shichang",
-    //     equipmentProvided: false,
-    //     level: "初学",
-    //     otherRequirements: "qitayaoqiu",
-    //     place: "didian",
-    //     publisher: 'testPublisher',
-    //     signProvided: false,
-    //     spaceProvided: false,
-    //     startTime: "Mon Nov 15 2021 11:47:00",
-    //     taskName: "mingcheng",
-    //     taskPic: "/images/cover.jpg",
-    //     totalNum: 1,
-    //     type: "跑步",
-    //     taskId: 'testTask1',
-    //     confirmed: true
-    //   },
-    //   {
-    //     details: "xiangqing",
-    //     duration: "shichang",
-    //     equipmentProvided: false,
-    //     level: "初学",
-    //     otherRequirements: "qitayaoqiu",
-    //     place: "didian",
-    //     publisher: 'testPublisher',
-    //     signProvided: false,
-    //     spaceProvided: false,
-    //     startTime: "Mon Nov 15 2021 11:47:00",
-    //     taskName: "mingcheng",
-    //     taskPic: "/images/cover.jpg",
-    //     totalNum: 1,
-    //     type: "跑步",
-    //     taskId: "testTask2",
-    //     confirmed: true
-    //   },
-    //   {
-    //     details: "xiangqing",
-    //     duration: "shichang",
-    //     equipmentProvided: false,
-    //     level: "初学",
-    //     otherRequirements: "qitayaoqiu",
-    //     place: "didian",
-    //     publisher: 'testPublisher',
-    //     signProvided: false,
-    //     spaceProvided: false,
-    //     startTime: "Mon Nov 15 2021 11:47:00",
-    //     taskName: "mingcheng",
-    //     taskPic: "/images/cover.jpg",
-    //     totalNum: 1,
-    //     type: "跑步",
-    //     taskId: "testTask3",
-    //     confirmed: false
-    //   }
-    // ]
-    // var activitiesPub =  [{
-    //   details: "xiangqing",
-    //   duration: "shichang",
-    //   equipmentProvided: false,
-    //   level: "初学",
-    //   otherRequirements: "qitayaoqiu",
-    //   place: "didian",
-    //   publisher: 'testPublisher',
-    //   signProvided: false,
-    //   spaceProvided: false,
-    //   startTime: "Mon Nov 15 2021 11:47:00",
-    //   taskName: "mingcheng",
-    //   taskPic: "/images/cover.jpg",
-    //   totalNum: 1,
-    //   type: "跑步",
-    //   taskId: "testTask4",
-    //   confirmed: false
-    // },
-    // {
-    //   details: "xiangqing",
-    //   duration: "shichang",
-    //   equipmentProvided: false,
-    //   level: "初学",
-    //   otherRequirements: "qitayaoqiu",
-    //   place: "didian",
-    //   publisher: 'testPublisher',
-    //   signProvided: false,
-    //   spaceProvided: false,
-    //   startTime: "Mon Nov 15 2021 11:47:00",
-    //   taskName: "mingcheng",
-    //   taskPic: "/images/cover.jpg",
-    //   totalNum: 1,
-    //   type: "跑步",
-    //   taskId: "testTask5",
-    //   confirmed: true
-    // },
-    // {
-    //   details: "xiangqing",
-    //   duration: "shichang",
-    //   equipmentProvided: false,
-    //   level: "初学",
-    //   otherRequirements: "qitayaoqiu",
-    //   place: "didian",
-    //   publisher: 'testPublisher',
-    //   signProvided: false,
-    //   spaceProvided: false,
-    //   startTime: "Mon Nov 15 2021 11:47:00",
-    //   taskName: "mingcheng",
-    //   taskPic: "/images/cover.jpg",
-    //   totalNum: 1,
-    //   type: "跑步",
-    //   taskId: "testTask6",
-    //   confirmed: true
-    // }]
-
-    that.setData({
-      status: 0,
-    })
 },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      status: 0
+    })
   },
 
   /**
