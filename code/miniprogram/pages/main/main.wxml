@@ -26,8 +26,8 @@
 
 <view class="activity-wrapper" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
   <view class="item-line">
-    <!-- <image wx:if="{{itemName.taskPic != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image> -->
-    <image class="item-picture" mode="scaleToFill" src="/images/avatar.png"></image>
+    <image wx:if="{{itemName.taskPic != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
+    <!-- <image class="item-picture" mode="scaleToFill" src="/images/avatar.png"></image> -->
     <view class="item-words">
       <view class="item-title">{{itemName.taskName}}</view>
       <view class="item-leader">{{itemName.publisher}}</view>

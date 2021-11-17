@@ -117,7 +117,7 @@ Page({
         wx.cloud.callFunction({
           name: 'get_latest_task',
           data: {
-            num: 4,
+            num: 10,
           },
           success: res => {
             console.log(res);

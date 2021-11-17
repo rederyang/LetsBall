@@ -8,7 +8,7 @@
 </view>
 
 <block >
-<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.confirmed}}" data-content="{{itemName}}">
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.isFull}}" data-content="{{itemName}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
     <view class="item-words">
@@ -17,8 +17,8 @@
       <view class="item-loc">{{itemName.place}}</view>
     </view>
     <view class="item-status-area">
-     <view class="{{itemName.confirmed ? 'item-status-confirmed' : 'item-status-unconfirmed'}}">
-      {{status == 0 ? (itemName.confirmed ? '已确认' : '未确认') : (itemName.confirmed ? '已满员' : '未满员')}}
+     <view class="{{itemName.isFull ? 'item-status-confirmed' : 'item-status-unconfirmed'}}">
+      {{status == 0 ? (itemName.isFull ? '已确认' : '未确认') : (itemName.isFull ? '已满员' : '未满员')}}
      </view>
     </view>
   </view>
