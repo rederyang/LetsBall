@@ -179,17 +179,18 @@ Page({
     console.log("发布任务")
     console.log(this.data)
     var that = this
-    var startTime = new Date(that.data.date + ' ' + that.data.time )
+    var startTime = that.data.date + ' ' + that.data.time + ' GMT+0800'
 
     console.log("传入的参数：")
     // 传入参数
     var submitData = {
       taskName: that.data.name,
       taskPic: "/images/cover.jpg",
-      publisher: app.globalData.openId,
+      publisher: app.globalData.userInfo.nickName,
+      publisherId: app.globalData.openId,
       totalNum: 1,
       startTime: startTime,
-      duration: that.data.duration,
+      duration: Number(that.data.duration),
       place: that.data.place,
       level: that.data.level_array[that.data.level_idx],
       type: that.data.sport_array[that.data.sport_idx],
@@ -215,13 +216,13 @@ Page({
             success(res) {
               if (res.confirm) {
                 console.log('用户点击确定')
+                wx.navigateBack({
+                  delta: 1,
+                })
               } else if (res.cancel) {
                 console.log('用户点击取消')
               }
             }
-          })
-          wx.navigateBack({
-            delta: 1,
           })
         } else {
           wx.showModal({
