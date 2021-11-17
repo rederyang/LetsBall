@@ -22,8 +22,8 @@
     <text>{{task.place}}</text>
     <text>{{task.type}}</text>
     <text>{{task.level}}</text>
-    <text>{{task.spaceProvided}}</text>
-    <text>{{task.equipmentProvided}}</text>
+    <text>{{task.spaceProvided ? '是' : '否'}}</text>
+    <text>{{task.equipmentProvided ? '是' : '否'}}</text>
     <text>{{task.otherRequirements}}</text>
   </view>
 </view>
