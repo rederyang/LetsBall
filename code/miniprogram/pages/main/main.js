@@ -74,7 +74,8 @@ Page({
               success: (res) => {
                 console.log("获取用户信息成功")
                 console.log(res.userInfo)
-                app.globalData.userInfo = res.userInfo
+                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl
+                app.globalData.userInfo.nickName = res.userInfo.nickName
                 that._updateUser()
               },
             })
