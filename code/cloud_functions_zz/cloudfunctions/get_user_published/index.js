@@ -45,7 +45,7 @@ exports.main = async (event, context) => {
       else{
         result.errCode = 0
         result.errMsg = "查询成功"
-        result.data.registeredTasks= query.registeredTasks
+        result.data.publishedTasks= query.publishedTasks
       }
   }catch(e){
     result.errCode = 10086
