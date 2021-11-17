@@ -76,39 +76,29 @@ Page({
     }
   },
 
-  loadData: function () {
+  loadData: async function () {
     var that = this
 
+    console.log(app.globalData.openId)
+
     // 获取用户发布的所有活动
-    wx.cloud.callFunction({
-      name: 'get_user_published',
-      data: {},
-      success: res => {
-        console.log(res);
-        if (res.result.errCode == 0) {
-          let taskPub = res.result.data.taskId
-          app.globalData.taskPub = taskPub
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
-      },
-      fail: err => {
-        console.error('[云函数] [wechat_sign] 调用失败', err)
+    try {
+      res = await wx.cloud.callFunction({
+        name: 'get_user_published',
+        data: {
+          openId: app.globalData.openId
+        },
+      })
+      if (res.result.errCode == 0) {
+        let taskPub = res.result.data.tasks.publishedTasks
+        that.setData({
+          pubTaskId: taskPub
+        })
+      } else {
         wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
           showCancel: false,
           success(res) {
             if (res.confirm) {
@@ -119,38 +109,28 @@ Page({
           }
         })
       }
-    })
+    } catch (err) {
+      console.log(err)
+    }
 
     // 获取用户报名的所有活动
-    wx.cloud.callFunction({
-      name: 'get_user_signed',
-      data: {},
-      success: res => {
-        console.log(res);
-        if (res.result.errCode == 0) {
-          let taskSub = res.result.data.taskId
-          app.globalData.taskSub = taskSub
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
+    try {
+      res = await wx.cloud.callFunction({
+        name: 'get_user_signed',
+        data: {
+          openId: app.globalData.openId
         }
-      },
-      fail: err => {
-        console.error('[云函数] [wechat_sign] 调用失败', err)
+      })
+      if (res.result.errCode == 0) {
+        let taskSub = res.result.data.registeredTasks
+        that.setData({
+          subTaskId: taskSub
+        })
+      } else {
         wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
           showCancel: false,
           success(res) {
             if (res.confirm) {
@@ -161,138 +141,218 @@ Page({
           }
         })
       }
-    })
+    } catch (err) {
+      console.log(err)
+    }
 
-    // 根据taskID查询得到任务的详情信息，具体形式待定
-    // TODO
-    
-    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了taskId和confirmed两个字段
-    // TODO
+    console.log("测试获取taskId")
+    console.log(that.data)
+
+    console.log("测试拼接")
+    console.log(that.data.pubTaskId.concat(that.data.subTaskId))
+
+    // 根据taskID查询得到任务的详情信息
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'get_task_detail',
+        data: {
+          taskId: that.data.pubTaskId.concat(that.data.subTaskId)
+        }})
+      if (res.result.errCode == 0) {
+        console.log(res)
+        let taskSub = res.result.data.tasks.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskPub = res.result.data.tasks.filter(item => that.data.pubTaskId.includes(item.taskId)) // 筛选得到用户发布的活动
+        that.setData({
+          activitiesSub: taskSub,
+          activitiesPub: taskPub
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch(err) {
+      console.log(err)
+    }
+
+    // 根据taskID查询得到任务的报名情况
+    try {
+      var res = await wx.cloud.callFunction({
+        name: 'get_task_applicants',
+        data: {
+          taskId: that.data.pubTaskId.concat(that.data.subTaskId)
+        }})
+      if (res.result.errCode == 0) {
+        let taskSubApplicants = res.result.data.tasks.filter(item => that.data.taskPub.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskPubApplicants = res.result.data.tasks.filter(item => that.data.taskSub.includes(item.taskId)) // 筛选得到用户发布的活动
+        this.setData({
+          activitiesSubApplicants: taskSubApplicants,
+          activitiesPubApplicants: taskPubApplicants
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch(err) {
+      console.log(err)
+    }
+
+    console.log("测试输出")
+    console.log(this.data)
+
+    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了confirmed字段
+    try {
+      var activitiesPub = this.data.activitiesPub.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      var activitiesSub = this.data.activitiesSub.map(item => ({...item, ...this.data.activitiesSubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      this.setData({
+        activitiesPub: activitiesPub,
+        activitiesSub: activitiesSub
+      })
+    } catch(err) {
+      console.log(err)
+    }
 
     // FAKE data 假设已经构造好了
-    var subTaskId = [
-      'testTask1', 'testTask2', 'testTask3'
-    ]
-    var pubTaskId = [
-      'testTask4', 'testTask5', 'testTask6'
-    ]
-    var activitiesSub =  [
-      {
-        details: "xiangqing",
-        duration: "shichang",
-        equipmentProvided: false,
-        level: "初学",
-        otherRequirements: "qitayaoqiu",
-        place: "didian",
-        publisher: 'testPublisher',
-        signProvided: false,
-        spaceProvided: false,
-        startTime: "Mon Nov 15 2021 11:47:00",
-        taskName: "mingcheng",
-        taskPic: "/images/cover.jpg",
-        totalNum: 1,
-        type: "跑步",
-        taskId: 'testTask1',
-        confirmed: true
-      },
-      {
-        details: "xiangqing",
-        duration: "shichang",
-        equipmentProvided: false,
-        level: "初学",
-        otherRequirements: "qitayaoqiu",
-        place: "didian",
-        publisher: 'testPublisher',
-        signProvided: false,
-        spaceProvided: false,
-        startTime: "Mon Nov 15 2021 11:47:00",
-        taskName: "mingcheng",
-        taskPic: "/images/cover.jpg",
-        totalNum: 1,
-        type: "跑步",
-        taskId: "testTask2",
-        confirmed: true
-      },
-      {
-        details: "xiangqing",
-        duration: "shichang",
-        equipmentProvided: false,
-        level: "初学",
-        otherRequirements: "qitayaoqiu",
-        place: "didian",
-        publisher: 'testPublisher',
-        signProvided: false,
-        spaceProvided: false,
-        startTime: "Mon Nov 15 2021 11:47:00",
-        taskName: "mingcheng",
-        taskPic: "/images/cover.jpg",
-        totalNum: 1,
-        type: "跑步",
-        taskId: "testTask3",
-        confirmed: false
-      }
-    ]
-    var activitiesPub =  [{
-      details: "xiangqing",
-      duration: "shichang",
-      equipmentProvided: false,
-      level: "初学",
-      otherRequirements: "qitayaoqiu",
-      place: "didian",
-      publisher: 'testPublisher',
-      signProvided: false,
-      spaceProvided: false,
-      startTime: "Mon Nov 15 2021 11:47:00",
-      taskName: "mingcheng",
-      taskPic: "/images/cover.jpg",
-      totalNum: 1,
-      type: "跑步",
-      taskId: "testTask4",
-      confirmed: false
-    },
-    {
-      details: "xiangqing",
-      duration: "shichang",
-      equipmentProvided: false,
-      level: "初学",
-      otherRequirements: "qitayaoqiu",
-      place: "didian",
-      publisher: 'testPublisher',
-      signProvided: false,
-      spaceProvided: false,
-      startTime: "Mon Nov 15 2021 11:47:00",
-      taskName: "mingcheng",
-      taskPic: "/images/cover.jpg",
-      totalNum: 1,
-      type: "跑步",
-      taskId: "testTask5",
-      confirmed: true
-    },
-    {
-      details: "xiangqing",
-      duration: "shichang",
-      equipmentProvided: false,
-      level: "初学",
-      otherRequirements: "qitayaoqiu",
-      place: "didian",
-      publisher: 'testPublisher',
-      signProvided: false,
-      spaceProvided: false,
-      startTime: "Mon Nov 15 2021 11:47:00",
-      taskName: "mingcheng",
-      taskPic: "/images/cover.jpg",
-      totalNum: 1,
-      type: "跑步",
-      taskId: "testTask6",
-      confirmed: true
-    }]
+    // var subTaskId = [
+    //   'testTask1', 'testTask2', 'testTask3'
+    // ]
+    // var pubTaskId = [
+    //   'testTask4', 'testTask5', 'testTask6'
+    // ]
+    // var activitiesSub =  [
+    //   {
+    //     details: "xiangqing",
+    //     duration: "shichang",
+    //     equipmentProvided: false,
+    //     level: "初学",
+    //     otherRequirements: "qitayaoqiu",
+    //     place: "didian",
+    //     publisher: 'testPublisher',
+    //     signProvided: false,
+    //     spaceProvided: false,
+    //     startTime: "Mon Nov 15 2021 11:47:00",
+    //     taskName: "mingcheng",
+    //     taskPic: "/images/cover.jpg",
+    //     totalNum: 1,
+    //     type: "跑步",
+    //     taskId: 'testTask1',
+    //     confirmed: true
+    //   },
+    //   {
+    //     details: "xiangqing",
+    //     duration: "shichang",
+    //     equipmentProvided: false,
+    //     level: "初学",
+    //     otherRequirements: "qitayaoqiu",
+    //     place: "didian",
+    //     publisher: 'testPublisher',
+    //     signProvided: false,
+    //     spaceProvided: false,
+    //     startTime: "Mon Nov 15 2021 11:47:00",
+    //     taskName: "mingcheng",
+    //     taskPic: "/images/cover.jpg",
+    //     totalNum: 1,
+    //     type: "跑步",
+    //     taskId: "testTask2",
+    //     confirmed: true
+    //   },
+    //   {
+    //     details: "xiangqing",
+    //     duration: "shichang",
+    //     equipmentProvided: false,
+    //     level: "初学",
+    //     otherRequirements: "qitayaoqiu",
+    //     place: "didian",
+    //     publisher: 'testPublisher',
+    //     signProvided: false,
+    //     spaceProvided: false,
+    //     startTime: "Mon Nov 15 2021 11:47:00",
+    //     taskName: "mingcheng",
+    //     taskPic: "/images/cover.jpg",
+    //     totalNum: 1,
+    //     type: "跑步",
+    //     taskId: "testTask3",
+    //     confirmed: false
+    //   }
+    // ]
+    // var activitiesPub =  [{
+    //   details: "xiangqing",
+    //   duration: "shichang",
+    //   equipmentProvided: false,
+    //   level: "初学",
+    //   otherRequirements: "qitayaoqiu",
+    //   place: "didian",
+    //   publisher: 'testPublisher',
+    //   signProvided: false,
+    //   spaceProvided: false,
+    //   startTime: "Mon Nov 15 2021 11:47:00",
+    //   taskName: "mingcheng",
+    //   taskPic: "/images/cover.jpg",
+    //   totalNum: 1,
+    //   type: "跑步",
+    //   taskId: "testTask4",
+    //   confirmed: false
+    // },
+    // {
+    //   details: "xiangqing",
+    //   duration: "shichang",
+    //   equipmentProvided: false,
+    //   level: "初学",
+    //   otherRequirements: "qitayaoqiu",
+    //   place: "didian",
+    //   publisher: 'testPublisher',
+    //   signProvided: false,
+    //   spaceProvided: false,
+    //   startTime: "Mon Nov 15 2021 11:47:00",
+    //   taskName: "mingcheng",
+    //   taskPic: "/images/cover.jpg",
+    //   totalNum: 1,
+    //   type: "跑步",
+    //   taskId: "testTask5",
+    //   confirmed: true
+    // },
+    // {
+    //   details: "xiangqing",
+    //   duration: "shichang",
+    //   equipmentProvided: false,
+    //   level: "初学",
+    //   otherRequirements: "qitayaoqiu",
+    //   place: "didian",
+    //   publisher: 'testPublisher',
+    //   signProvided: false,
+    //   spaceProvided: false,
+    //   startTime: "Mon Nov 15 2021 11:47:00",
+    //   taskName: "mingcheng",
+    //   taskPic: "/images/cover.jpg",
+    //   totalNum: 1,
+    //   type: "跑步",
+    //   taskId: "testTask6",
+    //   confirmed: true
+    // }]
 
     that.setData({
       status: 0,
-      activitiesSub: activitiesSub,
-      activitiesPub: activitiesPub,
-      pubTaskId: pubTaskId,
-      subTaskId: subTaskId
     })
 },
 
