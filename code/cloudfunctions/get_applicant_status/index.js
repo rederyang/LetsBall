@@ -12,10 +12,10 @@ exports.main = async (event, context) => {
   result.data = data
   /** 传递必要的参数 start */
 
-  if (event.TaskId == undefined || event.ApplicantopenId == undefined) {
-
+  if (event.taskId == undefined || event.applicantId== undefined) {
+    
     result.errMsg = '未传必要参数，请重试'
-
+    result.errcode = 1
     return result
 
   }
@@ -25,21 +25,22 @@ exports.main = async (event, context) => {
   try {
     await db.collection('CurrentTaskApplicantsInfo')
       .where({
-        Applicantsid: event.ApplicantopenId,
-        Taskid:event.Taskid
+        applicantId: event.applicantId,
+        taskId: event.taskId
       })
       .get()
       .then(res => {
-        console.log('查询applicantsinfo成功')
-        data.Taskid = res.TaskId
-        data.ApplicantopenId = res.Applicantsid
-        data.ApplicantNickNameStatus =  res.ApplicantNickNameStatus
-        data.ApplicantStatus = res.ApplicantStatus
-        data.CancelTimes = res.CancelTimes
+        result.errcode = 0
+        result.errcode = "查询applicantsinfo成功"
+        data.taskId = res.taskId
+        data.applicantId = res.applicantId
+        data.applicantNickNameStatus=  res.applicantNickNameStatus
+        data.applicantStatus = res.applicantStatus
         result.data = data
         return result
       })
   }catch(e){
+    result.errcode = 10086
     result.errMsg = e
     return result
 

@@ -15,7 +15,7 @@ exports.main = async (event, context) => {
   if (event.openID == undefined) {
 
     result.errMsg = '未传必要参数，请重试'
-
+    result.errcode = 1
     return result
 
   }
@@ -30,17 +30,19 @@ exports.main = async (event, context) => {
       })
       .get()
       .then(res => {
-        console.log('查询报名全部活动成功')
-        console.log(res.data)
         if (length(res.data)>=2) {
+          result.errcode = 2
           result.errMsg = '返回数量大于1！查一下错误'
           return result
         }
-        data.taskid = res.data[0].RegisteredTasks
+        data.taskIdArray= res.data[0].registeredTasks
+        result.errcode = 0
+        result.errMsg = '查询报名全部活动成功'
         result.data = data
         return result
       })
   }catch(e){
+    result.errMsg = 10086
     result.errMsg = e
     return result
 
