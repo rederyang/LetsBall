@@ -19,6 +19,13 @@ Page({
 
   // 点击热门活动
   onTapHot: function (event) {
+    wx.showModal({
+      title: '本功能开发中，敬请期待~',
+      confirmText: "好吧",
+      confirmColor: '#FE6559',
+      showCancel: false,
+    })
+    return
     this.setData({
       status: 1
     })
@@ -86,6 +93,13 @@ Page({
   // 点击更多按钮
   onTapMore: function(event) {
     console.log("点击更多按钮")
+    wx.showModal({
+      title: '本功能开发中，敬请期待~',
+      confirmText: "好吧",
+      confirmColor: '#FE6559',
+      showCancel: false,
+    })
+    return
     wx.navigateTo({
       url: '/pages/main-more/main-more',
     })
@@ -117,16 +131,24 @@ Page({
         wx.cloud.callFunction({
           name: 'get_latest_task',
           data: {
-            num: 4,
+            num: 5,
           },
           success: res => {
             console.log(res);
             if (res.result.errCode == 0) {
-              let tasks = res.result.data.tasks
-              // 根据时间筛选
-              // activities = activities.filter(that._filterByTime)
+              let newActivities = res.result.data.tasks.map(
+                item => {
+                  let startTime = new Date(item.startTime)
+                  let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
+                  let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
+                  let strTime = date + time + '开始'
+                  res = item
+                  res.startTime = strTime
+                  return res
+                }
+              )
               that.setData({
-                newActivities: tasks
+                newActivities: newActivities
               })
             } else {
               wx.showModal({
@@ -240,117 +262,6 @@ Page({
         // })
       }
     )
-    
-    // some dummy data
-    // var newActivities =  [
-    //   {
-    //     picture_url: "/images/test3.jpg",
-    //     title: '足球运动',
-    //     loc: "氣膜館",
-    //     time: "10月1日",
-    //     leader: "令狐沖",
-    //     TaskId: "1",
-    //   },
-    //   {
-    //     picture_url: "/images/test3.jpg",
-    //     title: '足球运动',
-    //     loc: "氣膜館",
-    //     time: "10月1日",
-    //     leader: "令狐沖",
-    //     TaskId: "2",
-    //   },
-    //   {
-    //     picture_url: "/images/test3.jpg",
-    //     title: '足球运动',
-    //     loc: "氣膜館",
-    //     time: "10月1日",
-    //     leader: "令狐沖",
-    //     TaskId: "3",
-    //   },
-    //   {
-    //     picture_url: "/images/test3.jpg",
-    //     title: '足球运动',
-    //     loc: "氣膜館",
-    //     time: "10月1日",
-    //     leader: "令狐沖",
-    //     TaskId: "4",
-    //   },
-    //   {
-    //     picture_url: "/images/test2.jpg",
-    //     title: '足球运动',
-    //     loc: "氣膜館",
-    //     time: "10月1日",
-    //     leader: "令狐沖",
-    //     TaskId: "5",
-    //   },
-    // ]
-    var hotActivities =  [
-      {
-        picture_url: "/images/test4.jpg",
-        title: '击剑',
-        loc: "氣膜館",
-        time: "10月1日",
-        leader: "令狐沖",
-        TaskId: "1234567",
-      },
-      {
-        picture_url: "/images/test3.jpg",
-        title: '击剑',
-        loc: "氣膜館",
-        time: "10月1日",
-        leader: "令狐沖",
-        TaskId: "1234567",
-      },
-      {
-        picture_url: "/images/test4.jpg",
-        title: '击剑',
-        loc: "氣膜館",
-        time: "10月1日",
-        leader: "令狐沖",
-        TaskId: "1234567",
-      },
-      {
-        picture_url: "/images/test4.jpg",
-        title: '击剑',
-        loc: "氣膜館",
-        time: "10月1日",
-        leader: "令狐沖",
-        TaskId: "1234567",
-      },
-      {
-        picture_url: "/images/test2.jpg",
-        title: '击剑',
-        loc: "氣膜館",
-        time: "10月1日",
-        leader: "令狐沖",
-        TaskId: "1234567",
-      },
-    ]
-    var taskSub = [
-      '1', '2', '3'
-    ]
-    var taskPub = [
-      '4', '5', '6'
-    ]
-    this.setData({
-      status: 0,
-      hotActivities: hotActivities,
-    })
-    app.globalData.taskSub = taskSub
-    app.globalData.taskPub = taskPub
-    // app.globalData.logged = true
-
-    if (this.data.status == 0) {
-      this.setData({
-        activities: this.data.newActivities
-      })
-      console.log("当前状态是0")
-    } else {
-      this.setData({
-        activities: this.data.hotActivities
-      })
-      console.log("当前状态是1")
-    }
   },
 
   /**
@@ -432,6 +343,7 @@ Page({
       })
     } else {
       console.log('已经获得openid')
+      callback()
     }
   },
 
