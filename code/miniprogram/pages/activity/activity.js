@@ -165,7 +165,7 @@ Page({
           taskId: that.data.pubTaskId.concat(that.data.subTaskId)
         }})
       if (res.result.errCode == 0) {
-        let taskSub = res.result.data.tasks.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskSub = res.result.data.tasks.filter(item => ((that.data.subTaskId.includes(item.taskId)) && (!item.publisherQuitStatus)))  // 筛选得到用户报名的活动，要求没有取消
         let taskPub = res.result.data.tasks.filter(item => ((that.data.pubTaskId.includes(item.taskId)) && (!item.publisherQuitStatus))) // 筛选得到用户发布的活动，要求没有取消
         that.setData({
           activitiesSub: taskSub,
@@ -227,10 +227,32 @@ Page({
     console.log("测试云函数获取后的结果")
     console.log(this.data)
 
-    // 根据上述信息构造用于显示的列表对象，具体形式待定，与任务详情相比，多了反应是否满员的字段
+    // 根据上述信息构造用于显示的列表对象，与任务详情相比，多了反应是否满员的字段，并对时间格式化
     try {
       var activitiesPub = this.data.activitiesPub.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      activitiesPub = activitiesPub.map(
+        item => {
+          let startTime = new Date(item.startTime)
+          let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
+          let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
+          let strTime = date + time + '开始'
+          res = item
+          res.startTime = strTime
+          return res
+        }
+      )
       var activitiesSub = this.data.activitiesSub.map(item => ({...item, ...this.data.activitiesSubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      activitiesSub = activitiesSub.map(
+        item => {
+          let startTime = new Date(item.startTime)
+          let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
+          let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
+          let strTime = date + time + '开始'
+          res = item
+          res.startTime = strTime
+          return res
+        }
+      )
       this.setData({
         activitiesPub: activitiesPub,
         activitiesSub: activitiesSub
