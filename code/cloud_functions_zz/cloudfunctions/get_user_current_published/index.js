@@ -18,6 +18,9 @@ exports.main = async (event, context) => {
       return result
     }
     const db = cloud.database()
-    time = db.serverDate()
-    console.log(time)
+    time1 = db.serverDate()
+    time2 = Date()
+    console.log(time1)
+    console.log(time2)
+    console.log()
 }
