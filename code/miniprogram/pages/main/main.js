@@ -28,16 +28,22 @@ Page({
   onTapDetail: function (event) {
     var TaskId = event.currentTarget.dataset.taskid
     console.log("获取到任务id:" + String(TaskId))
+    
     // 如果没有登录，就直接进入报名者界面，正常显示满员与否
-    if (!app.globalData.logged) {
-      wx.navigateTo({
-        url: '../detail_sub_1/detail_sub_1?TaskId=' + TaskId,
-      })
-    } else if (app.globalData.taskPub.includes(TaskId)) {  // 否则需要判断用户是否是该任务的发起者
-      wx.navigateTo({
-        url: '../detail_pub_1/detail_pub_1?TaskId=' + TaskId,
-      })
-    }
+    // if (!app.globalData.logged) {
+    //   wx.navigateTo({
+    //     url: '../detail_sub/detail_sub?TaskId=' + TaskId,
+    //   })
+    // } else if (app.globalData.taskPub.includes(TaskId)) {  // 否则需要判断用户是否是该任务的发起者
+    //   wx.navigateTo({
+    //     url: '../detail_pub/detail_pub?TaskId=' + TaskId,
+    //   })
+    // }
+
+    // 默认以报名者身份跳转
+    wx.navigateTo({
+      url: '../detail_sub/detail_sub?TaskId=' + TaskId,
+    })
   },
 
   // 点击增加按钮

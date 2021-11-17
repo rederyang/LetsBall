@@ -186,7 +186,7 @@ Page({
     var submitData = {
       taskName: that.data.name,
       taskPic: "/images/cover.jpg",
-      publisher: app.globalData.userInfo.OPENID,
+      publisher: app.globalData.openId,
       totalNum: 1,
       startTime: startTime,
       duration: that.data.duration,
