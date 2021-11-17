@@ -179,8 +179,8 @@ Page({
     console.log("发布任务")
     console.log(this.data)
     var that = this
-    // var startTime = that.data.date + ' ' + that.data.time + ' GMT+0800'
-    var startTime = that.data.date + ' ' + that.data.time
+    var startTime = that.data.date + ' ' + that.data.time + ' GMT+0800'
+    // var startTime = that.data.date + ' ' + that.data.time
 
     console.log("传入的参数：")
     // 传入参数
