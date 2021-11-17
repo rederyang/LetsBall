@@ -193,8 +193,9 @@ Page({
           taskId: that.data.pubTaskId.concat(that.data.subTaskId)
         }})
       if (res.result.errCode == 0) {
-        let taskSubApplicants = res.result.data.tasks.filter(item => that.data.taskPub.includes(item.taskId))  // 筛选得到用户报名的活动
-        let taskPubApplicants = res.result.data.tasks.filter(item => that.data.taskSub.includes(item.taskId)) // 筛选得到用户发布的活动
+        console.log(res)
+        let taskSubApplicants = res.result.data.info.filter(item => that.data.activitiesPub.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskPubApplicants = res.result.data.info.filter(item => that.data.activitiesSub.includes(item.taskId)) // 筛选得到用户发布的活动
         this.setData({
           activitiesSubApplicants: taskSubApplicants,
           activitiesPubApplicants: taskPubApplicants
@@ -350,16 +351,15 @@ Page({
     //   taskId: "testTask6",
     //   confirmed: true
     // }]
-
-    that.setData({
-      status: 0,
-    })
 },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    this.setData({
+      status: 0
+    })
   },
 
   /**
