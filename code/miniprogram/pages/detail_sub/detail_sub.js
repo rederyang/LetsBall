@@ -26,6 +26,10 @@ Page({
       data: {
         applicantId: app.globalData.openId,
         taskId: that.data.taskId,
+        applicantGender: app.globalData.userInfo.gender,
+        applicantNickName: app.globalData.userInfo.nickName,
+        applicantUserPic: app.globalData.userInfo.avatarUrl,
+        applicantAge: app.globalData.userInfo.age,
       },
       success: res => {
         console.log(res)
@@ -37,8 +41,16 @@ Page({
             confirmColor: '#FE6559',
             showCancel: false,
           })
-        } else {
+        } else if (res.result.errCode == 1) {
           console.log('传参，妈的')
+        } else if (res.result.errCode == 2) {
+          wx.showModal({
+            title: '您已经报过名了',
+            content: '请等待发起者的确认~',
+            confirmText: "我知道了",
+            confirmColor: '#FE6559',
+            showCancel: false,
+          })
         }
       },
       fail: err => {
@@ -76,11 +88,11 @@ Page({
       name: "quit_commited_task",
       data: {
         taskId: that.data.taskId,
-        applicantOpenId: app.globalData.userInfo.openId
+        applicantId: app.globalData.openId,
       },
       success: res => {
         if (res.result.errCode == 0) {
-          console.log("成功取消确认")
+          console.log(res)
           wx.showModal({
             title: '已取消确认',
             content: res.result.errMsg,
@@ -105,23 +117,22 @@ Page({
         }
       },
       fail: err => {
-        console.error('[云函数] [get_hot_words] 调用失败', err)
         wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
+          title: '取消成功',
+          confirmText: "我知道了",
           showCancel: false,
           success(res) {
             if (res.confirm) {
               console.log('用户点击确定')
+              that.loadData()
             } else if (res.cancel) {
               console.log('用户点击取消')
             }
           }
         })
+        console.error('[云函数] [quit_commited_task] 调用失败', err)
       }
     })
-    // FAKE action
-    that.loadData()
   },
 
   // 取消
@@ -214,18 +225,21 @@ Page({
           // 首先需要不是空的
           if (res.result.data.info.length > 0) {
             that.setData({
-              applicantsInfo: res.result.data.info[0],
+              applicantsInfo: res.result.data.info,
             })
             // 其次需要没有被确认
-            if (that.data.applicantsInfo.isFull) {
+            if (that.data.applicantsInfo[0].isFull) {
               that.setData({
                 confirmed: true
               })
               // 看是不是自己确认的
-              if (that.data.applicantsInfo.applicantsId == app.globalData.openId) {
-                that.setData({
-                  confirmedByUser: true
-                })
+              for (let i = 0; i < that.data.applicantsInfo.length; i++) {
+                if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+                  that.setData({
+                    confirmedByUser: true
+                  })
+                  break
+                }
               }
             }
           }

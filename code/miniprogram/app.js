@@ -15,6 +15,8 @@ App({
       userInfo: {
         avatarUrl: '/images/ano.png',
         nickName: '请先登录',
+        gender: 1,
+        age: 18,
       },
       user: {},
       taskSub: {},  // 当前用户报名的所有活动

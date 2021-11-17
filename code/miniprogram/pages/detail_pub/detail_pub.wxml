@@ -1,6 +1,6 @@
 <!--pages/detail_pub/detail_pub.wxml-->
 <view class='head'> 
-  <view class="title">{{info_content.taskName}}</view>
+  <view class="title">{{task.taskName}}</view>
   <view class="{{confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}}">{{confirmed ? "满员" : "未满"}}</view>
 </view>
 <view class="line_title"></view>
@@ -19,12 +19,12 @@
   <view class="info_content">
     <text>{{date}}</text>
     <text>{{time}}</text>
-    <text>{{info_content.place}}</text>
-    <text>{{info_content.type}}</text>
-    <text>{{info_content.level}}</text>
-    <text>{{info_content.spaceProvided}}</text>
-    <text>{{info_content.equipmentProvided}}</text>
-    <text>{{info_content.otherRequirements}}</text>
+    <text>{{task.place}}</text>
+    <text>{{task.type}}</text>
+    <text>{{task.level}}</text>
+    <text>{{task.spaceProvided ? '是' : '否'}}</text>
+    <text>{{task.equipmentProvided ? '是' : '否'}}</text>
+    <text>{{task.otherRequirements}}</text>
   </view>
 </view>
 
@@ -32,21 +32,21 @@
   <view class="subtitle">活动简介</view>
   <view class="intro_content">{{intro}}</view>
 </view>
-<view class="line_full"></view>
+<view wx:if="{{applied}}" class="line_full"></view>
 
 <block wx:if="{{confirmed}}">
 <view class="area">
   <view class="subtitle">参与者</view>
   <view class="area_chat">
     <view class="chat_card">
-      <image class="avatar" src="{{sub_info.userPic}}"></image>
+      <image class="avatar" src="{{subInfo.userPic}}"></image>
       <view class="chat_content">
         <view class="chat_row">
-          <view class="chat_name">{{sub_info.nickName}}</view>
+          <view class="chat_name">{{subInfo.nickName}}</view>
           <text class="user_badge">一般用户</text>
         </view>
         <view class="chat_row">
-          <view class="chat_gray">{{sub_info.gender ? "男" : "女"}}</view>
+          <view class="chat_gray">{{subInfo.gender ? "男" : "女"}}</view>
         </view>
       </view>
     </view>
@@ -55,10 +55,10 @@
 <view class="line_full"></view>
 </block>
 
-<view class="area">
+<view wx:if="{{applied}}" class="area">
   <view class="subtitle">聊天</view>
   <view class="area_chat">
-    <view class="chat_line" wx:for="{{chat_list}}" wx:for-index="idx" bindtap="onPickSub" data-openid="{{item.openId}}">
+    <view class="chat_line" wx:for="{{chatList}}" wx:for-index="idx" bindtap="onPickSub" data-openid="{{item.openId}}">
       <view class="chat_card">
         <image class="avatar" src="{{item.avatar}}"></image>
         <view class="chat_content">
@@ -72,7 +72,7 @@
           </view>
         </view>
       </view>
-      <view class="chat_cut" wx:if="{{chat_list.length > idx + 1}}"></view>
+      <view class="chat_cut" wx:if="{{chatList.length > idx + 1}}"></view>
     </view>
   </view>
 </view>
