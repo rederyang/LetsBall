@@ -4,10 +4,10 @@
 <view class="userinfo-wrapper">
   <view class="userinfo-line">
   <view class="userinfo-avatar-wrapper">
-    <image class="userinfo-avatar" mode="scaleToFill" src="{{user_info.avatar_url}}"></image>
+    <image class="userinfo-avatar" mode="scaleToFill" src="{{userInfo.avatarUrl}}"></image>
   </view>
     <view class="userinfo-words">
-      <view class="userinfo-nickname">{{user_info.nickname}}</view>
+      <view class="userinfo-nickname">{{userInfo.nickName}}</view>
     </view>
   </view>
   <view class="userinfo-line">
@@ -55,14 +55,13 @@
   </view>
   </view>
 </view>
-
+<!-- 
 <view class="tag-wrapper">
   <view class="tag-header">
     我的标签
   </view>
   <view class='tag-content-wrapper'>
     <view class="tag-content">
-    <!-- <view class="tag-item" wx:for="{{tags}}"> -->
     <view class="tag-content-item">手球</view>
     <view class="tag-content-item">乒乓球</view>
     <view class="tag-content-item">手球</view>
@@ -70,7 +69,6 @@
     <view class="tag-content-item">手球</view>
     <view class="tag-content-item">手球</view>
     <view class="tag-content-item">手球</view>
-    <!-- </view>  -->
     <view class="tag-edit-button">编辑</view> 
   </view>
   </view>
@@ -82,8 +80,7 @@
   </view>
   <view class='credit-content-wrapper'>
     <view class="credit-content">
-    <!-- <view class="tag-item" wx:for="{{tags}}"> -->
     <view class="credit-circle">良好</view>
   </view>
   </view>
-</view>
+</view> -->
