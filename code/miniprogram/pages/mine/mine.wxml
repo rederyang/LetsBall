@@ -7,22 +7,23 @@
     <image class="userinfo-avatar" mode="scaleToFill" src="{{userInfo.avatarUrl}}"></image>
   </view>
     <view class="userinfo-words">
-      <view class="userinfo-nickname">{{userInfo.nickName}}</view>
+      <view class="userinfo-nickname" bindtap="onTapLogIn">{{userInfo.nickName}}</view>
     </view>
   </view>
+
   <view class="userinfo-line">
     <view class="userinfo-stats">
       <view class="userinfo-stats-block">
-        <view class="userinfo-stats-value">12</view>
-        <view class="userinfo-stats-title">发布的</view>        
+        <view class="userinfo-stats-value">中国大陆</view>
+        <view class="userinfo-stats-title">地区</view>        
       </view>
       <view class="userinfo-stats-block">
-        <view class="userinfo-stats-value">12</view>
-        <view class="userinfo-stats-title">报名的</view>        
+        <view class="userinfo-stats-value">中文</view>
+        <view class="userinfo-stats-title">语言</view>        
       </view>
       <view class="userinfo-stats-block-tail">
-        <view class="userinfo-stats-value">12</view>
-        <view class="userinfo-stats-title">违约</view>
+        <view class="userinfo-stats-value">在校人员</view>
+        <view class="userinfo-stats-title">身份</view>
       </view>
     </view>
     <!-- <view class="item-time">{{user_info.time}}</view> -->
@@ -30,7 +31,7 @@
   
 </view>
 
-<view class="detail-wrapper">
+<!-- <view class="detail-wrapper">
   <view class="detail-header">
     个人信息
   </view>
@@ -54,7 +55,9 @@
     </view>
   </view>
   </view>
-</view>
+</view> -->
+
+
 <!-- 
 <view class="tag-wrapper">
   <view class="tag-header">

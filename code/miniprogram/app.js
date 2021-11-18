@@ -14,7 +14,7 @@ App({
       logged: false,
       userInfo: {
         avatarUrl: '/images/ano.png',
-        nickName: '请先登录',
+        nickName: '点击登录',
         gender: 1,
         age: 18,
       },
