@@ -168,8 +168,8 @@ Page({
         let taskSub = res.result.data.tasks.filter(item => ((that.data.subTaskId.includes(item.taskId)) && (!item.publisherQuitStatus)))  // 筛选得到用户报名的活动，要求没有取消
         let taskPub = res.result.data.tasks.filter(item => ((that.data.pubTaskId.includes(item.taskId)) && (!item.publisherQuitStatus))) // 筛选得到用户发布的活动，要求没有取消
         that.setData({
-          activitiesSub: taskSub,
-          activitiesPub: taskPub
+          activitiesSubRaw: taskSub,
+          activitiesPubRaw: taskPub
         })
       } else {
         wx.showModal({
@@ -229,7 +229,7 @@ Page({
 
     // 根据上述信息构造用于显示的列表对象，与任务详情相比，多了反应是否满员的字段，并对时间格式化
     try {
-      var activitiesPub = this.data.activitiesPub.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      var activitiesPub = this.data.activitiesPubRaw.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
       activitiesPub = activitiesPub.map(
         item => {
           let startTime = new Date(item.startTime)
@@ -241,7 +241,7 @@ Page({
           return res
         }
       )
-      var activitiesSub = this.data.activitiesSub.map(item => ({...item, ...this.data.activitiesSubApplicants.filter(s => s.taskId === item.taskId)[0]}))
+      var activitiesSub = this.data.activitiesSubRaw.map(item => ({...item, ...this.data.activitiesSubApplicants.filter(s => s.taskId === item.taskId)[0]}))
       activitiesSub = activitiesSub.map(
         item => {
           let startTime = new Date(item.startTime)
