@@ -26,10 +26,10 @@ Page({
       data: {
         applicantId: app.globalData.openId,
         taskId: that.data.taskId,
-        applicantGender: app.globalData.user.gender,
+        applicantGender: app.globalData.userInfo.gender,
         applicantNickName: app.globalData.userInfo.nickName,
         applicantUserPic: app.globalData.userInfo.avatarUrl,
-        applicantAge: app.globalData.user.age,
+        applicantAge: app.globalData.userInfo.age,
       },
       success: res => {
         console.log(res)
