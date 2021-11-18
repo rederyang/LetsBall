@@ -24,23 +24,26 @@ exports.main = async (event, context) => {
 
   // 实例化数据库连接
   const db = cloud.database()
+  const _ = db.command
   try {
     await db.collection('CurrentTaskApplicantsInfo')
-      .where({
-        applicantId: event.applicantId,
-        taskId: event.taskId
-      })
-      .get()
-      .then(res => {
-        query = res.data
-      })
+      .where(
+        _.and([{
+          applicantId: event.applicantId
+        }, {
+          taskId: event.taskId
+        }])
+      )
 
     if (query.length > 0) {
       await db.collection('CurrentTaskApplicantsInfo')
-        .where({
-          applicantId: event.applicantId,
-          taskId: event.taskId
-        })
+        .where(
+          _.and([{
+            applicantId: event.applicantId
+          }, {
+            taskId: event.taskId
+          }])
+        )
         .update({
           data: {
             applicantNickNameStatus: true
