@@ -105,7 +105,7 @@ Page({
             success(res) {
               if (res.confirm) {
                 console.log('用户点击确定')
-                that.loadData()  // 需要重新加载页面数据
+                that.onShow()  // 需要重新加载页面数据
               } else if (res.cancel) {
                 console.log('用户点击取消')
               }
