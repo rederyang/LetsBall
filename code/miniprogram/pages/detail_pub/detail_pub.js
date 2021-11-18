@@ -201,15 +201,23 @@ Page({
           that.setData({
             task: res.result.data.tasks[0]
           })
-
           // 修改时间
-          let startTime = new Date(that.data.task.startTime)
-          console.log(startTime)
-          var date = startTime.getFullYear() + '-' + (startTime.getMonth() + 1) + '-' + startTime.getDate()
-          var time =  startTime.getHours() + ':' + startTime.getMinutes()
-          that.setData({
-            date: date,
-            time: time,
+          let myDate = new Date(that.data.task.startTime)
+          let hour = myDate.getHours()
+          let minu = myDate.getMinutes()
+          if (hour < 10) {
+            var str_hour = '0' + hour
+          } else {
+            var str_hour = hour
+          }
+          if (minu < 10) {
+            var str_minu = '0' + minu
+          } else {
+            var str_minu = minu
+          }
+          this.setData({
+            time: str_hour + ':' + str_minu,
+            date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
           })
         } else {
           console.log('传参')

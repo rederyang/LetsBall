@@ -38,7 +38,7 @@ Page({
             title: '报名成功',
             content: '请等待发起者的确认',
             confirmText: "我知道了",
-            confirmColor: '#FE6559',
+            confirmColor: '#FF0A6B',
             showCancel: false,
           })
         } else if (res.result.errCode == 1) {
@@ -48,7 +48,7 @@ Page({
             title: '您已经报过名了',
             content: '请等待发起者的确认~',
             confirmText: "我知道了",
-            confirmColor: '#FE6559',
+            confirmColor: '#FF0A6B',
             showCancel: false,
           })
         }
@@ -62,22 +62,26 @@ Page({
   // 开启聊天（这里当作申请确认）
   onChat: function(e) {
     var that = this
-    wx.showModal({
-      title: '报名活动',
-      content: '确定要报名这个活动吗~',
-      confirmColor: '#FF0A6B',
-      cancelColor: '#81838F',
-      cancelText: '再想想',
-      confirmText: '报名！',
-      success(res) {
-        if (res.confirm) {
-          console.log('用户点击确定')
-          that.applyAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
+    if (!app.globalData.logged) {
+      that._wechatSign()
+    } else {
+      wx.showModal({
+        title: '报名活动',
+        content: '确定要报名这个活动吗~',
+        confirmColor: '#FF0A6B',
+        cancelColor: '#81838F',
+        cancelText: '再想想',
+        confirmText: '报名！',
+        success(res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+            that.applyAct()
+          } else if (res.cancel) {
+            console.log('用户点击取消')
+          }
         }
-      }
-    })
+      })
+    }
   },
 
   // 调用云函数完成活动取消操作
@@ -175,13 +179,22 @@ Page({
           })
 
           // 修改时间
-          let startTime = new Date(that.data.task.startTime)
-          console.log(startTime)
-          var date = startTime.getFullYear() + '-' + (startTime.getMonth() + 1) + '-' + startTime.getDate()
-          var time =  startTime.getHours() + ':' + startTime.getMinutes()
-          that.setData({
-            date: date,
-            time: time,
+          let myDate = new Date(that.data.task.startTime)
+          let hour = myDate.getHours()
+          let minu = myDate.getMinutes()
+          if (hour < 10) {
+            var str_hour = '0' + hour
+          } else {
+            var str_hour = hour
+          }
+          if (minu < 10) {
+            var str_minu = '0' + minu
+          } else {
+            var str_minu = minu
+          }
+          this.setData({
+            time: str_hour + ':' + str_minu,
+            date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
           })
 
           // 这里根据发布者id调用云函数获取参与者的个人信息
@@ -310,5 +323,70 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+
+  // 私有函数部分
+  // 主动登录
+  _wechatSign: function(callback) {
+    var that = this
+    wx.showModal({
+      title: '提示',
+      content: '请先登录哦~',
+      confirmColor: '#FF0A6B',
+      cancelColor: '#81838F',
+      cancelText: '取消',
+      confirmText: '登录',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户确认登录。')
+          wx.getUserProfile({
+            desc: '用于更新和完善用户资料', 
+            success: (res) => {
+              console.log("获取用户信息成功")
+              console.log(res.userInfo)
+              app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl
+              app.globalData.userInfo.nickName = res.userInfo.nickName
+              that._updateUser()
+              wx.showModal({
+                title: '登录成功！',
+                confirmText: "好的",
+                confirmColor: '#FE6559',
+                showCancel: false,
+              })
+            },
+          })
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
+  // 添加用户进入数据库
+  _updateUser: function() {
+    // 调用云函数 TODO 这里输入参数不应该有openid和age，因为前端拿不到
+    wx.cloud.callFunction({
+      name: 'wechat_sign',
+      data: {
+        openId: app.globalData.openId,
+        userPic: app.globalData.userInfo.avatarUrl,
+        nickName: app.globalData.userInfo.nickName,
+        gender: app.globalData.userInfo.gender,
+        age: 18,
+      },
+      success: res => {
+        console.log(res);
+        if (res.result.errCode == 0) {
+          console.log('注册完美成功！')
+          app.globalData.logged = true
+          app.globalData.user = res.result.data.user
+        } else {
+          console.error('传参错误！')
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [wechat_sign] 调用失败', err)
+      }
+    })
+  },
 })

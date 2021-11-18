@@ -55,35 +55,11 @@ Page({
 
   // 点击增加按钮
   onTapAdd: function (event) {
+    var that = this
     console.log('点击增加按钮')
     // 判断用户是否登录
     if (!app.globalData.logged) {
-      var that = this
-      wx.showModal({
-        title: '提示',
-        content: '请先登录哦~',
-        confirmColor: '#FF0A6B',
-        cancelColor: '#81838F',
-        cancelText: '取消',
-        confirmText: '登录',
-        success(res) {
-          if (res.confirm) {
-            console.log('用户确认登录。')
-            wx.getUserProfile({
-              desc: '用于更新和完善用户资料', 
-              success: (res) => {
-                console.log("获取用户信息成功")
-                console.log(res.userInfo)
-                app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl
-                app.globalData.userInfo.nickName = res.userInfo.nickName
-                that._updateUser()
-              },
-            })
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
-      })
+      that._wechatSign()
     } else {
       wx.navigateTo({
         url: '../publish/publish',
@@ -128,47 +104,8 @@ Page({
     // 先获取openId
     that._silentSign(
       () => {
-        // 获取最新活动并按照时间筛选
-        wx.cloud.callFunction({
-          name: 'get_latest_task',
-          data: {
-            num: 5,
-          },
-          success: res => {
-            console.log(res);
-            if (res.result.errCode == 0) {
-              let newActivities = res.result.data.tasks.map(
-                item => {
-                  let startTime = new Date(item.startTime)
-                  let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
-                  let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
-                  let strTime = date + time + '开始'
-                  res = item
-                  res.startTime = strTime
-                  return res
-                }
-              )
-              that.setData({
-                newActivities: newActivities
-              })
-            } else {
-              wx.showModal({
-                title: '抱歉，出错了呢~',
-                content: res.result.errMsg,
-                confirmText: "我知道了",
-                showCancel: false,
-              })
-            }
-          },
-          fail: err => {
-            console.error('[云函数] [get_latest_task] 调用失败', err)
-            wx.showModal({
-              title: '[get_latest_task] 调用失败',
-              content: '请检查云函数是否已部署',
-              showCancel: false,
-            })
-          }
-        })
+        // 获取最新活动
+        that._getLatestTask()
 
         // 获取热门活动并按照时间筛选
         // wx.cloud.callFunction({
@@ -283,7 +220,12 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    console.log('用户下拉刷新')
+    this._getLatestTask(
+      () => wx.stopPullDownRefresh({
+        success: (res) => {console.log('刷新完毕')},
+      })
+    )
   },
 
   /**
@@ -294,6 +236,42 @@ Page({
   },
 
   // 下方为私有函数部分
+  // 首次注册
+  _wechatSign: function(callback) {
+    var that = this
+    wx.showModal({
+      title: '提示',
+      content: '请先登录哦~',
+      confirmColor: '#FF0A6B',
+      cancelColor: '#81838F',
+      cancelText: '取消',
+      confirmText: '登录',
+      success(res) {
+        if (res.confirm) {
+          console.log('用户确认登录。')
+          wx.getUserProfile({
+            desc: '用于更新和完善用户资料', 
+            success: (res) => {
+              console.log("获取用户信息成功")
+              console.log(res.userInfo)
+              app.globalData.userInfo.avatarUrl = res.userInfo.avatarUrl
+              app.globalData.userInfo.nickName = res.userInfo.nickName
+              that._updateUser()
+              wx.showModal({
+                title: '登录成功！',
+                confirmText: "好的",
+                confirmColor: '#FE6559',
+                showCancel: false,
+              })
+            },
+          })
+        } else if (res.cancel) {
+          console.log('用户点击取消')
+        }
+      }
+    })
+  },
+
   // 静默注册
   _silentSign: function(callback) {
     if (app.globalData.openId == undefined) {
@@ -313,10 +291,10 @@ Page({
                 openId: app.globalData.openId,
               },
               success: res => {
-                console.log(res)
                 if (res.result.errCode == 0) {
                   if (res.result.data.boolexist == 1) {
                     console.log('查有此人。')
+                    console.log('昵称：', res.result.data.user.nickName)
                     app.globalData.logged = true
                     app.globalData.user = res.result.data.user
                     app.globalData.userInfo.avatarUrl = app.globalData.user.userPic
@@ -339,6 +317,10 @@ Page({
           }
         },
         fail: err => {
+          wx.showModal({
+            confirmText: '小程序加载失败，请退出重试',
+            showCancel: false,
+          })
           console.error('获取openId失败，离谱。', err)
         }
       })
@@ -346,6 +328,49 @@ Page({
       console.log('已经获得openid')
       callback()
     }
+  },
+
+  // 获得最新任务
+  _getLatestTask: function(callback) {
+    var that = this
+    wx.cloud.callFunction({
+      name: 'get_latest_task',
+      data: {
+        num: 5,
+      },
+      success: res => {
+        console.log('查询最新任务成功，一共', res.result.data.tasks.length, '条。');
+        if (res.result.errCode == 0) {
+          let newActivities = res.result.data.tasks.map(
+            item => {
+              let startTime = new Date(item.startTime)
+              let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
+              let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
+              let strTime = date + time + '开始'
+              res = item
+              res.startTime = strTime
+              return res
+            }
+          )
+          that.setData({
+            newActivities: newActivities
+          })
+          callback && callback()
+        } else {
+          console.error('传参！')
+          callback && callback()
+        }
+      },
+      fail: err => {
+        console.error('[云函数] [get_latest_task] 调用失败', err)
+        wx.showModal({
+          title: '获取最新活动失败，请刷新重试',
+          content: err.result.errMsg,
+          showCancel: false,
+        })
+        callback && callback()
+      }
+    })
   },
 
   // 根据时间进行筛选
@@ -360,7 +385,6 @@ Page({
 
   // 添加用户进入数据库
   _updateUser: function() {
-    var that = this
     // 调用云函数 TODO 这里输入参数不应该有openid和age，因为前端拿不到
     wx.cloud.callFunction({
       name: 'wechat_sign',
@@ -378,28 +402,11 @@ Page({
           app.globalData.logged = true
           app.globalData.user = res.result.data.user
         } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-          })
+          console.error('传参错误！')
         }
       },
       fail: err => {
         console.error('[云函数] [wechat_sign] 调用失败', err)
-        wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
       }
     })
   },
