@@ -248,9 +248,14 @@ Page({
               // 看是不是自己确认的
               for (let i = 0; i < that.data.applicantsInfo.length; i++) {
                 if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
-                  that.setData({
-                    confirmedByUser: true
-                  })
+                  if (that.data.applicantsInfo[i].applicantStatus) {
+                    that.setData({
+                      confirmedByUser: true
+                    })
+                    console.log('确认的人是我自己！')
+                  } else {
+                    console.log('别人确认了。')
+                  }
                   break
                 }
               }
