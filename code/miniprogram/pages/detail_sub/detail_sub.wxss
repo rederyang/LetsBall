@@ -67,7 +67,7 @@ page {
 }
 
 .tag-confirmedSelf {
-  background-color: #40E0D0;
+  background-color: #00CBFF;
 }
 
 .tag-confirmed {

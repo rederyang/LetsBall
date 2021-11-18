@@ -2,7 +2,7 @@
 <view class='head'> 
   <view class="title">{{task.taskName}}</view>
   <view wx:if="{{!confirmedByUser}}" class="{{confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}}">{{confirmed ? "满员" : "未满"}}</view>
-  <view wx:if="{{confirmedByUser}}" class="tag-confirmedSelf">确认</view>
+  <view wx:if="{{confirmedByUser}}" class="tag-confirmedSelf">已确认</view>
 </view>
 <view class="line_title"></view>
 
