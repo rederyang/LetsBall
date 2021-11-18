@@ -181,6 +181,8 @@ Page({
           openId: app.globalData.openId
         }
       })
+      console.log(app.globalData.openId)
+      console.log(res.result)
       if (res.result.errCode == 0) {
         let taskSub = res.result.data.registeredTasks
         if (taskSub == undefined) {
