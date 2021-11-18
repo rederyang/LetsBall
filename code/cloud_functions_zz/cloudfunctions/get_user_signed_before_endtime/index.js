@@ -25,6 +25,7 @@ exports.main = async (event, context) => {
   // 实例化数据库连接
   const db = cloud.database()
   const _ = db.command
+  var registeredTasks
   try {
     await db.collection('User')
       .where({

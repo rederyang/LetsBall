@@ -25,6 +25,7 @@ exports.main = async (event, context) => {
   // 实例化数据库连接
   const db = cloud.database()
   const _ = db.command
+  var registeredTasks
   try {
     await db.collection('User')
       .where({
@@ -34,6 +35,8 @@ exports.main = async (event, context) => {
       .then(res => {
         all_data = res.data
         query = res.data[0]
+        console.log(all_data)
+        console.log(query)
       })
     if (all_data.length > 1) {
       result.errCode = 3
