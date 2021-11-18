@@ -38,7 +38,7 @@ Page({
             title: '报名成功',
             content: '请等待发起者的确认',
             confirmText: "我知道了",
-            confirmColor: '#FE6559',
+            confirmColor: '#FF0A6B',
             showCancel: false,
           })
         } else if (res.result.errCode == 1) {
@@ -48,7 +48,7 @@ Page({
             title: '您已经报过名了',
             content: '请等待发起者的确认~',
             confirmText: "我知道了",
-            confirmColor: '#FE6559',
+            confirmColor: '#FF0A6B',
             showCancel: false,
           })
         }
@@ -175,13 +175,22 @@ Page({
           })
 
           // 修改时间
-          let startTime = new Date(that.data.task.startTime)
-          console.log(startTime)
-          var date = startTime.getFullYear() + '-' + (startTime.getMonth() + 1) + '-' + startTime.getDate()
-          var time =  startTime.getHours() + ':' + startTime.getMinutes()
-          that.setData({
-            date: date,
-            time: time,
+          let myDate = new Date(that.data.task.startTime)
+          let hour = myDate.getHours()
+          let minu = myDate.getMinutes()
+          if (hour < 10) {
+            var str_hour = '0' + hour
+          } else {
+            var str_hour = hour
+          }
+          if (minu < 10) {
+            var str_minu = '0' + minu
+          } else {
+            var str_minu = minu
+          }
+          this.setData({
+            time: str_hour + ':' + str_minu,
+            date: myDate.getFullYear() + '-' + (myDate.getMonth() + 1) + '-' + myDate.getDate()
           })
 
           // 这里根据发布者id调用云函数获取参与者的个人信息
