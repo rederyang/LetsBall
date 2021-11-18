@@ -8,7 +8,8 @@
 <view class="info">
   <view class="info_title">
     <text>日期：</text>
-    <text>时间：</text>
+    <text>开始：</text>
+    <text>时长：</text>
     <text>地点：</text>
     <text>类型：</text>
     <text>难度：</text>
@@ -19,6 +20,7 @@
   <view class="info_content">
     <text>{{date}}</text>
     <text>{{time}}</text>
+    <text>{{task.duration}} 分钟</text>
     <text>{{task.place}}</text>
     <text>{{task.type}}</text>
     <text>{{task.level}}</text>
