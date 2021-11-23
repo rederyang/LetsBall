@@ -32,6 +32,12 @@ Page({
     })
   },
 
+  toMainMore: function(e) {
+    wx.navigateTo({
+      url: '../main-more/main-more',
+    })
+  },
+
   toNewDetail: function(e) {
     wx.navigateTo({
       url: '../detail/detail',
