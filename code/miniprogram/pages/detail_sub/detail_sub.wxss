@@ -53,7 +53,7 @@ page {
   width: 300rpx
 }
 
-.tag, .tag-confirmed, .tag-unconfirmed {
+.tag, .tag-confirmed, .tag-unconfirmed, .tag-confirmedSelf {
   width: 160rpx;
   line-height: 70rpx;
   background-color: #FF0A6B;
@@ -64,6 +64,10 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.tag-confirmedSelf {
+  background-color: #00CBFF;
 }
 
 .tag-confirmed {

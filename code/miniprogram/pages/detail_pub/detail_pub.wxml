@@ -32,7 +32,7 @@
 
 <view class="area">
   <view class="subtitle">活动简介</view>
-  <view class="intro_content">{{intro}}</view>
+  <view class="intro_content">{{task.details}}</view>
 </view>
 <view wx:if="{{applied}}" class="line_full"></view>
 
