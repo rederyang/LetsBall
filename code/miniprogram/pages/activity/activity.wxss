@@ -175,6 +175,7 @@ page {
   margin-top: 10rpx;
   margin-bottom: 10rpx;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -203,6 +204,21 @@ page {
   line-height: 70rpx;
   font-size: 32rpx;
   font-weight: 600;
+}
+
+.item-bubble {
+  margin-left: auto;
+  width: 55rpx;
+  height: 38rpx;
+  background-color: #F29908;
+  border-radius: 36rpx;
+  text-align: center;
+  font-size: 28rpx;
+  align-self: right;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .item-title {
