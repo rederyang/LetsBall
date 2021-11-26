@@ -132,7 +132,7 @@ Page({
 
   // 下方为私有函数部分
 
-  // 根据openId获取用户信息
+  // 根据openId获取用户相关的活动信息
   _loadData: async function () {
     var that = this
 
@@ -146,7 +146,7 @@ Page({
           openId: app.globalData.openId
         },
       })
-      if (res.result.errCode == 0) {
+      if (res.result.errCode == 0 || res.result.errCode == 2) {  // 2 表示当前用户不存在
         let taskPub = res.result.data.publishedTasks
         if (taskPub == undefined) {
           taskPub = []
@@ -181,9 +181,7 @@ Page({
           openId: app.globalData.openId
         }
       })
-      console.log(app.globalData.openId)
-      console.log(res.result)
-      if (res.result.errCode == 0) {
+      if (res.result.errCode == 0 || res.result.errCode == 2) {  // 2 表示当前用户不存在
         let taskSub = res.result.data.registeredTasks
         if (taskSub == undefined) {
           taskSub = []
