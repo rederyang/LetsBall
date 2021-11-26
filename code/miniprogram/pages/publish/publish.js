@@ -13,11 +13,11 @@ Page({
     time_init: true,
     level_array: ['初学', '中级', '进阶'],
     level_idx: 0,
-    sport_array: ['跑步', '游泳', '网球', '篮球', '足球', '羽毛球', '飞盘', '乒乓球', '台球', '棒球', '击剑', '橄榄球', '板球', '桥牌', '其他'],
+    sport_array: ['跑步', '游泳', '网球', '篮球', '足球', '羽毛球', '飞盘', '乒乓球', '台球', '棒球', '击剑', '橄榄球', '板球', '桥牌', '射击', '其他'],
     sport_idx: 0,
     intro: "",
     name: "",
-    duration: "",
+    duration: 0,
     other: "",
     place: "",
     place_idx: 0,
@@ -112,30 +112,16 @@ Page({
         confirmText: "我知道了",
         confirmColor: '#FE6559',
         showCancel: false,
-        success(res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
       })
       return
     }
-    if (!that.data.duration) {
+    if (that.data.name.length > 8) {
       wx.showModal({
         title: '提示',
-        content: '请输入活动时长~',
+        content: '活动名称太长啦~',
         confirmText: "我知道了",
         confirmColor: '#FE6559',
         showCancel: false,
-        success(res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
       })
       return
     }
@@ -146,13 +132,26 @@ Page({
         confirmText: "我知道了",
         confirmColor: '#FE6559',
         showCancel: false,
-        success(res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-          } else if (res.cancel) {
-            console.log('用户点击取消')
-          }
-        }
+      })
+      return
+    }
+    if (that.data.place.length > 12) {
+      wx.showModal({
+        title: '提示',
+        content: '活动地点太长啦，最多十二字~',
+        confirmText: "我知道了",
+        confirmColor: '#FE6559',
+        showCancel: false,
+      })
+      return
+    }
+    if (!that.data.duration instanceof Number || that.data.duration < 30 || that.data.duration > 200) {
+      wx.showModal({
+        title: '提示',
+        content: '请正确填写活动持续时长~',
+        confirmText: "我知道了",
+        confirmColor: '#FE6559',
+        showCancel: false,
       })
       return
     }
@@ -167,8 +166,6 @@ Page({
         if (res.confirm) {
           console.log('用户点击确定')
           that.pubAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })
@@ -267,6 +264,9 @@ Page({
       var myDate = new Date()
       var hour = myDate.getHours()
       var minu = myDate.getMinutes()
+      if (hour < 23) {
+        hour += 1
+      }
       if (hour < 10) {
         var str_hour = '0' + hour
       } else {

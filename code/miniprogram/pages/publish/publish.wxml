@@ -2,7 +2,7 @@
 <view class="area">
   <view class="line-block">
     <view class="line-text">活动名称</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindNameChange" />
+    <input class="line-input" placeholder="八个字以内" placeholder-style="color:#949494;" bindinput="bindNameChange" />
   </view>
 
   <view class="line-block">

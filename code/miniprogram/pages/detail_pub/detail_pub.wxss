@@ -48,10 +48,10 @@ page {
 
 .title {
   color: rgba(254, 101, 89, 100);
-  font-size: 60rpx;
+  font-size: 50rpx;
   text-align: left;
-  height: 80rpx;
-  width: 300rpx
+  height: 60rpx;
+  width: 400rpx
 }
 
 .tag, .tag-confirmed, .tag-unconfirmed {
