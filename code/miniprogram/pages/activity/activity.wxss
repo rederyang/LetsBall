@@ -223,6 +223,11 @@ page {
 
 .item-title {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 10rpx;
@@ -232,14 +237,24 @@ page {
 
 .item-leader {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 10rpx;
-  font-size: 30rpx;
+  font-size: 30rpx;  
 }
 
 .item-loc {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   font-size: 30rpx;
