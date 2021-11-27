@@ -80,8 +80,10 @@
 </view>
 
 <block wx:if="{{!confirmed}}">
-<view class="button_float" bindtap="onEdit">
-  <image class="icon_img" src="/images/write.svg"></image>
+<view class="button_float">
+<button class="button_class" open-type="share">
+  <image class="icon_img" src="/images/share2.png"></image>
+</button>
 </view>
 </block>
 

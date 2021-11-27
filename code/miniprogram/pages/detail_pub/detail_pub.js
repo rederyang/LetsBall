@@ -344,7 +344,17 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function (res) {
+    return {
+      title: '活动邀请！',
+      path: '/pages/detail_sub/detail_sub?taskId=' + this.data.taskId,
+    }
+  },
 
-  }
+  // onShareTimeline: function(e) {
+  //   return {
+  //     title: '活动邀请',
+  //     query: 'taskId=' + this.data.taskId,
+  //   }
+  // },
 })

@@ -242,7 +242,13 @@ page {
   justify-content: center;
 }
 
+.button_class {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .icon_img {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 50rpx;
 }
