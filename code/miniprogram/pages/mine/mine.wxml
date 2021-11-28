@@ -1,0 +1,89 @@
+<!--pages/mine/mine.wxml-->
+<view class="background"></view>
+
+<view class="userinfo-wrapper">
+  <view class="userinfo-line">
+  <view class="userinfo-avatar-wrapper">
+    <image class="userinfo-avatar" mode="scaleToFill" src="{{userInfo.avatarUrl}}"></image>
+  </view>
+    <view class="userinfo-words">
+      <view class="userinfo-nickname" bindtap="onTapLogIn">{{userInfo.nickName}}</view>
+    </view>
+  </view>
+
+  <view class="userinfo-line">
+    <view class="userinfo-stats">
+      <view class="userinfo-stats-block">
+        <view class="userinfo-stats-value">中国大陆</view>
+        <view class="userinfo-stats-title">地区</view>        
+      </view>
+      <view class="userinfo-stats-block">
+        <view class="userinfo-stats-value">中文</view>
+        <view class="userinfo-stats-title">语言</view>        
+      </view>
+      <view class="userinfo-stats-block-tail">
+        <view class="userinfo-stats-value">在校人员</view>
+        <view class="userinfo-stats-title">身份</view>
+      </view>
+    </view>
+    <!-- <view class="item-time">{{user_info.time}}</view> -->
+  </view>
+  
+</view>
+
+<!-- <view class="detail-wrapper">
+  <view class="detail-header">
+    个人信息
+  </view>
+  <view class='detail-content-wrapper'>
+    <view class="detail-content">
+    <view class="detail-item">
+      <view class="detail-title">姓名：</view>
+      <view class="detail-value">王基建</view>    
+    </view>  
+    <view class="detail-item">
+      <view class="detail-title">年龄：</view>
+      <view class="detail-value">71</view>    
+    </view>
+    <view class="detail-item">
+      <view class="detail-title">性别：</view>
+      <view class="detail-value">男</view>    
+    </view>
+    <view class="detail-item">
+      <view class="detail-title">院系：</view>
+      <view class="detail-value">文理学院</view>
+    </view>
+  </view>
+  </view>
+</view> -->
+
+
+<!-- 
+<view class="tag-wrapper">
+  <view class="tag-header">
+    我的标签
+  </view>
+  <view class='tag-content-wrapper'>
+    <view class="tag-content">
+    <view class="tag-content-item">手球</view>
+    <view class="tag-content-item">乒乓球</view>
+    <view class="tag-content-item">手球</view>
+    <view class="tag-content-item">手球</view>
+    <view class="tag-content-item">手球</view>
+    <view class="tag-content-item">手球</view>
+    <view class="tag-content-item">手球</view>
+    <view class="tag-edit-button">编辑</view> 
+  </view>
+  </view>
+</view>
+
+<view class="credit-wrapper">
+  <view class="credit-header">
+    我的信用
+  </view>
+  <view class='credit-content-wrapper'>
+    <view class="credit-content">
+    <view class="credit-circle">良好</view>
+  </view>
+  </view>
+</view> -->

@@ -71,6 +71,7 @@ Page({
   },
   bindConfirmInvite() {
     if (this.data.searchUser.isChoose) {
+      console.log(`../../TUI-Chat/chat?conversationID=C2C${this.data.searchUser.userID}`)
       wx.navigateTo({
         url: `../../TUI-Chat/chat?conversationID=C2C${this.data.searchUser.userID}`,
       })
