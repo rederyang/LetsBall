@@ -70,13 +70,6 @@ Page({
   // 点击更多按钮
   onTapMore: function(event) {
     console.log("点击更多按钮")
-    wx.showModal({
-      title: '本功能开发中，敬请期待~',
-      confirmText: "好吧",
-      confirmColor: '#FE6559',
-      showCancel: false,
-    })
-    return
     wx.navigateTo({
       url: '/pages/main-more/main-more',
     })

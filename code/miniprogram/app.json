@@ -1,9 +1,10 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/detail/detail",
-    "pages/activity/activity",
     "pages/main/main",
+    "pages/main-more/main-more",
+    "pages/detail/detail",
+    "pages/activity/activity",    
     "pages/publish/publish",  
     "pages/mine/mine",    
     "pages/detail_pub/detail_pub",
@@ -13,8 +14,7 @@
     "pages/detail_sub_1/detail_sub_1",
     "pages/detail_sub_2/detail_sub_2",    
     "pages/detail_sub_3/detail_sub_3",
-    "pages/edit/edit",
-    "pages/main-more/main-more"
+    "pages/edit/edit"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

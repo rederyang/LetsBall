@@ -3,16 +3,17 @@
 <view class="search-bar">
 <view class="search-input-wrapper">
   <view class="search-input-outline">
-    <image class="search-input-image" src="/images/search.png" mode="heightFix"></image>
-    <input class="search-input" placeholder="搜索你想参与的活动.." bindinput="bindKeyInput" value="{{search_word}}"></input>
+    <image class="search-input-image" src="/images/search.png" mode="aspectFill"></image>
+    <input class="search-input" placeholder="输入你想参与的活动.." bindinput="bindInputChange" value="{{searchWord}}"></input>
+    <image wx:if="{{keyWordSent}}" class="search-cancel-image" src="/images/cancel.png" mode="aspectFill" bindtap="onTapCancel"></image>
   </view>
 </view>
 <view class="search-button-wrapper">
-  <button class="search-button" bindtap="search">搜索</button>
+  <button class="search-button" bindtap="onTapSearch">搜索</button>
 </view> 
 </view>
 
-<view class="activity-wrapper" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx" data-actid="{{itemName.actid}}">
+<view class="activity-wrapper" wx:for="{{result}}" wx:for-item="itemName" wx:for-index="idx" data-actid="{{itemName.actid}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
     <view class="item-words">
