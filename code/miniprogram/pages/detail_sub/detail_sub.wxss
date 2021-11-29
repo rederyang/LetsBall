@@ -54,7 +54,7 @@ page {
 }
 
 .tag, .tag-confirmed, .tag-unconfirmed, .tag-confirmedSelf {
-  width: 160rpx;
+  width: 120rpx;
   line-height: 70rpx;
   background-color: #FF0A6B;
   border-radius: 80rpx;
