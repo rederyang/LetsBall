@@ -48,10 +48,10 @@ page {
 
 .title {
   color: rgba(254, 101, 89, 100);
-  font-size: 60rpx;
+  font-size: 50rpx;
   text-align: left;
-  height: 80rpx;
-  width: 300rpx
+  height: 60rpx;
+  width: 400rpx
 }
 
 .tag, .tag-confirmed, .tag-unconfirmed {
@@ -214,7 +214,6 @@ page {
 
 .button_cancel {
   margin-top: 100rpx;
-  margin-bottom: 150rpx;
   width: var(--width);
   margin-left: var(--margin-left);
   font-size: 40rpx;
@@ -242,7 +241,26 @@ page {
   justify-content: center;
 }
 
+.button_class {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .icon_img {
-  width: 60rpx;
-  height: 60rpx;
+  width: 80rpx;
+  height: 50rpx;
+}
+
+.button_edit {
+  margin-top: 30rpx;
+  font-size: 30rpx;
+  color: gray;
+  text-decoration-line: underline;
+  display: flex;
+  justify-content: center;
+}
+
+.blank {
+  margin-bottom: 150rpx;
 }
