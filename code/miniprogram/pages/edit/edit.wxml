@@ -56,6 +56,26 @@
   </view>
 
   <view class="line-block">
+    <view class="line-text">提供场地</view>
+    <picker class="line-picker" mode="selector" value="{{place_idx}}" range="{{if_array}}" bindchange="bindOfferPlace">
+      <view class="picker-view">
+        <view class="time-view">{{if_array[place_idx]}}</view>
+        <image class="picker-icon" src="/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">提供器材</view>
+    <picker class="line-picker" mode="selector" value="{{tool_idx}}" range="{{if_array}}" bindchange="bindOfferTool">
+      <view class="picker-view">
+        <view class="time-view">{{if_array[tool_idx]}}</view>
+        <image class="picker-icon" src="/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
     <view class="line-text">其他要求</view>
     <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" value="{{other}}"/>
   </view>
@@ -64,6 +84,4 @@
   <textarea class="intro_content" placeholder="五十字以内" placeholder-style="color:#949494;" bindblur="bindIntroChange" value="{{intro}}" />
 </view>
 
-<view class="button_float" bindtap="onPub">
-  <image class="icon_img" src="/images/pub.png"></image>
-</view>
+<view class="button_confirm" bindtap="onEdit">确认修改</view>

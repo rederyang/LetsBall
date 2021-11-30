@@ -6,6 +6,7 @@ page {
   --margin-left: 10%;
   --margin-top: 30rpx;
   --line-width: 5rpx;
+  background-color: white;
 }
 
 /* public section */
@@ -121,8 +122,6 @@ page {
 .area_chat {
   width: 100%;
   box-sizing: border-box;
-  /* width: 90%;
-  margin-left: 5%; */
   margin-top: 5rpx;
   border: solid var(--line-width) #FE6559;
   border-radius: 50rpx;

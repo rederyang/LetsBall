@@ -62,8 +62,8 @@ page {
 
 .activity-wrapper, .activity-wrapper-pub{
   width: 86%;
-  margin-top: 16rpx;
-  margin-bottom: 16rpx;
+  margin-top: 40rpx;
+  /* margin-bottom: 16rpx; */
   margin-left: 7%;
   margin-right: 7%;
   padding-top: 2%;
@@ -73,14 +73,9 @@ page {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-radius: 16px 16px 16px 16px;
+  border-radius: 30rpx;
   background-color: rgba(250, 250, 250, 100);
-  /* background: linear-gradient(-20deg, #fe645918, rgba(250, 250, 250, 100), rgba(250, 250, 250, 100), rgba(250, 250, 250, 100)); */
-  color: rgba(16, 16, 16, 100);
-  font-size: 14px;
-  /* box-shadow: 1px 2px 2px 0px rgba(0, 0, 0, 0.4); */
-  box-shadow: 1px 1px 4px 0 #FE6559, 1px 4px 4px 2px rgba(0, 0, 0, 0.19); 
-  font-family: Arial;
+  box-shadow: 2rpx 2rpx 6rpx 0 #FE6559, 2rpx 6rpx 6rpx 4rpx rgba(0, 0, 0, 0.19); 
 }
 
 .activity-wrapper-pub {

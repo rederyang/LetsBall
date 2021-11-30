@@ -37,6 +37,8 @@
   <view class="item-time">{{itemName.startTime}}</view>
 </view>
 
+<view class="blank"></view>
+
 <view class="button_float" bindtap='onTapAdd'>
  <image class="add-icon" src="/images/add.png"></image>
 </view>

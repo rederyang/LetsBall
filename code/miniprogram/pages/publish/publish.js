@@ -142,10 +142,6 @@ Page({
       })
       return
     } else if (!parseInt(that.data.duration) || parseInt(that.data.duration) < 30 || parseInt(that.data.duration) > 200) {
-      console.log(that.data.duration)
-      console.log(typeof that.data.duration)
-      console.log(parseInt(that.data.duration))
-      console.log(typeof that.data.duration)
       wx.showModal({
         title: '提示',
         content: '请正确填写活动持续时长~',
@@ -208,10 +204,11 @@ Page({
         console.log(res);
         if (res.result.errCode == 0) {
           wx.showModal({
-            title: '发布成功！',
+            title: '发布成功',
             content: res.result.errMsg,
             confirmText: "我知道了",
             showCancel: false,
+            confirmColor: '#FE6559',
             success(res) {
               if (res.confirm) {
                 console.log('用户点击确定')
