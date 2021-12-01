@@ -1,0 +1,13 @@
+[
+  {
+    "name": "sign_up",
+    "value": {
+      "applicantId": "oxLgv42LKttuU9Xt1g-J8MLzhWBw",
+      "applicantAge": 18,
+      "applicantGender": 0,
+      "applicantNickName": "name",
+      "applicantUserPic": "url",
+      "taskId": 25
+    }
+  }
+]

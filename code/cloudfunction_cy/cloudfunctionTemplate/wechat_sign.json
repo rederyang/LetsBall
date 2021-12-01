@@ -1,0 +1,12 @@
+[
+  {
+    "name": "add_user",
+    "value": {
+      "openId": "oxLgv4xWiY7m-O9smRhbFtr1OWhA",
+      "nickName": "cy",
+      "userPic": "url1",
+      "gender": 1,
+      "age": 99
+    }
+  }
+]

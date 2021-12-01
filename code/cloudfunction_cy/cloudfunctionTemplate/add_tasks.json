@@ -1,0 +1,21 @@
+[
+  {
+    "name": "add_task",
+    "value": {
+      "taskName": "test0",
+      "taskPic": "url",
+      "publisher": "user0",
+      "totalNum": 10,
+      "startTime": "time1",
+      "duration": 10,
+      "place": "gym",
+      "type": "basketball",
+      "details": "come on",
+      "spaceProvided": true,
+      "equipmentProvided": true,
+      "signProvided": true,
+      "otherRequirements": "none",
+      "level": "熟练"
+    }
+  }
+]
