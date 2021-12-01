@@ -21,7 +21,10 @@ Page({
 
     /*** ***/
     chatId:'',
-    publishChatId:''
+    publishChatId:'',
+    sdkAppId:1400601709,
+    userSig:''
+
 
   },
 
@@ -65,17 +68,23 @@ Page({
       }
     })
     /***chat ***/
-    console.log(this.data)
+    
     const publishChatId = this.data.pubInfo.openId+'-'+this.data.taskId
     console.log(publishChatId)
     this.setData({
       publishChatId:publishChatId
     })
     console.log(this.data)
-
-    console.log(`../../TUI-Chat/chat?conversationID=C2C${this.data.publishChatId}`)
+    const payloadData = {
+      conversationID: `C2C${this.data.publishChatId}`
+    }    
+    const otherInfomation = {
+      sdkAppId:this.data.sdkAppId,
+      chatId:this.data.chatId,
+      userSig:this.data.userSig
+    }
     wx.navigateTo({
-      url: `../TUI-Chat/chat?conversationID=C2C${this.data.publishChatId}`,
+      url: `../TUI-Chat/chat?conversationInfomation=${JSON.stringify(payloadData)}&otherInfomation=${JSON.stringify(otherInfomation)}`,
     })
 
 
@@ -302,7 +311,8 @@ Page({
     logger.log(`TUI-login | login  | userSig:${userSig} userID:${chatId}`)
     this.setData({
       taskId: parseInt(options.taskId),
-      chatId: chatId
+      chatId: chatId,
+      userSig: userSig
     })
   },
 

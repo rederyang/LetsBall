@@ -1,5 +1,6 @@
 // pages/publish/publish.js
-
+import logger from '../../utils/logger'
+import { genTestUserSig } from '../../debug/GenerateTestUserSig'
 const app = getApp()
 
 Page({
@@ -22,7 +23,8 @@ Page({
     place: "",
     place_idx: 0,
     tool_idx: 0,
-    if_array: ['否', '是']
+    if_array: ['否', '是'],
+    taskId:0
   },
 
   bindNameChange: function(e) {
@@ -208,7 +210,15 @@ Page({
       data: submitData,
       success: res => {
         console.log(res);
+        this.setData({
+          taskId:res.result.data.taskId
+        })
         if (res.result.errCode == 0) {
+          /**登陆该发布者和该活动构成的聊天id */
+          const chatId = app.globalData.openId+'-'+this.data.taskId
+          const userSig = genTestUserSig(chatId).userSig
+          logger.log(`TUI-login | login  | userSig:${userSig} userID:${chatId}`)
+          console.log('用户点击确定')
           wx.showModal({
             title: '发布成功！',
             content: res.result.errMsg,
@@ -216,7 +226,6 @@ Page({
             showCancel: false,
             success(res) {
               if (res.confirm) {
-                console.log('用户点击确定')
                 wx.navigateBack({
                   delta: 1,
                 })
@@ -257,6 +266,9 @@ Page({
         })
       }
     })
+
+
+
   },
 
   /**

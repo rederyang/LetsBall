@@ -38,6 +38,7 @@ Page({
       this.TRTCCalling = this.selectComponent('#tui-calling')
       this.TRTCCalling.init()
     })
+    console.log(options.conversationInfomation)
     // conversationID: C2C、 GROUP
     logger.log(`| TUI-chat | onLoad | conversationInfomation: ${options.conversationInfomation}`)
     const   payloadData = JSON.parse(options.conversationInfomation)

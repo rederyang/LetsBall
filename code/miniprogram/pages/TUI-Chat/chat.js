@@ -27,11 +27,15 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    
+    const   otherData = JSON.parse(options.otherInfomation)
+    console.log(otherData)
     const { config } = this.data
-    config.sdkAppID = app.globalData.SDKAppID
-    config.userID = app.globalData.userInfo.userID
-    config.userSig = app.globalData.userInfo.userSig
+    config.sdkAppID = otherData.sdkAppId
+    config.userID = otherData.chatId
+    config.userSig = otherData.userSig
     config.tim = wx.$TUIKit
+    console.log(config)
     this.setData({
       config,
     }, () => {
@@ -46,11 +50,28 @@ Page({
       conversationID: payloadData.conversationID,
       unreadCount,
     })
+    wx.$TUIKit.on(wx.$TUIKitEvent.SDK_READY, this.onSDKReady)
+    // wx.$TUIKit.setMessageRead({ conversationID: this.data.conversationID }).then(() => {
+    //   logger.log('| TUI-chat | setMessageRead | ok')
+    // })
+    // wx.$TUIKit.getConversationProfile(this.data.conversationID).then((res) => {
+    //   const { conversation } = res.data
+    //   console.log(res.data)
+    //   this.setData({
+    //     conversationName: this.getConversationName(conversation),
+    //     conversation,
+    //     isShow: conversation.type === 'GROUP',
+    //   })
+    // })
+  },
+  onSDKReady(){
+    console.log(this.data.conversationID)
     wx.$TUIKit.setMessageRead({ conversationID: this.data.conversationID }).then(() => {
       logger.log('| TUI-chat | setMessageRead | ok')
     })
     wx.$TUIKit.getConversationProfile(this.data.conversationID).then((res) => {
       const { conversation } = res.data
+      console.log(res.data)
       this.setData({
         conversationName: this.getConversationName(conversation),
         conversation,
@@ -63,6 +84,7 @@ Page({
  */
   onUnload() {
     this.TRTCCalling.destroyed()
+    wx.$TUIKit.logout();
   },
   getConversationName(conversation) {
     if (conversation.type === '@TIM#SYSTEM') {

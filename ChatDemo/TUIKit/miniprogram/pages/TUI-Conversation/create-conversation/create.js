@@ -79,6 +79,7 @@ Page({
       const payloadData = {
         conversationID: `C2C${this.data.searchUser.userID}`,
       }
+      
       wx.navigateTo({
         url: `../../TUI-Chat/chat?conversationInfomation=${JSON.stringify(payloadData)}`,
       })
