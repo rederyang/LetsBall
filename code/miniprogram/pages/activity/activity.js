@@ -140,18 +140,33 @@ Page({
   _loadData: async function (callback) {
     var that = this
 
-    console.log(app.globalData.openId)
+    // console.log(app.globalData.openId)
 
-    // 获取用户发布的所有活动
+    console.time('获取用户发布和报名的所有活动')
+    // 获取用户发布和报名的所有活动
     try {
-      res = await wx.cloud.callFunction({
+      var userPubFunc = wx.cloud.callFunction({
         name: 'get_user_published_before_starttime',
         data: {
           openId: app.globalData.openId
         },
       })
-      if (res.result.errCode == 0 || res.result.errCode == 2) {  // 2 表示当前用户不存在
-        let taskPub = res.result.data.publishedTasks
+      var userSubFunc = wx.cloud.callFunction({
+        name: 'get_user_signed_before_starttime',
+        data: {
+          openId: app.globalData.openId
+        }
+      })
+
+      var result = await Promise.all([userPubFunc, userSubFunc])
+      var userPubRes = result[0]
+      var userSubRes = result[1]
+
+      console.log(userPubRes)
+      
+      // 处理userPubRes
+      if (userPubRes.result.errCode == 0 || userPubRes.result.errCode == 2) {  // 2 表示当前用户不存在
+        let taskPub = userPubRes.result.data.publishedTasks
         if (taskPub == undefined) {
           taskPub = []
         }
@@ -161,7 +176,7 @@ Page({
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
-          content: res.result.errMsg,
+          content: userPubRes.result.errMsg,
           confirmText: "我知道了",
           showCancel: false,
           success(res) {
@@ -173,20 +188,10 @@ Page({
           }
         })
       }
-    } catch (err) {
-      console.log(err)
-    }
-
-    // 获取用户报名的所有活动
-    try {
-      res = await wx.cloud.callFunction({
-        name: 'get_user_signed_before_starttime',
-        data: {
-          openId: app.globalData.openId
-        }
-      })
-      if (res.result.errCode == 0 || res.result.errCode == 2) {  // 2 表示当前用户不存在
-        let taskSub = res.result.data.registeredTasks
+      
+      // 处理userSubRes
+      if (userSubRes.result.errCode == 0 || userSubRes.result.errCode == 2) {  // 2 表示当前用户不存在
+        let taskSub = userSubRes.result.data.registeredTasks
         if (taskSub == undefined) {
           taskSub = []
         }
@@ -196,7 +201,7 @@ Page({
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
-          content: res.result.errMsg,
+          content: userSubRes.result.errMsg,
           confirmText: "我知道了",
           showCancel: false,
           success(res) {
@@ -211,23 +216,31 @@ Page({
     } catch (err) {
       console.log(err)
     }
+    console.timeEnd('获取用户发布和报名的所有活动')
 
-    console.log("测试获取taskId")
-    console.log(that.data)
-
-    console.log("测试拼接")
-    console.log(that.data.pubTaskId.concat(that.data.subTaskId))
-
-    // 根据taskID查询得到任务的详情信息
+    console.time('根据taskID查询得到任务的详情信息和报名情况')
+    // 根据taskID查询得到任务的详情信息和报名情况
     try {
-      var res = await wx.cloud.callFunction({
+      var taskDetailFunc = wx.cloud.callFunction({
         name: 'get_task_detail',
         data: {
           taskId: that.data.pubTaskId.concat(that.data.subTaskId)
         }})
-      if (res.result.errCode == 0) {
-        let taskSub = res.result.data.tasks.filter(item => ((that.data.subTaskId.includes(item.taskId)) && (!item.publisherQuitStatus)))  // 筛选得到用户报名的活动，要求没有取消
-        let taskPub = res.result.data.tasks.filter(item => ((that.data.pubTaskId.includes(item.taskId)) && (!item.publisherQuitStatus))) // 筛选得到用户发布的活动，要求没有取消
+      var taskAppFunc = wx.cloud.callFunction({
+        name: 'get_task_applicants',
+        data: {
+          taskId: that.data.pubTaskId.concat(that.data.subTaskId)
+        }})
+
+      var result = await Promise.all([taskDetailFunc, taskAppFunc])
+
+      var taskDetailRes = result[0]
+      var taskAppRes = result[1]
+
+      // 处理taskDetailRes
+      if (taskDetailRes.result.errCode == 0) {
+        let taskSub = taskDetailRes.result.data.tasks.filter(item => ((that.data.subTaskId.includes(item.taskId)) && (!item.publisherQuitStatus)))  // 筛选得到用户报名的活动，要求没有取消
+        let taskPub = taskDetailRes.result.data.tasks.filter(item => ((that.data.pubTaskId.includes(item.taskId)) && (!item.publisherQuitStatus))) // 筛选得到用户发布的活动，要求没有取消
         that.setData({
           activitiesSubRaw: taskSub,
           activitiesPubRaw: taskPub
@@ -235,7 +248,7 @@ Page({
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
-          content: res.result.errMsg,
+          content: taskDetailRes.result.errMsg,
           confirmText: "我知道了",
           showCancel: false,
           success(res) {
@@ -247,21 +260,13 @@ Page({
           }
         })
       }
-    } catch(err) {
-      console.log(err)
-    }
 
-    // 根据taskID查询得到任务的报名情况
-    try {
-      var res = await wx.cloud.callFunction({
-        name: 'get_task_applicants',
-        data: {
-          taskId: that.data.pubTaskId.concat(that.data.subTaskId)
-        }})
-      if (res.result.errCode == 0) {
-        let taskSubApplicants = res.result.data.info.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
-        let taskPubApplicants = res.result.data.info.filter(item => that.data.pubTaskId.includes(item.taskId)) // 筛选得到用户发布的活动
-        console.log(taskSubApplicants)
+      // 处理taskAppRes
+      if (taskAppRes.result.errCode == 0) {
+        let taskSubApplicants = taskAppRes.result.data.info.filter(item => that.data.subTaskId.includes(item.taskId))  // 筛选得到用户报名的活动
+        let taskPubApplicants = taskAppRes.result.data.info.filter(item => that.data.pubTaskId.includes(item.taskId)) // 筛选得到用户发布的活动
+        // 输出得到的任务报名情况
+        // console.log(taskSubApplicants)
         this.setData({
           activitiesSubApplicants: taskSubApplicants,
           activitiesPubApplicants: taskPubApplicants
@@ -269,7 +274,7 @@ Page({
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
-          content: res.result.errMsg,
+          content: taskAppRes.result.errMsg,
           confirmText: "我知道了",
           showCancel: false,
           success(res) {
@@ -284,10 +289,9 @@ Page({
     } catch(err) {
       console.log(err)
     }
+    console.timeEnd('根据taskID查询得到任务的详情信息和报名情况')
 
-    console.log("测试云函数获取后的结果")
-    console.log(this.data)
-
+    console.time('构造显示列表')
     // 根据上述信息构造用于显示的列表对象，与任务详情相比，多了反应是否满员的字段，并对时间格式化
     try {
       var activitiesPub = this.data.activitiesPubRaw.map(item => ({...item, ...this.data.activitiesPubApplicants.filter(s => s.taskId === item.taskId)[0]}))
@@ -297,7 +301,7 @@ Page({
           let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
           let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
           let strTime = date + time + '开始'
-          res = item
+          let res = item
           res.startTime = strTime
           return res
         }
@@ -309,7 +313,7 @@ Page({
           let date = startTime.getFullYear() + '年' + (startTime.getMonth() + 1) + '月' + startTime.getDate() + '日'
           let time =  startTime.getHours() + '点' + startTime.getMinutes() + '分'
           let strTime = date + time + '开始'
-          res = item
+          let res = item
           res.startTime = strTime
           return res
         }
@@ -325,11 +329,14 @@ Page({
     } catch(err) {
       console.log(err)
     }
+    console.timeEnd('构造显示列表')
 
+    console.time('回调函数')
     // 调用回调函数
     if (callback != undefined) {
       callback()
-    }    
+    }
+    console.timeEnd('回调函数')
   },
 
   // 静默注册
@@ -431,5 +438,9 @@ Page({
       }
     })
   },
+
+  _gerUserSub: function() {
+
+  }
 
 })
