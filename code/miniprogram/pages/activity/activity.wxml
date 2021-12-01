@@ -8,7 +8,7 @@
 </view>
 
 <block >
-<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.isFull}}" data-content="{{itemName}}">
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" wx:key="taskId" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.isFull}}" data-content="{{itemName}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
     <view class="item-words">

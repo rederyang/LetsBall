@@ -13,7 +13,7 @@
 </view> 
 </view>
 
-<view class="activity-wrapper" wx:for="{{keyWordSent ? result : latestTasks}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
+<view class="activity-wrapper" wx:for="{{keyWordSent ? result : latestTasks}}" wx:for-item="itemName" wx:for-index="idx" wx:key="taskId" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
     <view class="item-words">
