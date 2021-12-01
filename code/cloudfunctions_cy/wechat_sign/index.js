@@ -23,6 +23,20 @@ exports.main = async (event, context) => {
     /**检测前端是否传参 end */
     //实例化数据库
     const db = cloud.database()
+
+    //先查找前端传入的openId有没有在数据表中存在
+    var needAdd=0
+    await db.collection('User')
+    .where({
+        openId:event.openId
+    })
+    .get()
+    .then(res=>{
+        if(res.data.length == 0){
+            needAdd=1
+        }
+    })
+
     //构造要添加的数据
     add_data = {
         nickName: event.nickName,
@@ -39,7 +53,9 @@ exports.main = async (event, context) => {
         tips:{}
         //Tips: event.Tips
     }
+    var data = {}
 
+    if(needAdd==1){
     console.log('新构造的用户数据')
     console.log(add_data)
 
@@ -52,13 +68,38 @@ exports.main = async (event, context) => {
         .then(res => {
             console.log('新增用户成功')
             console.log(res)
+            data = add_data
         })
+    }
+    else{
+        await db.collection('User')
+        .where({
+            openId:event.openId
+        })
+        .update({
+            data:{
+                nickName:event.nickName,
+                userPic:event.userPic,
+                gender:event.gender,
+                age:event.age
+            }
+        })
+        .then(res=>{
+            console.log(res)
+        })
+        await db.collection('User')
+        .where({
+            openId:event.openId
+        })
+        .get()
+        .then(res=>{
+            data=res.data[0]
+        })
+    }
     
-    var data = {}
     var result = {}
     result.errCode=0
     result.errMsg='新增用户成功'
-    data = add_data
     result.data = data
     return result
 }

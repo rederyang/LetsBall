@@ -26,25 +26,25 @@ exports.main = async (event, context) => {
     const db = cloud.database()
 
     /**根据前端传递的任务id获取任务详情 start */
-    var task;
+    var tasks
     await db.collection('CurrentTask')
         .where({
-            taskId: event.taskId
+            taskId: db.command.in(event.taskId)
         })
         .get()
         .then(res => {
-            console.log('获取用户信息成功')
-            console.log(res.data)
-            task = res.data[0]
+            console.log('获取任务信息成功')
+            console.log(res)
+            tasks=res.data
         })
     /**根据前端传递的任务id获取任务详情 end */
 
     //返回执行结果
     var result = {}
-    result.errCode=0
-    result.errMsg='获取成功'
+    result.errCode = 0
+    result.errMsg = '获取成功'
     var data = {}
-    data.task = task
+    data.tasks = tasks
     result.data = data
     return result
 }

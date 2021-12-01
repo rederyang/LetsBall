@@ -41,6 +41,7 @@ exports.main = async (event, context) => {
                 boolexist = 0
             } else {
                 boolexist = 1
+                user=res.data[0]
             }
         })
     /**根据前端传入的openid判断用户信息是否在数据库中  end */
@@ -51,6 +52,9 @@ exports.main = async (event, context) => {
     result.errMsg = '返回结果成功，1表示用户数据存在，0表示用户数据不存在'
     var data = {}
     data.boolexist = boolexist
+    if(boolexist==1){
+        data.user=user
+    }
     result.data = data
     return result
 }

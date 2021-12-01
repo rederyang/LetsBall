@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
     /**检测参数是否传递 start */
-    if (event.taskId == undefined || event.taskName == undefined || event.taskPic == undefined || event.publisher == undefined || event.totalNum == undefined || event.startTime == undefined || event.duration == undefined || event.place == undefined || event.type == undefined || event.details == undefined || event.spaceProvided == undefined || event.equipmentProvided == undefined || event.signProvided == undefined || event.otherRequirements == undefined) {
+    if (event.taskId == undefined || event.taskName == undefined || event.taskPic == undefined || event.publisher == undefined || event.totalNum == undefined || event.startTime == undefined || event.duration == undefined || event.place == undefined || event.type == undefined || event.details == undefined || event.spaceProvided == undefined || event.equipmentProvided == undefined || event.signProvided == undefined || event.otherRequirements == undefined || event.level == undefined) {
         //返回执行结果
         var result = {}
         result.errCode = 1
@@ -21,6 +21,9 @@ exports.main = async (event, context) => {
         return result
     }
     /**检测参数是否传递 end */
+
+    //计算结束时间
+    var endtime
 
     //实例化数据库
     const db = cloud.database()
@@ -44,7 +47,9 @@ exports.main = async (event, context) => {
                 spaceProvided: event.spaceProvided,
                 equipmentProvided: event.equipmentProvided,
                 signProvided: event.signProvided,
-                otherRequirements: event.otherRequirements
+                otherRequirements: event.otherRequirements,
+                endTime: endtime,
+                level:event.level
             }
         })
         .then(res => {
@@ -53,20 +58,20 @@ exports.main = async (event, context) => {
         })
 
     await db.collection('CurrentTask')
-    .where({
-        taskId:event.taskId
-    })
-    .get()
-    .then(res=>{
-        console.log(res)
-        task=res.data[0]
-    })
+        .where({
+            taskId: event.taskId
+        })
+        .get()
+        .then(res => {
+            console.log(res)
+            task = res.data[0]
+        })
     /**根据前端传递参数对后端数据库的任务信息进行更改 end */
 
     //返回执行结果
     var result = {}
     result.errCode = 0
-    result.errMsg='修改成功'
+    result.errMsg = '修改成功'
     var data = {}
     data.task = task
     result.data = data

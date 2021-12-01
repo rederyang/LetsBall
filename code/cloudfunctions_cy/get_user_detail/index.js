@@ -19,23 +19,24 @@ exports.main = async (event, context) => {
         return result
     }
     /** 检测前端参数是否传递  end*/
-    var user
+    var users
     const db = cloud.database()
     await db.collection('User')
         .where({
-            openId:event.openId
+            openId:db.command.in(event.openId)
         })
         .get()
         .then(res => {
+            console.log('获取用户信息成功')
             console.log(res)
-            user = res.data[0]
+            users = res.data
         })
 
     var result = {}
     result.errMsg = '获取成功'
     result.errCode = 0
     var data = {}
-    data.user = user
+    data.users = users
     result.data = data
     return result
 }

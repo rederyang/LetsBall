@@ -10,7 +10,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
     /**前端参数是否传递  start */
-    if (event.applicantOpenId == undefined || event.taskId == undefined) {
+    if (event.applicantId == undefined || event.taskId == undefined || event.applicantGender == undefined || event.applicantNickName == undefined || event.applicantUserPic == undefined || event.applicantAge == undefined) {
         //返回执行结果
         var result = {}
         result.errCode = 1
@@ -23,12 +23,39 @@ exports.main = async (event, context) => {
     }
     /**前端参数是否传递  end */
 
-    //报名活动：在对应的user表字段中将任务id加入
+    //检测这个报名信息是否已经存在
     const db = cloud.database()
+    const _ = db.command
+    var flag = 0
+    await db.collection('CurrentTaskApplicantsInfo')
+        .where(
+            _.and([{applicantId:_.eq(event.applicantId)},{taskId:_.eq(event.taskId)}])
+        )
+        .get()
+        .then(res => {
+            console.log('该用户信息')
+            console.log(res)
+            console.log(res.data.length)
+            if (res.data.length > 0) {
+                console.log('111111111')
+                flag = 1
+            }
+        })
+
+    if (flag == 1) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '该用户已报名该任务'
+        var data = {}
+        result.data = data
+        return result
+    }
+
+    //报名活动：在对应的user表字段中将任务id加入
     var task;
     await db.collection('User')
         .where({
-            openId: event.applicantOpenId
+            openId: event.applicantId
         })
         .field({
             registeredTasks: true
@@ -44,10 +71,10 @@ exports.main = async (event, context) => {
     var user;
     await db.collection('User')
         .where({
-            openId: event.applicantOpenId
+            openId: event.applicantId
         })
         .update({
-            data:{
+            data: {
                 registeredTasks: task
             }
         })
@@ -57,7 +84,7 @@ exports.main = async (event, context) => {
         })
     await db.collection('User')
         .where({
-            openId: event.applicantOpenId
+            openId: event.applicantId
         })
         .get()
         .then(res => {
@@ -66,45 +93,28 @@ exports.main = async (event, context) => {
         })
 
     //更新info表
-    var applicants
-    var nickNameStatus
-    var confirmStatus
-    var cancelcount
 
-    const db=cloud.database()
-    db.collection('CurrentTaskApplicantsInfo')
-    .where({
-        taskId:event.taskId
-    })
-    .get()
-    .then(res=>{
-        console.log('获取任务的报名信息成功')
-        console.log(res)
-        applicants=res.data[0].applicantsId
-        nickNameStatus=res.data[0].applicantNickNameStatus
-        confirmStatus=res.data[0].applicantStatus
-        cancelcount=res.data[0].cancelTimes
-    })
-    applicants.push(event.applicantOpenId)
-    nickNameStatus.push(false)
-    confirmStatus.push(false)
-    cancelcount.push(0)
+    add_info = {
+        taskId: event.taskId,
+        applicantId: event.applicantId,
+        applicantNickNameStatus: false,
+        applicantStatus: false,
+        isFull: false,
+        currentNum: 0,
+        totalNum: 0,
+        applicantNickName: event.applicantNickName,
+        applicantUserPic: event.applicantUserPic,
+        applicantAge: event.applicantAge,
+        applicantGender: event.applicantGender
+    }
 
     db.collection('CurrentTaskApplicantsInfo')
-    .where({
-        taskId:event.taskId
-    })
-    .update({
-        data:{
-            applicantsId:applicants,
-            applicantNickNameStatus:nickNameStatus,
-            applicantStatus:confirmStatus,
-            cancelTimes:cancelcount
-        }
-    })
-    .then(res=>{
-        console.log(res)
-    })
+        .add({
+            data: add_info
+        })
+        .then(res => {
+            console.log(res)
+        })
 
     var result = {}
     result.errCode = 0
