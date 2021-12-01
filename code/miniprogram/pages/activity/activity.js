@@ -117,7 +117,11 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this._loadData(
+      () => wx.stopPullDownRefresh({
+        success: (res) => {console.log('刷新完毕')},
+      })
+    )
   },
 
   /**
@@ -133,7 +137,7 @@ Page({
   // 下方为私有函数部分
 
   // 根据openId获取用户相关的活动信息
-  _loadData: async function () {
+  _loadData: async function (callback) {
     var that = this
 
     console.log(app.globalData.openId)
@@ -319,6 +323,11 @@ Page({
     } catch(err) {
       console.log(err)
     }
+
+    // 调用回调函数
+    if (callback != undefined) {
+      callback()
+    }    
   },
 
   // 静默注册

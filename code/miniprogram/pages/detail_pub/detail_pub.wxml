@@ -82,7 +82,10 @@
 <block wx:if="{{!confirmed}}">
 <view class="button_float">
 <button class="button_class" open-type="share" hover-class="btn-hover">
-  <image class="icon_img" src="/images/share2.png"></image>
+<!-- <view class="share_icon_wrapper">
+  
+</view> -->
+<image class="icon_img" src="/images/share2.png" mode="aspectFill"></image>
 </button>
 </view>
 </block>
