@@ -314,6 +314,8 @@ Page({
           return res
         }
       )
+      activitiesPub = activitiesPub.reverse()
+      activitiesSub = activitiesSub.reverse()
       this.setData({
         activitiesPub: activitiesPub,
         activitiesSub: activitiesSub
