@@ -16,6 +16,7 @@ Page({
     pub_info: {},
     confirmed: false,
     confirmedByUser: false,
+    appliedByUser: false,
   },
 
   // 用户报名之后的动作
@@ -40,6 +41,14 @@ Page({
             confirmText: "我知道了",
             confirmColor: '#FE6559',
             showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                that.setData({
+                  appliedByUser: true,
+                })
+                that.loadData()
+              }
+            }
           })
         } else if (res.result.errCode == 1) {
           console.log('传参，妈的')
@@ -83,28 +92,26 @@ Page({
   },
 
   // 调用云函数完成活动取消操作
-  cancelAct: function(e) {
+  cancelAct: function(cancelDetail) {
     var that = this
-
     wx.cloud.callFunction({
-      name: "quit_commited_task",
+      name: cancelDetail.func,
       data: {
         taskId: that.data.taskId,
         applicantId: app.globalData.openId,
       },
       success: res => {
+        console.log(res)
         wx.hideLoading({
           success: () => {
             if (res.result.errCode == 0) {
-              console.log(res)
               wx.showModal({
-                title: '已取消确认',
+                title: '取消成功',
                 confirmText: "我知道了",
                 confirmColor: '#FE6559',
                 showCancel: false,
                 success(res) {
                   if (res.confirm) {
-                    console.log('用户点击确定')
                     wx.navigateBack({
                       delta: 1,
                     })
@@ -135,7 +142,7 @@ Page({
                 if (res.confirm) {
                   wx.navigateBack({
                     delta: 1,
-                  })                
+                  })
                 }
               }
             })
@@ -149,9 +156,18 @@ Page({
   // 取消
   onCancel: function(e) {
     var that = this
+    if (that.data.confirmedByUser) {
+      var title = '取消活动'
+      var content = '目前活动已确认，确认取消？'
+      var func = 'quit_commited_task'
+    } else {
+      var title = '取消报名'
+      var content = '确认取消报名？'
+      var func = 'quit_task'
+    }
     wx.showModal({
-      title: '取消活动',
-      content: '目前活动已确认，确认取消？',
+      title: title,
+      content: content,
       cancelColor: '#FE6559',
       confirmColor: '#81838F',
       cancelText: '再想想',
@@ -159,9 +175,14 @@ Page({
       success(res) {
         if (res.confirm) {
           wx.showLoading({
-            title: '取消活动',
+            title: title,
           })
-          that.cancelAct()
+          var cancelDetail = {
+            title: title,
+            content: content,
+            func: func,
+          }
+          that.cancelAct(cancelDetail)
         }
       }
     })
@@ -237,7 +258,7 @@ Page({
         }
       },
       fail: err => {
-        console.error('[云函数] [get_task_detail] 调用失败', err)
+        console.error('[云函数]' + cancelDetail.func + '调用失败', err)
       }
     })
 
@@ -255,24 +276,26 @@ Page({
             that.setData({
               applicantsInfo: res.result.data.info,
             })
-            // 其次需要没有被确认
+            // 看看有没有被确认
             if (that.data.applicantsInfo[0].isFull) {
               that.setData({
                 confirmed: true
               })
-              // 看是不是自己确认的
-              for (let i = 0; i < that.data.applicantsInfo.length; i++) {
-                if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
-                  if (that.data.applicantsInfo[i].applicantStatus) {
-                    that.setData({
-                      confirmedByUser: true
-                    })
-                    console.log('确认的人是我自己！')
-                  } else {
-                    console.log('别人确认了。')
-                  }
-                  break
+            }
+            // 看看有没有报过名，也看看是不是自己确认的
+            for (let i = 0; i < that.data.applicantsInfo.length; i++) {
+              if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+                that.setData({
+                  appliedByUser: true
+                })
+                console.log('我报名了！')
+                if (that.data.applicantsInfo[i].applicantStatus) {
+                  that.setData({
+                    confirmedByUser: true
+                  })
+                  console.log('确认的人是我自己！')
                 }
+                break
               }
             }
           }
