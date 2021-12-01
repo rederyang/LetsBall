@@ -24,5 +24,7 @@
   </view>
   <view class="item-time">{{itemName.startTime}}</view>
 </view>
+
+<view class="blank"></view>
  
 

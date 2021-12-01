@@ -63,5 +63,7 @@
 <view class="button_float" wx:if="{{status == 1}}" bindtap='onTapAdd'>
  <image class="add-icon" src="/images/add.png"></image>
 </view>
+
+<view class="blank"></view>
  
 
