@@ -23,51 +23,57 @@ exports.main = async (event, context) => {
     var tasks=[]
     var Num
     const db = cloud.database()
-    var validDataNUm = await db.collection('CurrentTask').where({
+    var validData
+    await db.collection('CurrentTask').where({
         publisherQuitStatus: false,
       })
       .get()
-    var dataNum = await db.collection('CurrentTask').count()
-    console.log(dataNum)
-    console.log(event.num)
-    if (dataNum.total < event.num) {
-        Num = dataNum.total
-    } else {
-        Num = event.num
-    }
-    console.log(Num)
-    var j=0
-    for(let i=1;i<=dataNum.total;i++){
-        await db.collection('CurrentTask')
-        .skip(dataNum.total-i)
-        .limit(1)
-        .get()
-        .then(res=>{
-            console.log(res)
-            if(res.data[0].publisherQuitStatus==false){
-                console.log(res)
-                tasks.push(res.data[0])
-                j++
-            }
-        })
-        if(j==Num){
-            break
-        }
-    }
-/*    await db.collection('CurrentTask')
-        .skip(dataNum.total - event.num)
-        .get()
-        .then(res => {
-            console.log(res)
-            tasks = res.data
-        })
-*/
-    var result = {}
-    result.errCode = 0
-    result.errMsg = '获取数据成功'
-    var data = {}
-    data.tasks = tasks
-    result.data = data
+      .then(res=>{
+          console.log(res.data)
+          validData = res.data
+      })
+    console.log(validData)
+//     var dataNum = await db.collection('CurrentTask').count()
+//     console.log(dataNum)
+//     console.log(event.num)
+//     if (dataNum.total < event.num) {
+//         Num = dataNum.total
+//     } else {
+//         Num = event.num
+//     }
+//     console.log(Num)
+//     var j=0
+//     for(let i=1;i<=dataNum.total;i++){
+//         await db.collection('CurrentTask')
+//         .skip(dataNum.total-i)
+//         .limit(1)
+//         .get()
+//         .then(res=>{
+//             console.log(res)
+//             if(res.data[0].publisherQuitStatus==false){
+//                 console.log(res)
+//                 tasks.push(res.data[0])
+//                 j++
+//             }
+//         })
+//         if(j==Num){
+//             break
+//         }
+//     }
+// /*    await db.collection('CurrentTask')
+//         .skip(dataNum.total - event.num)
+//         .get()
+//         .then(res => {
+//             console.log(res)
+//             tasks = res.data
+//         })
+// */
+//     var result = {}
+//     result.errCode = 0
+//     result.errMsg = '获取数据成功'
+//     var data = {}
+//     data.tasks = tasks
+//     result.data = data
     return result
 
 }
