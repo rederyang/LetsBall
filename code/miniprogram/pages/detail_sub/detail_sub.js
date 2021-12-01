@@ -105,7 +105,9 @@ Page({
                 success(res) {
                   if (res.confirm) {
                     console.log('用户点击确定')
-                    that.onShow()  // 需要重新加载页面数据
+                    wx.navigateBack({
+                      delta: 1,
+                    })
                   }
                 }
               })
@@ -131,8 +133,9 @@ Page({
               showCancel: false,
               success(res) {
                 if (res.confirm) {
-                  console.log('用户点击确定')
-                  that.onShow()
+                  wx.navigateBack({
+                    delta: 1,
+                  })                
                 }
               }
             })
@@ -221,8 +224,16 @@ Page({
               console.error('[云函数] [get_user_detail] 调用失败', err)
             }
           })
-        } else {
+        } else if (res.result.errCode == 1) {
           console.log('传参')
+        } else if (res.result.errCode == 2) {
+          console.log(res)
+          wx.showModal({
+            title: '查找活动失败，活动可能已被取消',
+            showCancel: false,
+            confirmText: '好的',
+            confirmColor: '#FE6559',
+          })
         }
       },
       fail: err => {
