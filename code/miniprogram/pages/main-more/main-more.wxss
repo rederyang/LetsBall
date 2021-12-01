@@ -38,11 +38,15 @@ page {
   margin-left: 20rpx;
 }
 
-.search-cancel-image{
+.search-cancel-image, .search-cancel-image-hidden{
   height: 80%;
   width: 10%;
   margin-left: 20rpx;
   margin-right: 20rpx;
+}
+
+.search-cancel-image-hidden {
+  visibility: hidden;
 }
 
 .search-input{
