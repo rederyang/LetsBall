@@ -6,6 +6,7 @@ page {
   --margin-left: 10%;
   --margin-top: 30rpx;
   --line-width: 5rpx;
+  background-color: white;
 }
 
 /* public section */
@@ -47,14 +48,14 @@ page {
 
 .title {
   color: rgba(254, 101, 89, 100);
-  font-size: 60rpx;
+  font-size: 50rpx;
   text-align: left;
-  height: 80rpx;
-  width: 300rpx
+  height: 60rpx;
+  width: 400rpx
 }
 
 .tag, .tag-confirmed, .tag-unconfirmed, .tag-confirmedSelf {
-  width: 160rpx;
+  width: 120rpx;
   line-height: 70rpx;
   background-color: #FF0A6B;
   border-radius: 80rpx;

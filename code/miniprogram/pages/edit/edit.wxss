@@ -6,6 +6,7 @@ page {
   --margin-top: 30rpx;
   --line-width: 5rpx;
   --line-height: 70rpx;
+  background-color: white;
 }
 
 .area {
@@ -122,6 +123,21 @@ page {
   border-radius: 50%;
   background-color: #FF0A6B;
   box-shadow: 3rpx 3rpx 3rpx 3rpx gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button_confirm {
+  margin-top: 100rpx;
+  width: var(--width);
+  margin-left: var(--margin-left);
+  font-size: 40rpx;
+  color: #FE6559;
+  height: 80rpx;
+  text-align: center;
+  background-color: #E5E5E5;
+  border-radius: 10rpx;
   display: flex;
   align-items: center;
   justify-content: center;

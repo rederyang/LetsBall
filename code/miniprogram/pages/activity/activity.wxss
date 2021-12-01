@@ -62,25 +62,20 @@ page {
 
 .activity-wrapper, .activity-wrapper-pub{
   width: 86%;
-  margin-top: 10rpx;
-  margin-bottom: 10rpx;
+  margin-top: 40rpx;
+  /* margin-bottom: 16rpx; */
   margin-left: 7%;
   margin-right: 7%;
   padding-top: 2%;
   padding-bottom: 2%;
-  border-radius: 10rpx;
   background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  border-radius: 5px 5px 5px 5px;
+  border-radius: 30rpx;
   background-color: rgba(250, 250, 250, 100);
-  color: rgba(16, 16, 16, 100);
-  font-size: 14px;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.4);
-  font-family: Arial;
-  border: 1px solid #FE6559;
+  box-shadow: 2rpx 2rpx 6rpx 0 #FE6559, 2rpx 6rpx 6rpx 4rpx rgba(0, 0, 0, 0.19); 
 }
 
 .activity-wrapper-pub {
@@ -175,6 +170,7 @@ page {
   margin-top: 10rpx;
   margin-bottom: 10rpx;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -205,8 +201,28 @@ page {
   font-weight: 600;
 }
 
+.item-bubble {
+  margin-left: auto;
+  width: 55rpx;
+  height: 38rpx;
+  background-color: #F29908;
+  border-radius: 36rpx;
+  text-align: center;
+  font-size: 28rpx;
+  align-self: right;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .item-title {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 10rpx;
@@ -216,14 +232,24 @@ page {
 
 .item-leader {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   margin-bottom: 10rpx;
-  font-size: 30rpx;
+  font-size: 30rpx;  
 }
 
 .item-loc {
   width: 90%;
+  overflow:hidden;
+  /*不换行*/
+  white-space:nowrap;
+  /*添加...*/
+  text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
   font-size: 30rpx;

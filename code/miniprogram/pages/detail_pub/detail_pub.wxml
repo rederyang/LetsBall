@@ -80,10 +80,14 @@
 </view>
 
 <block wx:if="{{!confirmed}}">
-<view class="button_float" bindtap="onEdit">
-  <image class="icon_img" src="/images/write.svg"></image>
+<view class="button_float">
+<button class="button_class" open-type="share" hover-class="btn-hover">
+  <image class="icon_img" src="/images/share2.png"></image>
+</button>
 </view>
 </block>
 
 <view class="button_cancel" bindtap="onCancel">取消活动</view>
 
+<view wx:if="{{!applied}}" class="button_edit" bindtap="onEdit">修改活动</view>
+<view class="blank"></view>

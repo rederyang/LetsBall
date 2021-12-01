@@ -6,6 +6,7 @@ page {
   --margin-left: 10%;
   --margin-top: 30rpx;
   --line-width: 5rpx;
+  background-color: white;
 }
 
 .background {

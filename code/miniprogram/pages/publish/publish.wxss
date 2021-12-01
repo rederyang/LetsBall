@@ -6,6 +6,7 @@ page {
   --margin-top: 30rpx;
   --line-width: 5rpx;
   --line-height: 70rpx;
+  background-color: white;
 }
 
 .area {

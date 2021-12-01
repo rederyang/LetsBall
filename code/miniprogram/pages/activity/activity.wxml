@@ -22,7 +22,11 @@
      </view>
     </view>
   </view>
-    <view class="item-time">{{itemName.startTime}}</view>
+  <view class="item-time">
+    {{itemName.startTime}}
+    <view class="item-bubble">10</view>
+  </view>
+  
 </view>
 </block>
 <!-- 

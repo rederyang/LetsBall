@@ -6,7 +6,6 @@ Page({
    */
   data: {
     taskId: '',
-    info_content: {},
     intro: "",
     chatList: [],
     subInfo: {},
@@ -31,7 +30,6 @@ Page({
           that.confirmAct({
             openid: openid,
           })
-        } else if (res.cancel) {
         }
       }
     })
@@ -91,17 +89,18 @@ Page({
 
   // 跳转至编辑界面
   onEdit: function(e) {
-    wx.showModal({
-      title: '本功能开发中，敬请期待~',
-      confirmText: "好吧",
-      showCancel: false,
-    })
+    var that = this
+    // wx.showModal({
+    //   title: '本功能开发中，敬请期待~',
+    //   confirmText: "好吧",
+    //   showCancel: false,
+    // })
 
-    return
+    // return
     console.log("点击编辑键")
-    var info_content= JSON.stringify(this.data.info_content);
+    var task= JSON.stringify(that.data.task);
     wx.navigateTo({
-      url: '../edit/edit?info_content=' + info_content + "&taskId=" + this.data.taskId,
+      url: '../edit/edit?info_content=' + task + "&taskId=" + that.data.taskId,
     })
   },
 
@@ -344,7 +343,17 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function (res) {
+    return {
+      title: '活动邀请！',
+      path: '/pages/detail_sub/detail_sub?taskId=' + this.data.taskId,
+    }
+  },
 
-  }
+  // onShareTimeline: function(e) {
+  //   return {
+  //     title: '活动邀请',
+  //     query: 'taskId=' + this.data.taskId,
+  //   }
+  // },
 })
