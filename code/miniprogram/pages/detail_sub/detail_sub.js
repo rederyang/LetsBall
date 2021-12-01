@@ -38,7 +38,7 @@ Page({
             title: '报名成功',
             content: '请等待发起者的确认',
             confirmText: "我知道了",
-            confirmColor: '#FF0A6B',
+            confirmColor: '#FE6559',
             showCancel: false,
           })
         } else if (res.result.errCode == 1) {
@@ -46,9 +46,9 @@ Page({
         } else if (res.result.errCode == 2) {
           wx.showModal({
             title: '您已经报过名了',
-            content: '请等待发起者的确认~',
+            content: '请等待发起者的确认',
             confirmText: "我知道了",
-            confirmColor: '#FF0A6B',
+            confirmColor: '#FE6559',
             showCancel: false,
           })
         }
@@ -68,16 +68,14 @@ Page({
       wx.showModal({
         title: '报名活动',
         content: '确定要报名这个活动吗~',
-        confirmColor: '#FF0A6B',
+        confirmColor: '#FE6559',
         cancelColor: '#81838F',
         cancelText: '再想想',
-        confirmText: '报名！',
+        confirmText: '报名',
         success(res) {
           if (res.confirm) {
             console.log('用户点击确定')
             that.applyAct()
-          } else if (res.cancel) {
-            console.log('用户点击取消')
           }
         }
       })
@@ -95,44 +93,50 @@ Page({
         applicantId: app.globalData.openId,
       },
       success: res => {
-        if (res.result.errCode == 0) {
-          console.log(res)
-          wx.showModal({
-            title: '已取消确认',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                that.onShow()  // 需要重新加载页面数据
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
+        wx.hideLoading({
+          success: () => {
+            if (res.result.errCode == 0) {
+              console.log(res)
+              wx.showModal({
+                title: '已取消确认',
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    that.onShow()  // 需要重新加载页面数据
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '抱歉，出错了呢~',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+              })
             }
-          })
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-          })
-        }
+          },
+        })
       },
       fail: err => {
-        wx.showModal({
-          title: '取消成功',
-          confirmText: "我知道了",
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              that.loadData()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
+        wx.hideLoading({
+          success: () => {
+            wx.showModal({
+              title: '取消成功',
+              confirmText: "我知道了",
+              confirmColor: '#FE6559',
+              showCancel: false,
+              success(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  that.onShow()
+                }
+              }
+            })
+          },
         })
         console.error('[云函数] [quit_commited_task] 调用失败', err)
       }
@@ -151,10 +155,10 @@ Page({
       confirmText: '要取消',
       success(res) {
         if (res.confirm) {
-          console.log('用户点击确定')
+          wx.showLoading({
+            title: '取消活动',
+          })
           that.cancelAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })

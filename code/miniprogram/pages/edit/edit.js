@@ -155,6 +155,9 @@ Page({
         confirmText: '确认',
         success(res) {
           if (res.confirm) {
+            wx.showLoading({
+              title: '正在修改',
+            })
             that.editAct()
           }
         }
@@ -194,40 +197,36 @@ Page({
         console.log(res);
         if (res.result.errCode == 0) {
           console.log('调用成功')
-          wx.navigateBack({
-            delta: 1,
+          wx.hideLoading({
+            success: () => {
+              wx.navigateBack({
+                delta: 1,
+              })
+            },
           })
-          // wx.showModal({
-          //   title: '修改成果',
-          //   confirmText: "我知道了",
-          //   showCancel: false,
-          //   confirmColor: '#FE6559',
-          //   success(res) {
-          //     if (res.confirm) {
-          //       console.log('用户点击确定')
-          //       wx.navigateBack({
-          //         delta: 1,
-          //       })
-          //     } else if (res.cancel) {
-          //       console.log('用户点击取消')
-          //     }
-          //   },
-          // })
         } else {
-          wx.showModal({
-            title: '修改失败，请重试或向开发者反馈',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
+          wx.hideLoading({
+            success: () => {
+              wx.showModal({
+                title: '修改失败，请重试或向开发者反馈',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                showCancel: false,
+              })
+            },
           })
         }
       },
       fail: err => {
-        console.error('[云函数] [modify_tasks] 调用失败', err)
-        wx.showModal({
-          title: '修改失败',
-          content: '可能存在网络问题',
-          showCancel: false,
+        wx.hideLoading({
+          success: () => {
+            console.error('[云函数] [modify_tasks] 调用失败', err)
+            wx.showModal({
+              title: '修改失败',
+              content: '可能存在网络问题',
+              showCancel: false,
+            })
+          },
         })
       }
     })

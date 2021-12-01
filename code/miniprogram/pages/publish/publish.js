@@ -154,13 +154,16 @@ Page({
       wx.showModal({
         title: '发布活动',
         content: '确定要发布这个活动了吗~',
-        confirmColor: '#FF0A6B',
+        confirmColor: '#FE6559',
         cancelColor: '#81838F',
         cancelText: '再改改',
-        confirmText: '发布！',
+        confirmText: '发布',
         success(res) {
           if (res.confirm) {
             console.log('用户点击确定')
+            wx.showLoading({
+              title: '正在发布',
+            })
             that.pubAct()
           }
         }
@@ -203,52 +206,47 @@ Page({
       success: res => {
         console.log(res);
         if (res.result.errCode == 0) {
-          wx.showModal({
-            title: '发布成功',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            confirmColor: '#FE6559',
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                wx.navigateBack({
-                  delta: 1,
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
+          wx.hideLoading({
+            success: () => {
+              wx.showModal({
+                title: '发布成功!',
+                confirmText: "我知道了",
+                showCancel: false,
+                confirmColor: '#FE6559',
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    wx.navigateBack({
+                      delta: 1,
+                    })
+                  }
+                }
+              })
+            },
           })
         } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
+          wx.hideLoading({
+            success: () => {
+              wx.showModal({
+                title: '发布失败',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                showCancel: false,
+              })
+            },
           })
         }
       },
       fail: err => {
-        console.error('[云函数] [wechat_sign] 调用失败', err)
-        wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
+        wx.hideLoading({
+          success: () => {
+            console.error('[云函数] [wechat_sign] 调用失败', err)
+            wx.showModal({
+              title: '调用失败',
+              content: '请检查云函数是否已部署',
+              showCancel: false,
+            })
+          },
         })
       }
     })

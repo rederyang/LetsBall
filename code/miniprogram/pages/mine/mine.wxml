@@ -87,3 +87,5 @@
   </view>
   </view>
 </view> -->
+
+<view class="develop" bindtap="toIndex">管理员入口，非公莫入</view>

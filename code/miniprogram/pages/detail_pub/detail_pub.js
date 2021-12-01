@@ -27,6 +27,9 @@ Page({
       success(res) {
         if (res.confirm) {
           console.log('用户确认活动')
+          wx.showLoading({
+            title: '正在确认',
+          })
           that.confirmAct({
             openid: openid,
           })
@@ -47,56 +50,55 @@ Page({
       },
       success: res => {
         if (res.result.errCode == 0) {
-          console.log("成功完成单向确认")
-          wx.showModal({
-            title: '确认成功！',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                that.loadData()
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
+          wx.hideLoading({
+            success: () => {
+              console.log("成功完成单向确认")
+              wx.showModal({
+                title: '确认成功',
+                confirmColor: '#FE6559',
+                confirmText: "我知道了",
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    that.loadData()
+                  }
+                }
+              })
+            },
           })
         } else {
-          console.error('传参')
+          wx.hideLoading({
+            success: () => {
+              console.error('传参')
+            },
+          })
         }
       },
       fail: err => {
-        wx.showModal({
-          title: '确认成功！',
-          confirmText: "我知道了",
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              that.loadData()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
+        wx.hideLoading({
+          success: () => {
+            wx.showModal({
+              title: '确认成功！',
+              confirmText: "我知道了",
+              confirmColor: '#FE6559',
+              showCancel: false,
+              success(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                  that.loadData()
+                }
+              }
+            })
+          },
         })
         console.error('[accept_registration] 调用失败', err)
       }
     })
-    // FAKE action
-    that.loadData()
   },
 
   // 跳转至编辑界面
   onEdit: function(e) {
     var that = this
-    // wx.showModal({
-    //   title: '本功能开发中，敬请期待~',
-    //   confirmText: "好吧",
-    //   showCancel: false,
-    // })
-
-    // return
     console.log("点击编辑键")
     var task= JSON.stringify(that.data.task);
     wx.navigateTo({
@@ -117,9 +119,10 @@ Page({
       success(res) {
         if (res.confirm) {
           console.log('用户点击确定')
+          wx.showLoading({
+            title: '取消活动',
+          })
           that.cancelAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })
@@ -143,41 +146,46 @@ Page({
         taskId: that.data.taskId
       },
       success: res => {
-        if (res.result.errCode == 0) {
-          console.log("成功取消活动")
-          wx.showModal({
-            title: '活动已取消',
-            confirmText: "我知道了",
-            confirmColor: '#FE6559',
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                wx.navigateBack({  // 返回上一级
-                  delta: 1,
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
+        wx.hideLoading({
+          success: () => {
+            if (res.result.errCode == 0) {
+              console.log("成功取消活动")
+              wx.showModal({
+                title: '活动已取消',
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    wx.navigateBack({  // 返回上一级
+                      delta: 1,
+                    })
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '抱歉，出错了呢~',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                  } else if (res.cancel) {
+                    console.log('用户点击取消')
+                  }
+                }
+              })
             }
-          })
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
+          },
+        })
       },
       fail: err => {
+        wx.hideLoading({
+          success: () => {},
+        })
         console.error('[云函数] [get_hot_words] 调用失败', err)
       }
     })

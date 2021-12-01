@@ -1,7 +1,5 @@
 {
-  "usingComponents": {
-    "mp-tabs": "@miniprogram-component-plus/tabs"
-  },
+  "usingComponents": {},
   "navigationBarTitleText": "约个ball",
   "enablePullDownRefresh": true,
   "backgroundTextStyle": "light"
