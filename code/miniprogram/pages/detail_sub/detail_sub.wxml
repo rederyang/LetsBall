@@ -59,6 +59,10 @@
 <view class="button_cancel" bindtap="onCancel">取消确认</view>
 </block>
 
+<block wx:if="{{appliedByUser}}">
+<view class="button_cancel" bindtap="onCancel">取消报名</view>
+</block>
+
 <view class="button_float">
   <image class="icon_img" src="/images/msg1.png" bindtap="onChat"></image>
 </view>
