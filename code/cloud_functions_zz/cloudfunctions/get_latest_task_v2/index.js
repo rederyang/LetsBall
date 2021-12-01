@@ -11,7 +11,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
     /**判断前端参数是否传递正确  start */
-    if (event.num == undefined) {
+    if (event.num1 == undefined || event.num2 == undefined) {
         var result = {}
         result.errCode = 1
         result.errMsg = '前端参数传递错误，请重试'
@@ -20,10 +20,11 @@ exports.main = async (event, context) => {
         return result
     }
     /**判断前端参数是否传递正确  end */
-    var tasks=[]
-    var Num
+    var num1 = event.num1
+    var num2 = event.num2
     const db = cloud.database()
     var validData
+    var validDataLength
     await db.collection('CurrentTask').where({
         publisherQuitStatus: false,
       })
@@ -31,8 +32,30 @@ exports.main = async (event, context) => {
       .then(res=>{
           console.log(res.data)
           validData = res.data
+          validDataLength = res.data.length
       })
-    console.log(validData)
+      if (event.num2 > validDataLength) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '你太贪心了，没那么多数据，妈的'
+        var data = {}
+        data.tasks = validData.reverse()
+        return result
+    }
+    if (event.num1 >= event.num2) {
+        var result = {}
+        result.errCode = 3
+        result.errMsg = '参数传反了 小傻瓜'
+        var data = {}
+        data.tasks = validData.reverse()
+        return result
+    }
+    var result = {}
+    result.errCode = 0
+    result.errMsg = '成了！'
+    var data = {}
+    data.tasks = validData.reverse().slice(num1,num2)
+    result.data = data
 //     var dataNum = await db.collection('CurrentTask').count()
 //     console.log(dataNum)
 //     console.log(event.num)
