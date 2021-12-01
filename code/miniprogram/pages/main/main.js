@@ -78,8 +78,10 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {    
-    
+  onLoad: function (options) { 
+    var that = this   
+    // 先获取openId
+    that._silentSign()
   },
 
   /**
@@ -94,105 +96,8 @@ Page({
    */
   onShow: function () {
     var that = this
-    // 先获取openId
-    that._silentSign(
-      () => {
-        // 获取最新活动
-        that._getLatestTask()
-
-        // 获取热门活动并按照时间筛选
-        // wx.cloud.callFunction({
-        //   name: 'get_hot_task',
-        //   data: {
-        //     num: 30,
-        //   },
-        //   success: res => {
-        //     console.log(res);
-        //     if (res.result.errCode == 0) {
-        //       let activities = res.result.data.activities
-        //       // 根据时间筛选          
-        //       activities = activities.filter(this._filterByTime)
-        //       that.setData({
-        //         hotActivities: activities
-        //       })
-        //     } else {
-        //       wx.showModal({
-        //         title: '抱歉，出错了呢~',
-        //         content: res.result.errMsg,
-        //         confirmText: "我知道了",
-        //         showCancel: false,
-        //       })
-        //     }
-        //   },
-        //   fail: err => {
-        //     console.error('[云函数] [wechat_sign] 调用失败', err)
-        //     wx.showModal({
-        //       title: '调用失败',
-        //       content: '请检查云函数是否已部署',
-        //       showCancel: false,
-        //     })
-        //   }
-        // })
-
-        // wx.cloud.callFunction({
-        //   name: 'get_user_published',
-        //   data: {
-        //     openId: app.globalData.openId,
-        //   },
-        //   success: res => {
-        //     console.log(res);
-        //     if (res.result.errCode == 0) {
-        //       let taskPub = res.result.data.taskId
-        //       app.globalData.taskPub = taskPub
-        //       console.log(taskPub)
-        //     } else {
-        //       wx.showModal({
-        //         title: 'get_user_published',
-        //         content: res.result.errMsg,
-        //         confirmText: "我知道了",
-        //         showCancel: false,
-        //       })
-        //     }
-        //   },
-        //   fail: err => {
-        //     console.error('[云函数] [get_user_published] 调用失败', err)
-        //     wx.showModal({
-        //       title: '[get_user_published]调用失败',
-        //       content: '请检查云函数是否已部署',
-        //       showCancel: false,
-        //     })
-        //   }
-        // })
-    
-        // // 获取用户报名的所有活动
-        // wx.cloud.callFunction({
-        //   name: 'get_user_signed',
-        //   data: {},
-        //   success: res => {
-        //     console.log(res);
-        //     if (res.result.errCode == 0) {
-        //       let taskSub = res.result.data.taskId
-        //       app.globalData.taskSub = taskSub
-        //     } else {
-        //       wx.showModal({
-        //         title: '抱歉，出错了呢~',
-        //         content: res.result.errMsg,
-        //         confirmText: "我知道了",
-        //         showCancel: false,
-        //       })
-        //     }
-        //   },
-        //   fail: err => {
-        //     console.error('[get_user_signed] 调用失败', err)
-        //     wx.showModal({
-        //       title: '调用失败',
-        //       content: '请检查云函数是否已部署',
-        //       showCancel: false,
-        //     })
-        //   }
-        // })
-      }
-    )
+    // 获取最新活动
+    that._getLatestTask()
   },
 
   /**
@@ -292,10 +197,10 @@ Page({
                     app.globalData.user = res.result.data.user
                     app.globalData.userInfo.avatarUrl = app.globalData.user.userPic
                     app.globalData.userInfo.nickName = app.globalData.user.nickName
-                    callback()
+                    callback && callback()
                   } else {
                     console.log('查无此人。')
-                    callback()
+                    callback && callback()
                   }
                 } else {
                   console.error('通过openid查用户失败。', err)
@@ -319,7 +224,7 @@ Page({
       })
     } else {
       console.log('已经获得openid')
-      callback()
+      callback && callback()
     }
   },
 
