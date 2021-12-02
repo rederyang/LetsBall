@@ -59,7 +59,7 @@
 <view class="button_cancel" bindtap="onCancel">取消确认</view>
 </block>
 
-<block wx:if="{{appliedByUser}}">
+<block wx:if="{{appliedByUser && !confirmedByUser}}">
 <view class="button_cancel" bindtap="onCancel">取消报名</view>
 </block>
 
