@@ -19,7 +19,7 @@
 <view class="tab-right-wrapper" bindtap="onTapMore">
   <view class='tab-right-button'>更多</view>
   <view class='tab-right-icon'>
-    <image class='tab-right-image' src='/images/arrow.png' mode='center'></image>
+    <image class='tab-right-image' src='cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/arrow.png' mode='center'></image>
   </view>  
 </view>
 </view>
@@ -27,7 +27,7 @@
 <view class="activity-wrapper" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx" wx:key="taskId" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
   <view class="item-line">
     <image wx:if="{{itemName.taskPic != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
-    <!-- <image class="item-picture" mode="scaleToFill" src="/images/avatar.png"></image> -->
+    <!-- <image class="item-picture" mode="scaleToFill" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png"></image> -->
     <view class="item-words">
       <view class="item-title">{{itemName.taskName}}</view>
       <view class="item-leader">{{itemName.publisher}}</view>
@@ -40,6 +40,6 @@
 <view class="blank"></view>
 
 <view class="button_float" bindtap='onTapAdd'>
- <image class="add-icon" src="/images/add.png"></image>
+ <image class="add-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/add.png"></image>
 </view>
  

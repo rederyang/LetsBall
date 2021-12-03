@@ -5,7 +5,7 @@ const app = getApp()
 Page({
   data: {
     status: 0,
-    images: [ '/images/test1.jpg', '/images/test2.jpg'],
+    images: [ 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/test1.jpg', 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/test2.jpg'],
     activities: []
   },
 
@@ -140,7 +140,7 @@ Page({
     wx.showModal({
       title: '提示',
       content: '请先登录哦~',
-      confirmColor: '#FF0A6B',
+      confirmColor: '#FE6559',
       cancelColor: '#81838F',
       cancelText: '取消',
       confirmText: '登录',
