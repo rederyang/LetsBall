@@ -61,7 +61,7 @@
 
 
 <view class="button_float" wx:if="{{status == 1}}" bindtap='onTapAdd'>
- <image class="add-icon" src="/images/add.png"></image>
+ <image class="add-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/add.png"></image>
 </view>
 
 <view class="blank"></view>

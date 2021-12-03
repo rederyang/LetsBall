@@ -1,5 +1,8 @@
 // pages/detail_sub/detail_sub.js
 
+//用户登录IM系统
+import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
+
 const app = getApp()
 
 Page({
@@ -17,6 +20,8 @@ Page({
     confirmed: false,
     confirmedByUser: false,
     appliedByUser: false,
+    msg: [],
+    status: 'true',
   },
 
   // 用户报名之后的动作
@@ -35,22 +40,12 @@ Page({
       success: res => {
         console.log(res)
         if (res.result.errCode == 0) {
-          wx.showModal({
-            title: '报名成功',
-            content: '请等待发起者的确认',
-            confirmText: "我知道了",
-            confirmColor: '#FE6559',
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
                 that.setData({
                   appliedByUser: true,
                 })
                 that.loadData()
               }
-            }
-          })
-        } else if (res.result.errCode == 1) {
+         else if (res.result.errCode == 1) {
           console.log('传参，妈的')
         } else if (res.result.errCode == 2) {
           wx.showModal({
@@ -68,26 +63,110 @@ Page({
     })
   },
 
-  // 开启聊天（这里当作申请确认）
+  // 开启聊天
   onChat: function(e) {
     var that = this
     if (!app.globalData.logged) {
       that._wechatSign()
     } else {
-      wx.showModal({
-        title: '报名活动',
-        content: '确定要报名这个活动吗~',
-        confirmColor: '#FE6559',
-        cancelColor: '#81838F',
-        cancelText: '再想想',
-        confirmText: '报名',
-        success(res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-            that.applyAct()
+      const _SDKAPPID = 1400601709;
+      const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
+      var EXPIRETIME = 604800;
+      var SDKAPPID = _SDKAPPID;
+      var SECRETKEY = _SECRETKEY;
+      var userID = app.globalData.openId + '-' + that.data.taskId;
+      var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+      var userSig = generator.genTestUserSig(userID);
+      console.log('IM userID')
+      console.log(userID)
+      console.log('IM userSig')
+      console.log(userSig)
+      app.globalData.accountTid = userID
+      var tim = app.globalData.tim
+      let promise = tim.login({
+        userID: userID,
+        userSig: userSig
+      });
+      promise.then(function (imResponse) {
+        console.log(imResponse)
+        console.log('登录IM成功')
+        wx.setStorageSync('isImlogin', true)
+        app.globalData.isImLogin = true
+        setTimeout(() => {
+          //拉取会话列表
+          that.initRecentContactList()
+        }, 1000);
+      })
+
+      wx.cloud.callFunction({
+        name: "get_task_applicants",
+        data: {
+          taskId: [that.data.taskId]
+        },
+        success: res => {
+          if (res.result.errCode == 0) {
+            console.log(res)
+            // 首先需要不是空的
+            if (res.result.data.info.length > 0) {
+              that.setData({
+                applicantsInfo: res.result.data.info,
+              })
+            }
           }
         }
       })
+      var exist = 0;
+      if (that.data.applicantsInfo != undefined) {
+        console.log('打印报名信息')
+        console.log(that.data.applicantsInfo)
+        var num = that.data.applicantsInfo.length
+        for (let i = 0; i < num; i++) {
+          if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+            exist = 1;
+            break;
+          }
+        }
+      }
+      if (exist == 0) {
+        wx.showModal({
+          title: '报名活动',
+          content: '确定要报名这个活动吗~',
+          confirmColor: '#FE6559',
+          cancelColor: '#81838F',
+          cancelText: '再想想',
+          confirmText: '报名',
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.applyAct()
+              console.log('打印e')
+              console.log(e)
+              console.log(that.data)
+              var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+              console.log(conversationid)
+              var avatar = that.data.pubInfo.userPic
+              var name = that.data.pubInfo.nickName
+              var status = that.data.status
+              console.log(status)
+              wx.navigateTo({
+                url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+        console.log(conversationid)
+        var avatar = that.data.pubInfo.userPic
+        var name = that.data.pubInfo.nickName
+        var status = that.data.status
+        
+        wx.navigateTo({
+          url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+        })
+      }
     }
   },
 
@@ -115,6 +194,7 @@ Page({
                     wx.navigateBack({
                       delta: 1,
                     })
+                    that.loadData()
                   }
                 }
               })
@@ -143,6 +223,7 @@ Page({
                   wx.navigateBack({
                     delta: 1,
                   })
+                  that.loadData()
                 }
               }
             })
@@ -187,6 +268,26 @@ Page({
       }
     })
   },
+
+ //获取会话列表
+ initRecentContactList() {
+  var that = this
+  //拉取会话列表
+  var tim = app.globalData.tim
+  let promise = tim.getConversationList();
+  if (!promise) {
+    console.log('获取会话列表出错，SDK not ready')
+    return
+  }
+  promise.then(function (imResponse) {
+    console.log('会话列表')
+    console.log(imResponse)
+    const conversationList = imResponse.data.conversationList;
+    that.setData({
+      msg: conversationList
+    })
+  })
+},
 
   // 获取关于活动的信息
   loadData: function () {
