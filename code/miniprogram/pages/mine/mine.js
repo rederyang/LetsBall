@@ -89,7 +89,7 @@ Page({
     wx.showModal({
       title: '登录',
       content: '您要登录吗？',
-      confirmColor: '#FF0A6B',
+      confirmColor: '#FE6559',
       cancelColor: '#81838F',
       cancelText: '取消',
       confirmText: '登录',
