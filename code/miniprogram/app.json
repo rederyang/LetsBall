@@ -1,19 +1,14 @@
 {
   "pages": [
     "pages/main/main",
-    "pages/main-more/main-more",
-    "pages/detail/detail",
-    "pages/activity/activity",    
-    "pages/publish/publish",  
-    "pages/mine/mine",    
+    "pages/activity/activity",
+    "pages/publish/publish",
+    "pages/mine/mine",
     "pages/detail_pub/detail_pub",
     "pages/detail_sub/detail_sub",
-    "pages/detail_pub_1/detail_pub_1",
-    "pages/detail_pub_2/detail_pub_2",
-    "pages/detail_sub_1/detail_sub_1",
-    "pages/detail_sub_2/detail_sub_2",    
-    "pages/detail_sub_3/detail_sub_3",
     "pages/edit/edit",
+    "pages/main-more/main-more",
+    "pages/chat/chat",
     "pages/index/index"
   ],
   "window": {
@@ -28,8 +23,7 @@
     "selectedColor": "#FE6559",
     "borderStyle": "white",
     "backgroundColor": "#FAFAFA",
-    "list": [
-      {
+    "list": [{
         "selectedIconPath": "images/square_.png",
         "iconPath": "images/square.png",
         "pagePath": "pages/main/main",
