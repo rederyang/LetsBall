@@ -1,0 +1,129 @@
+/* pages/publish/publish.wxss */
+/* global config */
+page {
+  --width: 80%;
+  --margin-left: 10%;
+  --margin-top: 30rpx;
+  --line-width: 5rpx;
+  --line-height: 70rpx;
+  background-color: white;
+}
+
+.area {
+  width: var(--width);
+  margin-left: var(--margin-left);
+  margin-top: var(--margin-top);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.subtitle {
+  width: 100%;
+  font-size: 40rpx;
+  text-align: center;
+  margin-top: 30rpx;
+}
+
+.line_full {
+  width: var(--width);
+  margin-left: var(--margin-left);
+  margin-top: var(--margin-top);
+  height: var(--line-width);
+  background-color: #FE6559;
+}
+
+.line-block {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.line-text {
+  width: 25%;
+  height: var(--line-height);
+  line-height: var(--line-height);
+}
+
+.line-input {
+  width: 75%;
+  border-bottom: 4rpx solid #FE6559;
+  height: var(--line-height);
+  line-height: var(--line-height);
+  text-align: right;
+}
+
+.line-picker {
+  width: 75%;
+}
+
+.picker-view {
+  width: 100%;
+  height: var(--line-height);
+  border-bottom: 4rpx solid #FE6559;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.picker-icon {
+  height: 36rpx;
+  width: 36rpx;
+  color: #FE6559;
+  margin-left: 10rpx;
+}
+
+.time-view {
+  line-height: var(--line-height);
+}
+
+.intro_content {
+  height: 150rpx;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 5rpx;
+  padding-top: 10rpx;
+  padding-left: 10rpx;
+  padding-right: 10rpx;
+  padding-bottom: 10rpx;
+  border: solid var(--line-width) #FE6559;
+  border-radius: 10rpx;
+}
+
+.line-button {
+  margin-top: 100rpx;
+  margin-bottom: 150rpx;
+  width: var(--width);
+  margin-left: var(--margin-left);
+  font-size: 40rpx;
+  color: white;
+  height: 80rpx;
+  text-align: center;
+  background-color: #FF0A6B;
+  border-radius: 10rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon_img {
+  width: 85rpx;
+  height: 85rpx;
+}
+
+.button_float {
+  position: fixed;
+  bottom: 150rpx;
+  right: 60rpx;
+  width: 135rpx;
+  height: 135rpx;
+  border-radius: 50%;
+  background-color: #FF0A6B;
+  box-shadow: 3rpx 3rpx 3rpx 3rpx gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

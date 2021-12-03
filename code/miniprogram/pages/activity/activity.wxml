@@ -1,0 +1,69 @@
+<!--pages/activity/activity.wxml-->
+
+<view class="tab-wrapper">
+<view class='tab-center-wrapper'>
+  <button class="{{status==0?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapPub">我报名的</button>
+ <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapSub">我发布的</button>
+</view>
+</view>
+
+<block >
+<view class="activity-wrapper" wx:for="{{status==0 ? activitiesSub:activitiesPub}}" wx:for-item="itemName" wx:for-index="idx" wx:key="taskId" bindtap="onTapDetail" data-taskid="{{itemName.taskId}}" data-confirmed="{{itemName.isFull}}" data-content="{{itemName}}">
+  <view class="item-line">
+    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
+    <view class="item-words">
+      <view class="item-title">{{itemName.taskName}}</view>
+      <view class="item-leader">{{itemName.publisher}}</view>
+      <view class="item-loc">{{itemName.place}}</view>
+    </view>
+    <view class="item-status-area">
+     <view class="{{itemName.isFull ? 'item-status-confirmed' : 'item-status-unconfirmed'}}">
+      {{itemName.isFull ? '已满员' : '未满员'}}
+     </view>
+    </view>
+  </view>
+  <view class="item-time">
+    {{itemName.startTime}}
+    <view class="item-bubble">10</view>
+  </view>
+  
+</view>
+</block>
+<!-- 
+<block wx:if="{{status == 1}}">
+<view class="activity-wrapper-pub" wx:for="{{status==0 ? newActivities:hotActivities}}" wx:for-item="itemName" wx:for-index="idx">
+<view class="item-info-area">
+  <view class="item-line">
+    <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.picture_url}}"></image>
+    <view class="item-words">
+      <view class="item-title">{{itemName.title}}</view>
+      <view class="item-leader">{{itemName.leader}}</view>
+      <view class="item-loc">{{itemName.loc}}</view>
+    
+    </view>
+  </view>
+  <view class="item-time">{{itemName.time}}</view>
+</view>
+<view class="item-panel-area">
+ <view class="item-panel-top">
+  <view class="item-panel-status">已满员</view>
+ </view>
+ <view class="item-panel-bottom">
+  <button class="cancel-button">取消</button>
+  <view class="share-button">
+   <image class="share-icon" src="/images/share.png"></image>
+  </view>
+ </view>
+</view>
+
+</view>
+></block> -->
+
+
+<view class="button_float" wx:if="{{status == 1}}" bindtap='onTapAdd'>
+ <image class="add-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/add.png"></image>
+</view>
+
+<view class="blank"></view>
+ 
+

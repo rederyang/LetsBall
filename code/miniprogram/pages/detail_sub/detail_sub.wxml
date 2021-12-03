@@ -1,0 +1,70 @@
+<!--pages/detail_sub/detail_sub.wxml-->
+<view class='head'> 
+  <view class="title">{{task.taskName}}</view>
+  <view wx:if="{{!confirmedByUser}}" class="{{confirmed ? 'tag-confirmed' : 'tag-unconfirmed'}}">{{confirmed ? "满员" : "未满"}}</view>
+  <view wx:if="{{confirmedByUser}}" class="tag-confirmedSelf">确认</view>
+</view>
+<view class="line_title"></view>
+
+<view class="info">
+  <view class="info_title">
+    <text>日期：</text>
+    <text>开始：</text>
+    <text>时长：</text>
+    <text>地点：</text>
+    <text>类型：</text>
+    <text>难度：</text>
+    <text>提供场地：</text>
+    <text>提供器材：</text>
+    <text>其他要求：</text>
+  </view>
+  <view class="info_content">
+    <text>{{date}}</text>
+    <text>{{time}}</text>
+    <text>{{task.duration}} 分钟</text>
+    <text>{{task.place}}</text>
+    <text>{{task.type}}</text>
+    <text>{{task.level}}</text>
+    <text>{{task.spaceProvided ? '是' : '否'}}</text>
+    <text>{{task.equipmentProvided ? '是' : '否'}}</text>
+    <text>{{task.otherRequirements}}</text>
+  </view>
+</view>
+
+<view class="area">
+  <view class="subtitle">活动简介</view>
+  <view class="intro_content">{{task.details}}</view>
+</view>
+<view class="line_full"></view>
+
+<view class="area">
+  <view class="subtitle">发起人</view>
+  <view class="area_chat">
+    <view class="chat_card">
+      <image class="avatar" src="{{pubInfo.userPic}}"></image>
+      <view class="chat_content">
+        <view class="chat_row">
+          <view class="chat_name">{{pubInfo.nickName}}</view>
+          <text class="user_badge">一般用户</text>
+        </view>
+        <view class="chat_row">
+          <view class="chat_gray">{{pubInfo.gender ? "男" : "女"}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<block wx:if="{{confirmedByUser && confirmed}}">
+<view class="button_cancel" bindtap="onCancel">取消确认</view>
+</block>
+
+<block wx:if="{{appliedByUser && !confirmedByUser}}">
+<view class="button_cancel" bindtap="onCancel">取消报名</view>
+</block>
+
+<view class="button_float">
+  <image class="icon_img" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/msg1.png" bindtap="onChat"></image>
+</view>
+
+<view class="noti_float" wx:if="{{version2}}">3</view>

@@ -1,0 +1,89 @@
+<!--pages/publish/publish.wxml-->
+<view class="area">
+  <view class="line-block">
+    <view class="line-text">活动名称</view>
+    <input class="line-input" placeholder="八个字以内" placeholder-style="color:#949494;" bindinput="bindNameChange" />
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">活动日期</view>
+    <picker class="line-picker" mode="date" start="2021-11-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
+      <view class="picker-view">
+        <view class="time-view">{{date}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">开始时间</view>
+    <picker class="line-picker" mode="time" start="07:00" end="22:00" value="{{time}}" bindchange="bindTimeChange">
+      <view class="picker-view">
+        <view class="time-view">{{time}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">持续时长</view>
+    <input class="line-input" placeholder="30-200分钟" placeholder-style="color:#949494;" bindinput="bindDurationChange" />
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">活动地点</view>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindPlaceChange" />
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">运动项目</view>
+    <picker class="line-picker" mode="selector" value="{{sport_idx}}" range="{{sport_array}}" bindchange="bindSportChange">
+      <view class="picker-view">
+        <view class="time-view">{{sport_array[sport_idx]}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">活动难度</view>
+    <picker class="line-picker" mode="selector" value="{{level_idx}}" range="{{level_array}}" bindchange="bindLevelChange">
+      <view class="picker-view">
+        <view class="time-view">{{level_array[level_idx]}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">提供场地</view>
+    <picker class="line-picker" mode="selector" value="{{place_idx}}" range="{{if_array}}" bindchange="bindOfferPlace">
+      <view class="picker-view">
+        <view class="time-view">{{if_array[place_idx]}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">提供器材</view>
+    <picker class="line-picker" mode="selector" value="{{tool_idx}}" range="{{if_array}}" bindchange="bindOfferTool">
+      <view class="picker-view">
+        <view class="time-view">{{if_array[tool_idx]}}</view>
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
+      </view>
+    </picker>
+  </view>
+
+  <view class="line-block">
+    <view class="line-text">其他要求</view>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" />
+  </view>
+
+  <view class="subtitle">活动详情</view>
+  <textarea class="intro_content" placeholder="五十字以内" placeholder-style="color:#949494;" bindblur="bindIntroChange" value="{{intro}}" />
+</view>
+
+<view class="button_float" bindtap="onPub">
+  <image class="icon_img" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/pub.png"></image>
+</view>
