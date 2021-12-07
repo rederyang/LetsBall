@@ -218,6 +218,12 @@ Page({
     }
     console.timeEnd('获取用户发布和报名的所有活动')
 
+    console.log(that.data.pubTaskId.concat(that.data.subTaskId))
+
+    if (that.data.pubTaskId.concat(that.data.subTaskId).length == 0) {  // 如果没有活动，就不调用云函数
+      return
+    }
+
     console.time('根据taskID查询得到任务的详情信息和报名情况')
     // 根据taskID查询得到任务的详情信息和报名情况
     try {

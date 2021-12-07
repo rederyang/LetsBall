@@ -48,10 +48,10 @@
   </block>
 </view>
 <view class="chat-footer" style="padding-bottom: calc({{tabBottom}}px + 25rpx)">
-<view class='input' bindtap="bindfocus">
-  <textarea class="inputArea" focus="{{focus}}" fixed="true" cursor-spacing="25" disable-default-padding="true" bindinput="bindKeyInput" bindfocus="bindfocus" bindblur="bindblur" value="{{inputValue}}" placeholder=""/>
-  <text class="placeHolder" wx:if="{{inputShow}}">对ta发送消息</text>
-</view>
+  <view class='input' bindtap="bindfocus">
+    <textarea class="inputArea" focus="{{focus}}" fixed="true" cursor-spacing="25" disable-default-padding="true" bindinput="bindKeyInput" bindfocus="bindfocus" bindblur="bindblur" value="{{inputValue}}" placeholder=""/>
+    <text class="placeHolder" wx:if="{{inputShow}}">对ta发送消息</text>
+  </view>
   <view class='send' bindtap='accept' hidden='{{status}}'>接受报名</view>
   <view class='send' bindtap='bindConfirm'>发送</view>
 </view>

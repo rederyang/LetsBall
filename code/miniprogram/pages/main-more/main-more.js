@@ -29,6 +29,14 @@ Page({
   },
 
   onTapSearch: function(event) {
+    wx.showModal({
+      title: '本功能开发中，敬请期待~',
+      confirmText: "好吧",
+      confirmColor: '#FE6559',
+      showCancel: false,
+    })
+    return
+
     var that = this
     //TODO
     // 调用云函数进行搜索
