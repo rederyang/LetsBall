@@ -25,9 +25,17 @@ exports.main = async (event, context) => {
     const db = cloud.database()
     var validData
     var validDataLength
-    await db.collection('CurrentTask').where({
-        publisherQuitStatus: false,
-      })
+    const _ = db.command
+    await db.collection('CurrentTask')
+        .where(
+            _.and([{
+                publisherQuitStatus:false
+            }, {
+              startTime: _.gt(new Date(Date.now()))
+            }])
+          )
+
+        
       .get()
       .then(res=>{
           console.log(res.data)
