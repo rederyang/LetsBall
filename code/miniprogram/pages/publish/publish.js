@@ -1,5 +1,5 @@
 // pages/publish/publish.js
-
+import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
 const app = getApp()
 
 Page({
@@ -154,13 +154,16 @@ Page({
       wx.showModal({
         title: '发布活动',
         content: '确定要发布这个活动了吗~',
-        confirmColor: '#FF0A6B',
+        confirmColor: '#FE6559',
         cancelColor: '#81838F',
         cancelText: '再改改',
-        confirmText: '发布！',
+        confirmText: '发布',
         success(res) {
           if (res.confirm) {
             console.log('用户点击确定')
+            wx.showLoading({
+              title: '正在发布',
+            })
             that.pubAct()
           }
         }
@@ -180,7 +183,7 @@ Page({
     // 传入参数
     var submitData = {
       taskName: that.data.name,
-      taskPic: "/images/cover.jpg",
+      taskPic: "cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/cover.jpg",
       publisher: app.globalData.userInfo.nickName,
       publisherId: app.globalData.openId,
       totalNum: 1,
@@ -196,6 +199,7 @@ Page({
       otherRequirements: that.data.other
     }
     console.log(submitData)
+    var taskID;
 
     wx.cloud.callFunction({
       name: 'add_tasks',
@@ -203,54 +207,104 @@ Page({
       success: res => {
         console.log(res);
         if (res.result.errCode == 0) {
-          wx.showModal({
-            title: '发布成功',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            confirmColor: '#FE6559',
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                wx.navigateBack({
-                  delta: 1,
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
+          taskID = res.result.data.taskId
+          wx.hideLoading({
+            success: () => {
+              //在IM中注册账号
+          const _SDKAPPID = 1400601709;
+          const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
+          var EXPIRETIME = 604800;
+          var SDKAPPID = _SDKAPPID;
+          var SECRETKEY = _SECRETKEY;
+          var userID = app.globalData.openId + '-' + taskID;
+          var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+          var userSig = generator.genTestUserSig(userID);
+          console.log('IM userID')
+          console.log(userID)
+          console.log('IM userSig')
+          console.log(userSig)
+          app.globalData.accountTid = userID
+          var tim = app.globalData.tim
+          let promise = tim.login({
+            userID: userID,
+            userSig: userSig
+          });
+          promise.then(function (imResponse) {
+            console.log(imResponse)
+            console.log('登录IM成功')
+            wx.setStorageSync('isImlogin', true)
+            app.globalData.isImLogin = true
+            setTimeout(() => {
+              //拉取会话列表
+              that.initRecentContactList()
+            }, 1000);
+          })
+              wx.showModal({
+                title: '发布成功!',
+                confirmText: "我知道了",
+                showCancel: false,
+                confirmColor: '#FE6559',
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    let promise = tim.logout();
+                    promise.then(function (imResponse) {
+                      console.log(imResponse.data); // 登出成功
+                    }).catch(function (imError) {
+                      console.warn('logout error:', imError);
+                    });
+                    wx.navigateBack({
+                      delta: 1,
+                    })
+                  }
+                }
+              })
+            },
           })
         } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
+          wx.hideLoading({
+            success: () => {
+              wx.showModal({
+                title: '发布失败',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                showCancel: false,
+              })
+            },
           })
         }
       },
       fail: err => {
-        console.error('[云函数] [wechat_sign] 调用失败', err)
-        wx.showModal({
-          title: '调用失败',
-          content: '请检查云函数是否已部署',
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
+        wx.hideLoading({
+          success: () => {
+            console.error('[云函数] [wechat_sign] 调用失败', err)
+            wx.showModal({
+              title: '调用失败',
+              content: '请检查云函数是否已部署',
+              showCancel: false,
+            })
+          },
         })
       }
+    })
+  },
+
+  initRecentContactList() {
+    var that = this
+    //拉取会话列表
+    var tim = app.globalData.tim
+    let promise = tim.getConversationList();
+    if (!promise) {
+      console.log('获取会话列表出错，SDK not ready')
+      return
+    }
+    promise.then(function (imResponse) {
+      console.log('会话列表')
+      console.log(imResponse)
+      const conversationList = imResponse.data.conversationList;
+      that.setData({
+        msg: conversationList
+      })
     })
   },
 

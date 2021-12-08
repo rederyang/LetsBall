@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@miniprogram-component-plus/tabs": "^1.0.0"
+    "@miniprogram-component-plus/tabs": "^1.0.0",
+    "tim-upload-plugin": "^1.0.3",
+    "tim-wx-sdk": "^2.15.0"
   }
 }

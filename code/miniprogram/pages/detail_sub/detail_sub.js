@@ -1,5 +1,8 @@
 // pages/detail_sub/detail_sub.js
 
+//用户登录IM系统
+import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
+
 const app = getApp()
 
 Page({
@@ -16,6 +19,9 @@ Page({
     pub_info: {},
     confirmed: false,
     confirmedByUser: false,
+    appliedByUser: false,
+    msg: [],
+    status: 'true',
   },
 
   // 用户报名之后的动作
@@ -34,21 +40,19 @@ Page({
       success: res => {
         console.log(res)
         if (res.result.errCode == 0) {
-          wx.showModal({
-            title: '报名成功',
-            content: '请等待发起者的确认',
-            confirmText: "我知道了",
-            confirmColor: '#FF0A6B',
-            showCancel: false,
-          })
-        } else if (res.result.errCode == 1) {
+                that.setData({
+                  appliedByUser: true,
+                })
+                that.loadData()
+              }
+         else if (res.result.errCode == 1) {
           console.log('传参，妈的')
         } else if (res.result.errCode == 2) {
           wx.showModal({
             title: '您已经报过名了',
-            content: '请等待发起者的确认~',
+            content: '请等待发起者的确认',
             confirmText: "我知道了",
-            confirmColor: '#FF0A6B',
+            confirmColor: '#FE6559',
             showCancel: false,
           })
         }
@@ -59,80 +63,171 @@ Page({
     })
   },
 
-  // 开启聊天（这里当作申请确认）
+  // 开启聊天
   onChat: function(e) {
     var that = this
     if (!app.globalData.logged) {
       that._wechatSign()
     } else {
-      wx.showModal({
-        title: '报名活动',
-        content: '确定要报名这个活动吗~',
-        confirmColor: '#FF0A6B',
-        cancelColor: '#81838F',
-        cancelText: '再想想',
-        confirmText: '报名！',
-        success(res) {
-          if (res.confirm) {
-            console.log('用户点击确定')
-            that.applyAct()
-          } else if (res.cancel) {
-            console.log('用户点击取消')
+      const _SDKAPPID = 1400601709;
+      const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
+      var EXPIRETIME = 604800;
+      var SDKAPPID = _SDKAPPID;
+      var SECRETKEY = _SECRETKEY;
+      var userID = app.globalData.openId + '-' + that.data.taskId;
+      var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+      var userSig = generator.genTestUserSig(userID);
+      console.log('IM userID')
+      console.log(userID)
+      console.log('IM userSig')
+      console.log(userSig)
+      app.globalData.accountTid = userID
+      var tim = app.globalData.tim
+      let promise = tim.login({
+        userID: userID,
+        userSig: userSig
+      });
+      promise.then(function (imResponse) {
+        console.log(imResponse)
+        console.log('登录IM成功')
+        wx.setStorageSync('isImlogin', true)
+        app.globalData.isImLogin = true
+        setTimeout(() => {
+          //拉取会话列表
+          that.initRecentContactList()
+        }, 1000);
+      })
+
+      wx.cloud.callFunction({
+        name: "get_task_applicants",
+        data: {
+          taskId: [that.data.taskId]
+        },
+        success: res => {
+          if (res.result.errCode == 0) {
+            console.log(res)
+            // 首先需要不是空的
+            if (res.result.data.info.length > 0) {
+              that.setData({
+                applicantsInfo: res.result.data.info,
+              })
+            }
           }
         }
       })
+      var exist = 0;
+      if (that.data.applicantsInfo != undefined) {
+        console.log('打印报名信息')
+        console.log(that.data.applicantsInfo)
+        var num = that.data.applicantsInfo.length
+        for (let i = 0; i < num; i++) {
+          if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+            exist = 1;
+            break;
+          }
+        }
+      }
+      if (exist == 0) {
+        wx.showModal({
+          title: '报名活动',
+          content: '确定要报名这个活动吗~',
+          confirmColor: '#FE6559',
+          cancelColor: '#81838F',
+          cancelText: '再想想',
+          confirmText: '报名',
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.applyAct()
+              console.log('打印e')
+              console.log(e)
+              console.log(that.data)
+              var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+              console.log(conversationid)
+              var avatar = that.data.pubInfo.userPic
+              var name = that.data.pubInfo.nickName
+              var status = that.data.status
+              console.log(status)
+              wx.navigateTo({
+                url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+        console.log(conversationid)
+        var avatar = that.data.pubInfo.userPic
+        var name = that.data.pubInfo.nickName
+        var status = that.data.status
+        
+        wx.navigateTo({
+          url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+        })
+      }
     }
   },
 
   // 调用云函数完成活动取消操作
-  cancelAct: function(e) {
+  cancelAct: function(cancelDetail) {
     var that = this
-
     wx.cloud.callFunction({
-      name: "quit_commited_task",
+      name: cancelDetail.func,
       data: {
         taskId: that.data.taskId,
         applicantId: app.globalData.openId,
       },
       success: res => {
-        if (res.result.errCode == 0) {
-          console.log(res)
-          wx.showModal({
-            title: '已取消确认',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                that.onShow()  // 需要重新加载页面数据
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
+        console.log(res)
+        wx.hideLoading({
+          success: () => {
+            if (res.result.errCode == 0) {
+              wx.showModal({
+                title: '取消成功',
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    wx.navigateBack({
+                      delta: 1,
+                    })
+                    that.loadData()
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '抱歉，出错了呢~',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+              })
             }
-          })
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-          })
-        }
+          },
+        })
       },
       fail: err => {
-        wx.showModal({
-          title: '取消成功',
-          confirmText: "我知道了",
-          showCancel: false,
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              that.loadData()
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
+        wx.hideLoading({
+          success: () => {
+            wx.showModal({
+              title: '取消成功',
+              confirmText: "我知道了",
+              confirmColor: '#FE6559',
+              showCancel: false,
+              success(res) {
+                if (res.confirm) {
+                  wx.navigateBack({
+                    delta: 1,
+                  })
+                  that.loadData()
+                }
+              }
+            })
+          },
         })
         console.error('[云函数] [quit_commited_task] 调用失败', err)
       }
@@ -142,23 +237,57 @@ Page({
   // 取消
   onCancel: function(e) {
     var that = this
+    if (that.data.confirmedByUser) {
+      var title = '取消活动'
+      var content = '目前活动已确认，确认取消？'
+      var func = 'quit_commited_task'
+    } else {
+      var title = '取消报名'
+      var content = '确认取消报名？'
+      var func = 'quit_task'
+    }
     wx.showModal({
-      title: '取消活动',
-      content: '目前活动已确认，确认取消？',
+      title: title,
+      content: content,
       cancelColor: '#FE6559',
       confirmColor: '#81838F',
       cancelText: '再想想',
       confirmText: '要取消',
       success(res) {
         if (res.confirm) {
-          console.log('用户点击确定')
-          that.cancelAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
+          wx.showLoading({
+            title: title,
+          })
+          var cancelDetail = {
+            title: title,
+            content: content,
+            func: func,
+          }
+          that.cancelAct(cancelDetail)
         }
       }
     })
   },
+
+ //获取会话列表
+ initRecentContactList() {
+  var that = this
+  //拉取会话列表
+  var tim = app.globalData.tim
+  let promise = tim.getConversationList();
+  if (!promise) {
+    console.log('获取会话列表出错，SDK not ready')
+    return
+  }
+  promise.then(function (imResponse) {
+    console.log('会话列表')
+    console.log(imResponse)
+    const conversationList = imResponse.data.conversationList;
+    that.setData({
+      msg: conversationList
+    })
+  })
+},
 
   // 获取关于活动的信息
   loadData: function () {
@@ -217,12 +346,20 @@ Page({
               console.error('[云函数] [get_user_detail] 调用失败', err)
             }
           })
-        } else {
+        } else if (res.result.errCode == 1) {
           console.log('传参')
+        } else if (res.result.errCode == 2) {
+          console.log(res)
+          wx.showModal({
+            title: '查找活动失败，活动可能已被取消',
+            showCancel: false,
+            confirmText: '好的',
+            confirmColor: '#FE6559',
+          })
         }
       },
       fail: err => {
-        console.error('[云函数] [get_task_detail] 调用失败', err)
+        console.error('[云函数]' + cancelDetail.func + '调用失败', err)
       }
     })
 
@@ -240,24 +377,26 @@ Page({
             that.setData({
               applicantsInfo: res.result.data.info,
             })
-            // 其次需要没有被确认
+            // 看看有没有被确认
             if (that.data.applicantsInfo[0].isFull) {
               that.setData({
                 confirmed: true
               })
-              // 看是不是自己确认的
-              for (let i = 0; i < that.data.applicantsInfo.length; i++) {
-                if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
-                  if (that.data.applicantsInfo[i].applicantStatus) {
-                    that.setData({
-                      confirmedByUser: true
-                    })
-                    console.log('确认的人是我自己！')
-                  } else {
-                    console.log('别人确认了。')
-                  }
-                  break
+            }
+            // 看看有没有报过名，也看看是不是自己确认的
+            for (let i = 0; i < that.data.applicantsInfo.length; i++) {
+              if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+                that.setData({
+                  appliedByUser: true
+                })
+                console.log('我报名了！')
+                if (that.data.applicantsInfo[i].applicantStatus) {
+                  that.setData({
+                    confirmedByUser: true
+                  })
+                  console.log('确认的人是我自己！')
                 }
+                break
               }
             }
           }

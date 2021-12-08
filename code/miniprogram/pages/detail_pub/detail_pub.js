@@ -1,4 +1,6 @@
 // pages/detail_pub/detail_pub.js
+import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
+const app = getApp()
 Page({
 
   /**
@@ -11,32 +13,63 @@ Page({
     subInfo: {},
     confirmed: false,
     applied: false,
+    msg: [],
+    status: 'false',
   },
 
   // 确认报名者
   onPickSub: function(e) {
     var openid = e.currentTarget.dataset.openid
     var that = this
-    wx.showModal({
-      title: '确认活动',
-      content: '您确定要让该用户参加您的活动吗？',
-      confirmColor: '#FE6559',
-      cancelColor: '#81838F',
-      cancelText: '取消',
-      confirmText: '确认',
-      success(res) {
-        if (res.confirm) {
-          console.log('用户确认活动')
-          that.confirmAct({
-            openid: openid,
-          })
-        }
+    const _SDKAPPID = 1400601709;
+    const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
+    var EXPIRETIME = 604800;
+    var SDKAPPID = _SDKAPPID;
+    var SECRETKEY = _SECRETKEY;
+    var userID = app.globalData.openId + '-' + that.data.taskId;
+    var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+    var userSig = generator.genTestUserSig(userID);
+    console.log('IM userID')
+    console.log(userID)
+    console.log('IM userSig')
+    console.log(userSig)
+    app.globalData.accountTid = userID
+    var tim = app.globalData.tim
+    let promise = tim.login({
+      userID: userID,
+      userSig: userSig
+    });
+    promise.then(function (imResponse) {
+      console.log(imResponse)
+      console.log('登录IM成功')
+      wx.setStorageSync('isImlogin', true)
+      app.globalData.isImLogin = true
+      setTimeout(() => {
+        //拉取会话列表
+        that.initRecentContactList()
+      }, 1000);
+    })
+    var conversationid = 'C2C' + openid + '-' + that.data.taskId;
+    console.log(conversationid)
+    console.log('输出申请者信息')
+    console.log(that.data.applicantsInfo)
+    var number = that.data.applicantsInfo.length
+    for (let i = 0; i < number; i++) {
+      if (that.data.applicantsInfo[i].applicantId == openid) {
+        var avatar = that.data.applicantsInfo[i].applicantUserPic
+        var name = that.data.applicantsInfo[i].applicantNickName
+        var status=that.data.status
+        var taskId=that.data.taskId
+        break
       }
+    }
+    wx.navigateTo({
+      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status+'&applicantId='+openid+'&taskId='+String(taskId),
     })
   },
 
   // 调用云函数完成确认环节
-  confirmAct: function(e) {
+  confirmAct: function (e) {
     var that = this
     console.log(e.openid)
     wx.cloud.callFunction({
@@ -90,13 +123,6 @@ Page({
   // 跳转至编辑界面
   onEdit: function(e) {
     var that = this
-    // wx.showModal({
-    //   title: '本功能开发中，敬请期待~',
-    //   confirmText: "好吧",
-    //   showCancel: false,
-    // })
-
-    // return
     console.log("点击编辑键")
     var task= JSON.stringify(that.data.task);
     wx.navigateTo({
@@ -117,9 +143,10 @@ Page({
       success(res) {
         if (res.confirm) {
           console.log('用户点击确定')
+          wx.showLoading({
+            title: '取消活动',
+          })
           that.cancelAct()
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })
@@ -143,46 +170,72 @@ Page({
         taskId: that.data.taskId
       },
       success: res => {
-        if (res.result.errCode == 0) {
-          console.log("成功取消活动")
-          wx.showModal({
-            title: '活动已取消',
-            confirmText: "我知道了",
-            confirmColor: '#FE6559',
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-                wx.navigateBack({  // 返回上一级
-                  delta: 1,
-                })
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
+        wx.hideLoading({
+          success: () => {
+            if (res.result.errCode == 0) {
+              console.log("成功取消活动")
+              wx.showModal({
+                title: '活动已取消',
+                confirmText: "我知道了",
+                confirmColor: '#FE6559',
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                    wx.navigateBack({  // 返回上一级
+                      delta: 1,
+                    })
+                  }
+                }
+              })
+            } else {
+              wx.showModal({
+                title: '抱歉，出错了呢~',
+                content: res.result.errMsg,
+                confirmText: "我知道了",
+                showCancel: false,
+                success(res) {
+                  if (res.confirm) {
+                    console.log('用户点击确定')
+                  } else if (res.cancel) {
+                    console.log('用户点击取消')
+                  }
+                }
+              })
             }
-          })
-        } else {
-          wx.showModal({
-            title: '抱歉，出错了呢~',
-            content: res.result.errMsg,
-            confirmText: "我知道了",
-            showCancel: false,
-            success(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        }
+          },
+        })
       },
       fail: err => {
+        wx.hideLoading({
+          success: () => {},
+        })
         console.error('[云函数] [get_hot_words] 调用失败', err)
       }
     })
   },
 
+
+  //获取会话列表
+  initRecentContactList() {
+    var that = this
+    //拉取会话列表
+    var tim = app.globalData.tim
+    let promise = tim.getConversationList();
+    if (!promise) {
+      console.log('获取会话列表出错，SDK not ready')
+      return
+    }
+    promise.then(function (imResponse) {
+      console.log('会话列表')
+      console.log(imResponse)
+      const conversationList = imResponse.data.conversationList;
+      that.setData({
+        msg: conversationList
+      })
+    })
+  },
+  
   // 获取关于活动的信息
   loadData: function () {
     var that = this

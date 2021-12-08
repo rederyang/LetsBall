@@ -217,6 +217,9 @@ page {
   height: 150rpx;
   margin-top: 10rpx;
   margin-bottom: 10rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .item-title {
@@ -228,7 +231,7 @@ page {
   text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
-  margin-bottom: 10rpx;
+  margin-bottom: 5rpx;
   font-size: 40rpx;
   font-weight: 800;
 }
@@ -242,7 +245,7 @@ page {
   text-overflow:ellipsis;
   margin-left: 5%;
   margin-right: 5%;
-  margin-bottom: 10rpx;
+  margin-bottom: 5rpx;
   font-size: 30rpx;
 }
 
@@ -278,4 +281,8 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.blank {
+  margin-bottom: 60rpx;
 }

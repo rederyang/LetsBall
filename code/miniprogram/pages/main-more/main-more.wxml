@@ -3,9 +3,9 @@
 <view class="search-bar">
 <view class="search-input-wrapper">
   <view class="search-input-outline">
-    <image class="search-input-image" src="/images/search.png" mode="aspectFill"></image>
+    <image class="search-input-image" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/search.png" mode="aspectFill"></image>
     <input class="search-input" placeholder="输入你想参与的活动.." bindinput="bindInputChange" value="{{searchWord}}" bindconfirm="onTapSearch"></input>
-    <image class="{{keyWordSent ? 'search-cancel-image' : 'search-cancel-image-hidden'}}" src="/images/cancel.png" mode="aspectFill" bindtap="onTapCancel"></image>
+    <image class="{{keyWordSent ? 'search-cancel-image' : 'search-cancel-image-hidden'}}" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/cancel.png" mode="aspectFill" bindtap="onTapCancel"></image>
   </view>
 </view>
 <view class="search-button-wrapper">
@@ -13,7 +13,7 @@
 </view> 
 </view>
 
-<view class="activity-wrapper" wx:for="{{keyWordSent ? result : latestTasks}}" wx:for-item="itemName" wx:for-index="idx" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
+<view class="activity-wrapper" wx:for="{{keyWordSent ? result : latestTasks}}" wx:for-item="itemName" wx:for-index="idx" wx:key="taskId" bindtap="onTapDetail" data-TaskId="{{itemName.taskId}}">
   <view class="item-line">
     <image wx:if="{{itemName.picture_url != ''}}" class="item-picture" mode="scaleToFill" src="{{itemName.taskPic}}"></image>
     <view class="item-words">
@@ -24,5 +24,7 @@
   </view>
   <view class="item-time">{{itemName.startTime}}</view>
 </view>
+
+<view class="blank"></view>
  
 

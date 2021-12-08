@@ -17,6 +17,12 @@ Page({
     }
   },
 
+  toIndex: function(e) {
+    wx.navigateTo({
+      url: '../index/index',
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -83,7 +89,7 @@ Page({
     wx.showModal({
       title: '登录',
       content: '您要登录吗？',
-      confirmColor: '#FF0A6B',
+      confirmColor: '#FE6559',
       cancelColor: '#81838F',
       cancelText: '取消',
       confirmText: '登录',
@@ -106,8 +112,6 @@ Page({
               })
             },
           })
-        } else if (res.cancel) {
-          console.log('用户点击取消')
         }
       }
     })

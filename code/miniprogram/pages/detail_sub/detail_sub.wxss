@@ -130,7 +130,7 @@ page {
   margin-top: 5rpx;
   border: solid var(--line-width) #FE6559;
   border-radius: 50rpx;
-  box-shadow: 2rpx 2rpx 2rpx 2rpx gray;
+  /* box-shadow: 2rpx 2rpx 2rpx 2rpx gray; */
 }
 
 .user_badge {

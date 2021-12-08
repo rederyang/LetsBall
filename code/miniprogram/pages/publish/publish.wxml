@@ -7,20 +7,21 @@
 
   <view class="line-block">
     <view class="line-text">活动日期</view>
-    <picker class="line-picker" mode="date" start="2021-11-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
+    <picker class="line-picker" mode="date" start="2021-12-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
       <view class="picker-view">
         <view class="time-view">{{date}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
 
   <view class="line-block">
     <view class="line-text">开始时间</view>
-    <picker class="line-picker" mode="time" start="07:00" end="22:00" value="{{time}}" bindchange="bindTimeChange">
+    <picker class="line-picker" mode="time" value="{{time}}" bindchange="bindTimeChange">
+    <!-- <picker class="line-picker" mode="time" start="06:00" end="24:00" value="{{time}}" bindchange="bindTimeChange"> -->
       <view class="picker-view">
         <view class="time-view">{{time}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
@@ -40,7 +41,7 @@
     <picker class="line-picker" mode="selector" value="{{sport_idx}}" range="{{sport_array}}" bindchange="bindSportChange">
       <view class="picker-view">
         <view class="time-view">{{sport_array[sport_idx]}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
@@ -50,7 +51,7 @@
     <picker class="line-picker" mode="selector" value="{{level_idx}}" range="{{level_array}}" bindchange="bindLevelChange">
       <view class="picker-view">
         <view class="time-view">{{level_array[level_idx]}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
@@ -60,7 +61,7 @@
     <picker class="line-picker" mode="selector" value="{{place_idx}}" range="{{if_array}}" bindchange="bindOfferPlace">
       <view class="picker-view">
         <view class="time-view">{{if_array[place_idx]}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
@@ -70,7 +71,7 @@
     <picker class="line-picker" mode="selector" value="{{tool_idx}}" range="{{if_array}}" bindchange="bindOfferTool">
       <view class="picker-view">
         <view class="time-view">{{if_array[tool_idx]}}</view>
-        <image class="picker-icon" src="/images/choose.png" />
+        <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
       </view>
     </picker>
   </view>
@@ -85,5 +86,5 @@
 </view>
 
 <view class="button_float" bindtap="onPub">
-  <image class="icon_img" src="/images/pub.png"></image>
+  <image class="icon_img" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/pub.png"></image>
 </view>

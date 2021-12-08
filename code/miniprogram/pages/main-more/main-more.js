@@ -6,6 +6,7 @@ Page({
     step: 6,  // 每次刷新拉取任务数
     result: [],
     latestTasks: [],
+    numLatestTask: 0
   },
 
   bindInputChange: function(e) {
@@ -28,6 +29,14 @@ Page({
   },
 
   onTapSearch: function(event) {
+    wx.showModal({
+      title: '本功能开发中，敬请期待~',
+      confirmText: "好吧",
+      confirmColor: '#FE6559',
+      showCancel: false,
+    })
+    return
+
     var that = this
     //TODO
     // 调用云函数进行搜索
@@ -150,7 +159,7 @@ Page({
       return
     }
     // 非搜索状态下
-    this._getLatestTask(this.data.numLatestTask + this.data.step)
+    this._getLatestTask(this.data.numLatestTask, this.data.numLatestTask + this.data.step)
   },
 
   _search: async function(keyWord) {
@@ -192,15 +201,16 @@ Page({
   },
 
   // 获得最新任务
-  _getLatestTask: async function (numTask=10) {  // 初始状态下拉取10个
+  _getLatestTask: async function (num1=0, num2=6) {  // 初始状态下拉取10个
     var that = this
 
     // 调用云函数
     try {
       var res = await wx.cloud.callFunction({
-        name: 'get_latest_task',
+        name: 'get_latest_task_v2',
         data: {
-          num: numTask
+          num1: num1,
+          num2: num2
         },
       })
       if (res.result.errCode == 0) {  
@@ -221,9 +231,11 @@ Page({
           }
         )
         that.setData({
-          latestTasks: latestTasks,
-          numLatestTask: latestTasks.length
+          latestTasks: that.data.latestTasks.concat(latestTasks),
+          numLatestTask: that.data.numLatestTask + latestTasks.length
         })
+      } else if (res.result.errCode == 2){
+        console.log("已经没有更多活动了")
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
