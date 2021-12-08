@@ -39,9 +39,7 @@
     <view class="chat_box" wx:if="{{item.type != 'TIMCustomElem'}}">
       <view class="chat-item {{item.flow == 'in' ? '' : 'flex-wrap'}}">
         <image wx:if="{{item.flow == 'in'}}" class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl ? friendAvatarUrl : 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}"></image>
-        <view class='avatar' style="margin-left: 19rpx" wx:else>
-          <open-data  type="userAvatarUrl"></open-data>
-        </view>
+        <image class='avatar' style="margin-left: 19rpx" mode= "scaleToFill" src="{{'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}" wx:else></image>
         <view class='content'>{{item.payload.text}}</view>
       </view>
     </view>
