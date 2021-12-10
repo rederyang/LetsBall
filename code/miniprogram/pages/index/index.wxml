@@ -1,5 +1,6 @@
 <!--pages/index/index.wxml-->
 <text bindtap="main" class="tap">首页</text>
+<text bindtap="test" class="tap">测试云函数</text>
 <!-- <text bindtap="toMainMore" class="tap">首页-更多</text>
 <text bindtap="activity" class="tap">活动</text>
 <text bindtap="toDetail" class="tap">点击进入详情页</text>

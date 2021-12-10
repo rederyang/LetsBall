@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/main/main",
     "pages/activity/activity",
     "pages/publish/publish",
@@ -9,7 +10,7 @@
     "pages/edit/edit",
     "pages/main-more/main-more",
     "pages/chat/chat",
-    "pages/index/index"
+    "pages/test/test"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -23,7 +24,8 @@
     "selectedColor": "#FE6559",
     "borderStyle": "white",
     "backgroundColor": "#FAFAFA",
-    "list": [{
+    "list": [
+      {
         "selectedIconPath": "images/square_.png",
         "iconPath": "images/square.png",
         "pagePath": "pages/main/main",

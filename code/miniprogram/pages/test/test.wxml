@@ -1,0 +1,3 @@
+<!--pages/test/test.wxml-->
+<text bindtap="wechatSign" class="tap">wechatSign</text>
+<text bindtap="deleteTask" class="tap">deleteTask</text>
