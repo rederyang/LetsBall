@@ -38,6 +38,61 @@ Page({
     this._callFunc(name, data)
   },
 
+  deleteTask: function(e) {
+    let name = 'delete_task'
+    let data = {
+      taskId: 19,
+    }
+    this._callFunc(name, data)
+  },
+
+  signUpForTask: function(e) {
+    let name = 'sign_up_for_task'
+    let data = {
+      taskId: 19,
+      applicantId: this.data.openId,
+      applicantGender: 0,
+      applicantNickName: 'Hippo',
+      applicantUserPic: 'test',
+      applicantAge: 18,
+    }
+    this._callFunc(name, data)
+  },
+
+  quitCommitedTask: function(e) {
+    let name = 'quit_commited_task'
+    let data = {
+      taskId: 19,
+      applicantId: this.data.openId,
+    }
+    this._callFunc(name, data)
+  },
+  
+  acceptRegistration: function(e) {
+    let name = 'accept_registration'
+    let data = {
+      taskId: 19,
+      applicantId: this.data.openId,
+    }
+    this._callFunc(name, data)
+  },
+
+  getCurrentTaskTime: function(e) {
+    let name = 'get_current_task_time'
+    let data = {
+      taskId: 100,
+    }
+    this._callFunc(name, data)
+  },
+
+  getTaskDetail: function(e) {
+    let name = 'get_task_detail'
+    let data = {
+      taskId: [19, 100],
+    }
+    this._callFunc(name, data)
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
