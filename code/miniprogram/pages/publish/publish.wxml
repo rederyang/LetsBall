@@ -7,7 +7,7 @@
 
   <view class="line-block">
     <view class="line-text">活动日期</view>
-    <picker class="line-picker" mode="date" start="2021-11-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
+    <picker class="line-picker" mode="date" start="2021-12-01" end="2022-11-01" value="{{date}}" bindchange="bindDateChange">
       <view class="picker-view">
         <view class="time-view">{{date}}</view>
         <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
@@ -17,7 +17,8 @@
 
   <view class="line-block">
     <view class="line-text">开始时间</view>
-    <picker class="line-picker" mode="time" start="07:00" end="22:00" value="{{time}}" bindchange="bindTimeChange">
+    <picker class="line-picker" mode="time" value="{{time}}" bindchange="bindTimeChange">
+    <!-- <picker class="line-picker" mode="time" start="06:00" end="24:00" value="{{time}}" bindchange="bindTimeChange"> -->
       <view class="picker-view">
         <view class="time-view">{{time}}</view>
         <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />

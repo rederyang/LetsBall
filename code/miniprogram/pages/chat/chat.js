@@ -33,7 +33,10 @@ Page({
     inputShow: true,
     focus: false,
     adjust: true,
+    asPub: false,  // 当前用户是否是发布者
+    applicantNickNameStatus: false,  // 报名者是否取匿
   },
+
   accept() {
     // 确认报名者
     var that = this
@@ -55,6 +58,7 @@ Page({
       }
     })
   },
+
   confirmAct: function (e) {
     // 调用云函数完成确认环节
     var that = this
@@ -127,16 +131,87 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: async function (options) {
     wx.event = new Event()
     var that = this
     wx.showLoading({
       title: '加载中...',
       icon: 'none'
     })
+
+    // 用于显示的对方头像和昵称
+    var avatar = ''
+    var name = '匿名用户'
+
+    // 根据前一个页面判断当前用户是否是发布者
+    let pages = getCurrentPages(); //页面对象
+    let prevpage = pages[pages.length - 2]; //上一个页面对象
+    console.log(prevpage.route) //上一个页面路由地址
+    if (prevpage.route === 'pages/detail_pub/detail_pub') {
+      this.setData({
+        asPub: true
+      })
+    }
+
+    console.log('unique')
+    console.log(this.data)
+
+    // 如果当前用户是发布者，获取对方（报名者）当前是否取匿
+    if (this.data.asPub) {
+      this._getSubStatus(options.taskId, options.applicantId)
+
+      // 调用云函数获取报名者是否取匿
+      try {
+        var res = await wx.cloud.callFunction({
+          name: "get_applicant_status",
+          data: {
+            taskId: Number(options.taskId),
+            applicantId: options.applicantId
+        }})
+        
+        if (res.result.errCode == 0) {
+          console.log(res)
+          that.setData({
+            applicantNickNameStatus: res.result.data.applicantNickNameStatus
+          })
+        } else {
+          wx.showModal({
+            title: '抱歉，出错了呢~',
+            content: userPubRes.result.errMsg,
+            confirmText: "我知道了",
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      } catch (err) {
+        console.log(err)
+      }
+
+      console.log(this.data)
+
+      if (this.data.applicantNickNameStatus) {
+        console.log("当前用户是发布者。对方已经取匿。")
+        avatar = options.avatar
+        name = options.name
+      } else {
+        console.log(this.data.applicantNickNameStatus)
+        console.log('当前用户是发布者。判定对方没有取匿。')
+      }
+
+    } else {  // 如果当前用户是报名者，则正常显示
+      avatar = options.avatar
+      name = options.name
+    }
+
     that.setData({
       conversationID: options.conversationID,
-      friendAvatarUrl: options.avatar,
+      friendAvatarUrl: avatar,
       height: wx.getSystemInfoSync().windowHeight,
       isDetail: true,
       status: options.status == 'true',
@@ -146,7 +221,7 @@ Page({
     console.log('options')
     console.log(options)
     wx.setNavigationBarTitle({
-      title: options.name
+      title: name
     })
     that.pageScrollToBottom()
     wx.event.on('testFunc', (e, newMsgForm) => {
@@ -168,7 +243,7 @@ Page({
             }
           })
         }
-        console.log(that.data.myMessages)
+        // console.log(that.data.myMessages)
         that.setMessageRead()
         that.pageScrollToBottom()
       }
@@ -180,11 +255,11 @@ Page({
   },
   watch: {
     myMessages: function (newVal, oldVal) {
-      console.log(newVal, oldVal)
+      // console.log(newVal, oldVal)
     }
   },
   inputFocus(e) {
-    console.log(e)
+    // console.log(e)
     var inputHeight = 0
     if (e.detail.height) {
       inputHeight = e.detail.height
@@ -459,7 +534,7 @@ Page({
     var tim = app.globalData.tim
     let promise = tim.logout();
     promise.then(function (imResponse) {
-      console.log(imResponse.data); // 登出成功
+      // console.log(imResponse.data); // 登出成功
     }).catch(function (imError) {
       console.warn('logout error:', imError);
     });
@@ -499,5 +574,11 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
-})
+  },
+
+  _getSubStatus: async function (taskId, applicantId) {
+
+    var that = this
+    }
+  },
+)
