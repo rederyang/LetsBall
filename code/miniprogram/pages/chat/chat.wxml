@@ -2,7 +2,7 @@
   <view class="more"><text class="more_text">{{more_text}}</text></view>
     <block wx:for="{{myMessages}}" wx:key="index" >
     <!-- 自定义消息 -->
-    <view class="chat_box" wx:if="{{item.type == 'TIMCustomElem'}}">
+    <!-- <view class="chat_box" wx:if="{{item.type == 'TIMCustomElem'}}">
       <view class="chat-item" wx:if="{{item.flow == 'in'}}" data-type="{{item.payload.data.type}}" data-id="{{item.payload.data.id}}" bindtap="house_detail">
         <image class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl ? friendAvatarUrl : 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}"></image>
         <view class="custom_box">
@@ -35,11 +35,11 @@
           </view>
         </view>
       </view>
-    </view>
+    </view> -->
     <view class="chat_box" wx:if="{{item.type != 'TIMCustomElem'}}">
       <view class="chat-item {{item.flow == 'in' ? '' : 'flex-wrap'}}">
-        <image wx:if="{{item.flow == 'in'}}" class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl ? friendAvatarUrl : 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}"></image>
-        <image class='avatar' style="margin-left: 19rpx" mode= "scaleToFill" src="{{'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}" wx:else></image>
+        <image wx:if="{{item.flow == 'in'}}" class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl}}"></image>
+        <image class='avatar' style="margin-left: 19rpx" mode= "scaleToFill" src="{{myAvatarUrl}}" wx:else></image>
         <view class='content'>{{item.payload.text}}</view>
       </view>
     </view>
