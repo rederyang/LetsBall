@@ -230,7 +230,6 @@ Page({
       }, 1000);
     })
   },*/
-
   getMsgList() {
     console.log('获取会话列表')
     var that = this
@@ -470,7 +469,9 @@ Page({
    */
   onPullDownRefresh: function () {
     var that = this
+    console.log('在拉了在拉了')
     if (!that.data.isCompleted) {
+      console.log('正在拉取历史记录')
       wx.showLoading({
         title: '加载历史记录中...',
         icon: 'none'
