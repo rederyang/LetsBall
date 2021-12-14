@@ -239,6 +239,7 @@ Page({
     })
 
     that.pageScrollToBottom()
+    
     wx.event.on('testFunc', (e, newMsgForm) => {
       console.log('testFunc')
       if ((newMsgForm === options.conversationID) && app.globalData.isDetail) {
