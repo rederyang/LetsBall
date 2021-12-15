@@ -1,6 +1,5 @@
 {
   "pages": [
-    "pages/index/index",
     "pages/main/main",
     "pages/activity/activity",
     "pages/publish/publish",
@@ -10,6 +9,7 @@
     "pages/edit/edit",
     "pages/main-more/main-more",
     "pages/chat/chat",
+    "pages/index/index",
     "pages/test/test"
   ],
   "window": {
