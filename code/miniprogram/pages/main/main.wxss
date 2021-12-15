@@ -19,8 +19,7 @@ page {
 }
 
 .tab-wrapper {
-  position: sticky;
-  top: -5rpx;
+  position: relative;
   display: flex;
   height: 80rpx;
   justify-content: center;

@@ -88,17 +88,18 @@ App({
       conversationList.forEach(e => {
         number = number + e.unreadCount
       })
-      wx.setStorageSync('number_msg', number)
-      if(number>0) {
-        wx.setTabBarBadge({
-          index: 2,
-          text: number.toString()
-        })
-      } else {
-        wx.hideTabBarRedDot({
-          index: 2
-        })
-      }
+      wx.setStorageSync('conversationList', conversationList)
+      console.log(conversationList)
+      // if(number>0) {
+      //   wx.setTabBarBadge({
+      //     index: 2,
+      //     text: number.toString()
+      //   })
+      // } else {
+      //   wx.hideTabBarRedDot({
+      //     index: 2
+      //   })
+      // }
       // 收到会话列表更新通知，可通过遍历 event.data 获取会话列表数据并渲染到页面
       // event.name - TIM.EVENT.CONVERSATION_LIST_UPDATED
       // event.data - 存储 Conversation 对象的数组 - [Conversation]
