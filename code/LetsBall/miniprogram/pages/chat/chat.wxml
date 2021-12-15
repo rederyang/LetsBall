@@ -1,0 +1,57 @@
+<view class='chat' id="chat" style="min-height:{{height}}px; padding-bottom:116rpx; background-color:#EFF0F3">
+  <view class="more"><text class="more_text">{{more_text}}</text></view>
+    <block wx:for="{{myMessages}}" wx:key="index" >
+    <!-- 自定义消息 -->
+    <view class="chat_box" wx:if="{{item.type == 'TIMCustomElem'}}">
+      <view class="chat-item" wx:if="{{item.flow == 'in'}}" data-type="{{item.payload.data.type}}" data-id="{{item.payload.data.id}}" bindtap="house_detail">
+        <image class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl ? friendAvatarUrl : 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}"></image>
+        <view class="custom_box">
+          <image src="{{item.payload.data.house_pic}}" class="pic"></image>
+          <view class="des_box">
+            <view class="title">{{item.payload.data.title}}</view>
+            <view class="des">
+              <view>{{item.payload.data.area}}m²</view>
+              <view style="padding:0 8rpx">|</view>
+              <view class="park_name">{{item.payload.data.city}}·{{item.payload.data.park}}</view>
+            </view>
+            <view class="price">￥{{item.payload.data.price}}元/m²·月</view>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="chat-item flex-wrap" data-type="{{item.payload.data.type}}" data-id="{{item.payload.data.id}}" bindtap="house_detail">
+        <view class='avatar' style="margin-left: 19rpx" wx:if="{{item.flow == 'out'}}">
+          <open-data type="userAvatarUrl"></open-data>
+        </view>
+        <view class="custom_box">
+          <image src="{{item.payload.data.house_pic}}" class="pic"></image>
+          <view class="des_box">
+            <view class="title">{{item.payload.data.title}}</view>
+            <view class="des">
+              <view>{{item.payload.data.area}}m²</view>
+              <view style="padding:0 8rpx">|</view>
+              <view class="park_name">{{item.payload.data.city}}·{{item.payload.data.park}}</view>
+            </view>
+            <view class="price">￥{{item.payload.data.price}}元/m²·月</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="chat_box" wx:if="{{item.type != 'TIMCustomElem'}}">
+      <view class="chat-item {{item.flow == 'in' ? '' : 'flex-wrap'}}">
+        <image wx:if="{{item.flow == 'in'}}" class='avatar' style="margin-right: 19rpx;" mode= "scaleToFill" src="{{friendAvatarUrl ? friendAvatarUrl : 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'}}"></image>
+        <view class='avatar' style="margin-left: 19rpx" wx:else>
+          <open-data  type="userAvatarUrl"></open-data>
+        </view>
+        <view class='content'>{{item.payload.text}}</view>
+      </view>
+    </view>
+  </block>
+</view>
+<view class="chat-footer" style="padding-bottom: calc({{tabBottom}}px + 25rpx)">
+  <view class='input' bindtap="bindfocus">
+    <textarea class="inputArea" focus="{{focus}}" fixed="true" cursor-spacing="25" disable-default-padding="true" bindinput="bindKeyInput" bindfocus="bindfocus" bindblur="bindblur" value="{{inputValue}}" placeholder=""/>
+    <text class="placeHolder" wx:if="{{inputShow}}">对ta发送消息</text>
+  </view>
+  <view class='send' bindtap='accept' hidden='{{status}}'>接受报名</view>
+  <view class='send' bindtap='bindConfirm'>发送</view>
+</view>
