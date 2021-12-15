@@ -24,6 +24,8 @@ Page({
     conversationID: '',
     msgList: app.globalData.msgList,
     friendAvatarUrl: '',
+    friendNickname: '',
+    myAvatarUrl: '',
     isCompleted: false,
     nextReqMessageID: '',
     more_text: '下拉查看更多历史信息',
@@ -33,7 +35,10 @@ Page({
     inputShow: true,
     focus: false,
     adjust: true,
+    asPub: false,  // 当前用户是否是发布者
+    applicantNickNameStatus: false,  // 报名者是否取匿
   },
+
   accept() {
     // 确认报名者
     var that = this
@@ -55,6 +60,7 @@ Page({
       }
     })
   },
+
   confirmAct: function (e) {
     // 调用云函数完成确认环节
     var that = this
@@ -127,28 +133,113 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: async function (options) {
     wx.event = new Event()
     var that = this
     wx.showLoading({
       title: '加载中...',
       icon: 'none'
     })
+
+    // 用于显示对方头像、对方昵称和当前用户头像
+    var friendAvatarUrl = ''
+    var friendNickname = ''
+    var myAvatarUrl = ''
+
+    // 根据前一个页面判断当前用户是否是发布者
+    let pages = getCurrentPages(); //页面对象
+    let prevpage = pages[pages.length - 2]; //上一个页面对象
+    console.log(prevpage.route) //上一个页面路由地址
+    if (prevpage.route === 'pages/detail_pub/detail_pub') {
+      this.setData({
+        asPub: true
+      })
+    }
+
+    console.log(options)
+
+    // 不论当前用户是报名者还是发布者，总要查询报名者是否取匿，因此先获得报名者的openId
+    var subOpenId = ''
+    if (this.data.asPub) {
+      subOpenId = options.openId
+    } else {
+      subOpenId = app.globalData.openId
+    }
+
+    // 接下来调用云函数查询这个报名者是否取匿
+    try {
+      var res = await wx.cloud.callFunction({
+        name: "get_applicant_status",
+        data: {
+          taskId: Number(options.taskId),
+          applicantId: subOpenId
+      }})
+      
+      if (res.result.errCode == 0) {
+        console.log(res)
+        that.setData({
+          applicantNickNameStatus: res.result.data.applicantNickNameStatus
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: userPubRes.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
+    // 根据：报名者是否取匿、当前用户是否发布者, 确定当前用户头像、对方头像、对方昵称
+    if (this.data.asPub) { // 如果当前用户是发布者
+      myAvatarUrl = app.globalData.userInfo.avatarUrl  // 发布者总是要显示真实头像
+      if (this.data.applicantNickNameStatus) {  // 报名者已经取匿
+        friendNickname = options.name
+        friendAvatarUrl = options.avatar
+      } else {  // 报名者未取匿
+        friendNickname = '匿名用户'
+        friendAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'        
+      }
+    } else {  // 如果当前用户是报名者
+      friendAvatarUrl = options.avatar  // 发布者总是要显示真实头像
+      friendNickname = options.name  // 并显示真实昵称
+      if (this.data.applicantNickNameStatus) {  // 报名者已经取匿
+        myAvatarUrl = this.globalData.userInfo.avatarUrl
+      } else {
+        myAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'
+      }
+    }
+
     that.setData({
       conversationID: options.conversationID,
-      friendAvatarUrl: options.avatar,
+      friendAvatarUrl: friendAvatarUrl,
+      friendNickname: friendNickname,
+      myAvatarUrl: myAvatarUrl,
       height: wx.getSystemInfoSync().windowHeight,
       isDetail: true,
       status: options.status == 'true',
       applicantId: options.applicantId,
       taskId: parseInt(options.taskId)
     })
-    console.log('options')
-    console.log(options)
+
+    console.log(this.data)
+
+    // 设置title，显示对方昵称
     wx.setNavigationBarTitle({
-      title: options.name
+      title: friendNickname
     })
+
     that.pageScrollToBottom()
+    
     wx.event.on('testFunc', (e, newMsgForm) => {
       console.log('testFunc')
       if ((newMsgForm === options.conversationID) && app.globalData.isDetail) {
@@ -168,7 +259,7 @@ Page({
             }
           })
         }
-        console.log(that.data.myMessages)
+        // console.log(that.data.myMessages)
         that.setMessageRead()
         that.pageScrollToBottom()
       }
@@ -180,11 +271,11 @@ Page({
   },
   watch: {
     myMessages: function (newVal, oldVal) {
-      console.log(newVal, oldVal)
+      // console.log(newVal, oldVal)
     }
   },
   inputFocus(e) {
-    console.log(e)
+    // console.log(e)
     var inputHeight = 0
     if (e.detail.height) {
       inputHeight = e.detail.height
@@ -459,7 +550,7 @@ Page({
     var tim = app.globalData.tim
     let promise = tim.logout();
     promise.then(function (imResponse) {
-      console.log(imResponse.data); // 登出成功
+      // console.log(imResponse.data); // 登出成功
     }).catch(function (imError) {
       console.warn('logout error:', imError);
     });
@@ -499,5 +590,11 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
-})
+  },
+
+  _getSubStatus: async function (taskId, applicantId) {
+
+    var that = this
+    }
+  },
+)
