@@ -24,6 +24,8 @@ Page({
     conversationID: '',
     msgList: app.globalData.msgList,
     friendAvatarUrl: '',
+    friendNickname: '',
+    myAvatarUrl: '',
     isCompleted: false,
     nextReqMessageID: '',
     more_text: '下拉查看更多历史信息',
@@ -38,6 +40,7 @@ Page({
     waitForConfirm: false,  // 是否正在等待报名者确认参加
     waitForFace: false,  // 是否正在等待报名者取匿
   },
+
   accept() {
     // 确认报名者
     var that = this
@@ -59,6 +62,7 @@ Page({
       }
     })
   },
+
   confirmAct: function (e) {
     // 调用云函数完成确认环节
     var that = this
@@ -447,7 +451,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: async function (options) {
     wx.event = new Event()
     var that = this
     wx.showLoading({
@@ -548,19 +552,25 @@ Page({
 
     that.setData({
       conversationID: options.conversationID,
-      friendAvatarUrl: options.avatar,
+      friendAvatarUrl: friendAvatarUrl,
+      friendNickname: friendNickname,
+      myAvatarUrl: myAvatarUrl,
       height: wx.getSystemInfoSync().windowHeight,
       isDetail: true,
       status: options.status == 'true',
       applicantId: subOpenId,
       taskId: parseInt(options.taskId)
     })
-    console.log('options')
-    console.log(options)
+
+    console.log(this.data)
+
+    // 设置title，显示对方昵称
     wx.setNavigationBarTitle({
-      title: options.name
+      title: friendNickname
     })
+
     that.pageScrollToBottom()
+    
     wx.event.on('testFunc', (e, newMsgForm) => {
       console.log('testFunc')
       if ((newMsgForm === options.conversationID) && app.globalData.isDetail) {
@@ -580,7 +590,7 @@ Page({
             }
           })
         }
-        console.log(that.data.myMessages)
+        // console.log(that.data.myMessages)
         that.setMessageRead()
         that.pageScrollToBottom()
       }
@@ -592,11 +602,11 @@ Page({
   },
   watch: {
     myMessages: function (newVal, oldVal) {
-      console.log(newVal, oldVal)
+      // console.log(newVal, oldVal)
     }
   },
   inputFocus(e) {
-    console.log(e)
+    // console.log(e)
     var inputHeight = 0
     if (e.detail.height) {
       inputHeight = e.detail.height
@@ -868,6 +878,13 @@ Page({
     wx.event.off("testFunc")
     // 键盘消失
     wx.hideKeyboard()
+    var tim = app.globalData.tim
+    let promise = tim.logout();
+    promise.then(function (imResponse) {
+      // console.log(imResponse.data); // 登出成功
+    }).catch(function (imError) {
+      console.warn('logout error:', imError);
+    });
   },
 
   /**
@@ -904,5 +921,11 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
-})
+  },
+
+  _getSubStatus: async function (taskId, applicantId) {
+
+    var that = this
+    }
+  },
+)
