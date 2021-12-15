@@ -1,20 +1,20 @@
-<view class="tab-wrapper" wx:if="{{false}}">
+<view class="tab-wrapper" wx:if="{{waitForFace & !waitForConfirm}}">
 <view class='tab-center-wrapper'>
 对方请求你取消匿名
 </view>
 <view class='tab-center-wrapper'>
-  <button class="{{status==0?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapPub">拒绝</button>
- <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapSub">同意</button>
+  <button class='tab-button-normal' bindtap="onRefuseFace">拒绝</button>
+ <button class='tab-button-selected' bindtap="onConfirmFace">同意</button>
 </view>
 </view>
 
-<view class="tab-wrapper" wx:if="{{false}}">
+<view class="tab-wrapper" wx:if="{{waitForConfirm}}">
 <view class='tab-center-wrapper'>
 对方请求你确认参加活动
 </view>
 <view class='tab-center-wrapper'>
-  <button class="{{status==0?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapPub">拒绝</button>
- <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapSub">同意</button>
+  <button class='tab-button-normal' bindtap="onRefuseFace">拒绝</button>
+ <button class='tab-button-selected' bindtap="onConfirmFace">同意</button>
 </view>
 </view>
 
@@ -66,6 +66,10 @@
   </block>
 </view>
 <view class="chat-footer" style="padding-bottom: calc({{tabBottom}}px + 25rpx)">
+  <view class='action-button' bindtap='onRequestFace' wx:if="{{asPub}}">匿
+  </view>
+  <view class='action-button' bindtap='onRequestConfirm' wx:if="{{asPub}}">邀
+  </view>
   <view class='input' bindtap="bindfocus">
     <textarea class="inputArea" focus="{{focus}}" fixed="true" cursor-spacing="25" disable-default-padding="true" bindinput="bindKeyInput" bindfocus="bindfocus" bindblur="bindblur" value="{{inputValue}}" placeholder=""/>
     <text class="placeHolder" wx:if="{{inputShow}}">对ta发送消息</text>

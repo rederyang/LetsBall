@@ -126,25 +126,38 @@
   word-wrap: break-word;
 }
 .chat-footer{
-  /* margin-left: 5%;
-  margin-right: 5%; */
-  /* padding-left: 5%;
-  padding-right: 20%; */
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: -20rpx;
   width: 100%;
   background: #ffffff;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
-  padding: 20rpx 25rpx;
+  padding: 20rpx 20rpx;
 }
 .chat-footer.full_sucreen{
   padding-bottom: 100rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.action-button{
+  color: #fff;
+  background-color: #FE6559;
+  width: 76rpx;
+  height: 76rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32rpx;
+  margin-right: 5rpx;
+  margin-left: 5rpx;
 }
 .input{
-  width:70%;
+  /* width: 100%; */
+  flex: auto;
   height:76rpx;
   line-height: 76rpx;
   background:rgba(255,255,255,1);
@@ -156,9 +169,13 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   position: relative;
+  margin-left: 10rpx;
+  margin-right: 10rpx;
 }
 .inputArea{
+  width: 90%;
   position: absolute;
   height: 60%;
   line-height: 50rpx;
@@ -169,6 +186,7 @@
   font-size: 32rpx;
 }
 .placeHolder{
+  width: 90%;
   position: absolute;
   color: #cccccc;
   height: 90%;
@@ -189,7 +207,8 @@
   justify-content: center;
   align-items: center;
   font-size: 32rpx;
-  margin-left: 10rpx;
+  margin-right: 5rpx;
+  margin-left: 5rpx;
 }
 .footer-h{
   position: fixed;

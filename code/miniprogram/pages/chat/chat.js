@@ -37,6 +37,8 @@ Page({
     adjust: true,
     asPub: false,  // 当前用户是否是发布者
     applicantNickNameStatus: false,  // 报名者是否取匿
+    waitForConfirm: false,  // 是否正在等待报名者确认参加
+    waitForFace: false,  // 是否正在等待报名者取匿
   },
 
   accept() {
@@ -129,6 +131,322 @@ Page({
     //that.loadData()
   },
 
+  // 发布者请求对方最终确认
+  onRequestConfirm: function () {
+    var that = this
+    wx.showModal({
+      title: '请求确认',
+      content: '请求对方进行最终确认?',
+      cancelColor: '#81838F',
+      confirmColor: '#FE6559',
+      cancelText: '再想想',
+      confirmText: '请求',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({
+            title: '请稍等',
+          })
+          wx.cloud.callFunction({
+            name: 'ask_applicant_confirm',
+            data: {
+              taskId: that.data.taskId,
+              applicantId: that.data.applicantId
+            },
+            success: res => {
+              if (res.result.errCode == 0) {
+                console.log("成功发起请求：最终确认")
+                wx.showModal({
+                  title: '请求成功！',
+                  content: '成功发起请求',
+                  confirmText: "我知道了",
+                  showCancel: false,
+                })
+              } else {
+                console.error('传参')
+              }
+            },
+            fail: err => {
+              wx.showModal({
+                title: '云函数调用失败',
+                confirmText: "我知道了",
+                showCancel: false,
+              })
+              console.error('云函数调用失败', err)
+            },
+            complete: () => {
+              wx.hideLoading()
+            }
+          })
+        }
+      }
+    })
+  },
+
+  // 发布者请求对方取匿
+  onRequestFace: function () {
+    var that = this
+    wx.showModal({
+      title: '请求匿名',
+      content: '请求对方取消匿名?',
+      cancelColor: '#81838F',
+      confirmColor: '#FE6559',
+      cancelText: '再想想',
+      confirmText: '请求',
+      success(res) {
+        if (res.confirm) {
+          wx.showLoading({
+            title: '请稍等',
+          })
+          wx.cloud.callFunction({
+            name: 'ask_cancel_anonymity',
+            data: {
+              taskId: that.data.taskId,
+              applicantId: that.data.applicantId
+            },
+            success: res => {
+              if (res.result.errCode == 0) {
+                console.log("成功发起请求：最终确认")
+                wx.showModal({
+                  title: '请求成功！',
+                  content: '成功发起请求',
+                  confirmText: "我知道了",
+                  showCancel: false,
+                })
+              } else {
+                console.error('传参')
+              }
+            },
+            fail: err => {
+              wx.showModal({
+                title: '云函数调用失败',
+                confirmText: "我知道了",
+                showCancel: false,
+              })
+              console.error('云函数调用失败', err)
+            },
+            complete: () => {
+              wx.hideLoading()
+            }
+          })
+        }
+      }
+    })
+  },
+
+  // 报名者拒绝最终确认
+  onRefuseJoin: async function () {
+    var that = this
+    try {
+      wx.showLoading({
+        title: '请稍等',
+      })
+      var res = await wx.cloud.callFunction({
+        name: 'accept_registration',
+        data: {
+          taskId: this.data.taskId,
+          applicantId: this.data.applicantId,
+          status: false
+        },
+      })
+      wx.hideLoading()
+      if (res.result.errCode == 0) { 
+        wx.showModal({
+          title: '已拒绝',
+          content: '您已拒绝确认参加活动',
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.setData({
+                waitForConfirm: false
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  // 报名者同意最终确认
+  onConfirmJoin: async function () {
+    var that = this
+    // 报名者确认参加活动
+    try {
+      wx.showLoading({
+        title: '请稍等',
+      })
+      var res = await wx.cloud.callFunction({
+        name: 'accept_registration',
+        data: {
+          taskId: this.data.taskId,
+          applicantId: this.data.applicantId,
+          status: true
+        },
+      })
+      wx.hideLoading()
+      if (res.result.errCode == 0) { 
+        wx.showModal({
+          title: '确认成功',
+          content: '您已成功确认参加活动',
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.setData({
+                waitForConfirm: false
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  // 报名者拒绝取匿
+  onRefuseFace: async function () {
+    var that = this
+    try {
+      wx.showLoading({
+        title: '请稍等',
+      })
+      var res = await wx.cloud.callFunction({
+        name: 'cancel_anonymity',
+        data: {
+          taskId: this.data.taskId,
+          applicantId: this.data.applicantId,
+          status: false
+        },
+      })
+      wx.hideLoading()
+      if (res.result.errCode == 0) { 
+        wx.showModal({
+          title: '已拒绝',
+          content: '您已拒绝取消匿名',
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.setData({
+                waitForFace: false
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
+
+  // 报名者同意取匿
+  onConfirmFace: async function () {
+    var that = this
+    // 报名者确认取匿
+    try {
+      wx.showLoading({
+        title: '请稍等',
+      })
+      var res = await wx.cloud.callFunction({
+        name: 'cancel_anonymity',
+        data: {
+          taskId: this.data.taskId,
+          applicantId: this.data.applicantId,
+          status: true
+        },
+      })
+      wx.hideLoading()
+      if (res.result.errCode == 0) { 
+        wx.showModal({
+          title: '确认成功',
+          content: '您已取消匿名',
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              that.setData({
+                waitForFace: false,
+                myAvatarUrl: app.globalData.userInfo.avatarUrl
+              })
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '抱歉，出错了呢~',
+          content: res.result.errMsg,
+          confirmText: "我知道了",
+          showCancel: false,
+          success(res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+            } else if (res.cancel) {
+              console.log('用户点击取消')
+            }
+          }
+        })
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  },
 
   /**
    * 生命周期函数--监听页面加载
@@ -140,6 +458,9 @@ Page({
       title: '加载中...',
       icon: 'none'
     })
+
+    let tmp = options.conversationID.split('-')
+    options.taskId = tmp[tmp.length-1]
 
     // 用于显示对方头像、对方昵称和当前用户头像
     var friendAvatarUrl = ''
@@ -161,12 +482,12 @@ Page({
     // 不论当前用户是报名者还是发布者，总要查询报名者是否取匿，因此先获得报名者的openId
     var subOpenId = ''
     if (this.data.asPub) {
-      subOpenId = options.openId
+      subOpenId = options.applicantId
     } else {
       subOpenId = app.globalData.openId
     }
 
-    // 接下来调用云函数查询这个报名者是否取匿
+    // 接下来调用云函数查询这个报名者是否取匿、是否等待确认取匿、是否等待最终确认
     try {
       var res = await wx.cloud.callFunction({
         name: "get_applicant_status",
@@ -174,12 +495,22 @@ Page({
           taskId: Number(options.taskId),
           applicantId: subOpenId
       }})
+      console.log(Number(options.taskId))
+      console.log(subOpenId)
+      
+      console.log(res)
       
       if (res.result.errCode == 0) {
         console.log(res)
         that.setData({
-          applicantNickNameStatus: res.result.data.applicantNickNameStatus
+          applicantNickNameStatus: res.result.data.applicantNickNameStatus,
         })
+        if (!this.data.asPub) {
+          this.setData({
+            waitForFace: res.result.data.askedCancelAnonymity,
+            waitForConfirm: res.result.data.askedConfirm
+          })
+        }
       } else {
         wx.showModal({
           title: '抱歉，出错了呢~',
@@ -213,7 +544,7 @@ Page({
       friendAvatarUrl = options.avatar  // 发布者总是要显示真实头像
       friendNickname = options.name  // 并显示真实昵称
       if (this.data.applicantNickNameStatus) {  // 报名者已经取匿
-        myAvatarUrl = this.globalData.userInfo.avatarUrl
+        myAvatarUrl = app.globalData.userInfo.avatarUrl
       } else {
         myAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'
       }
@@ -227,7 +558,7 @@ Page({
       height: wx.getSystemInfoSync().windowHeight,
       isDetail: true,
       status: options.status == 'true',
-      applicantId: options.applicantId,
+      applicantId: subOpenId,
       taskId: parseInt(options.taskId)
     })
 
