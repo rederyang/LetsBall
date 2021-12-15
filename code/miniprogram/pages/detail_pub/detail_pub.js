@@ -16,10 +16,7 @@ Page({
     msg: [],
     status: 'false',
   },
-
-  // 确认报名者
-  onPickSub: function(e) {
-    var openid = e.currentTarget.dataset.openid
+  IMlogin: function (e) {
     var that = this
     const _SDKAPPID = 1400601709;
     const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
@@ -49,6 +46,13 @@ Page({
         that.initRecentContactList()
       }, 1000);
     })
+
+
+  },
+  // 确认报名者
+  onPickSub: function (e) {
+    var that = this
+    var openid = e.currentTarget.dataset.openid
     var conversationid = 'C2C' + openid + '-' + that.data.taskId;
     console.log(conversationid)
     console.log('输出申请者信息')
@@ -58,13 +62,13 @@ Page({
       if (that.data.applicantsInfo[i].applicantId == openid) {
         var avatar = that.data.applicantsInfo[i].applicantUserPic
         var name = that.data.applicantsInfo[i].applicantNickName
-        var status=that.data.status
-        var taskId=that.data.taskId
+        var status = that.data.status
+        var taskId = that.data.taskId
         break
       }
     }
     wx.navigateTo({
-      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status+'&applicantId='+openid+'&taskId='+String(taskId),
+      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&applicantId=' + openid + '&taskId=' + String(taskId),
     })
   },
 
@@ -121,17 +125,17 @@ Page({
   },
 
   // 跳转至编辑界面
-  onEdit: function(e) {
+  onEdit: function (e) {
     var that = this
     console.log("点击编辑键")
-    var task= JSON.stringify(that.data.task);
+    var task = JSON.stringify(that.data.task);
     wx.navigateTo({
       url: '../edit/edit?info_content=' + task + "&taskId=" + that.data.taskId,
     })
   },
 
   // 取消活动
-  onCancel: function(e) {
+  onCancel: function (e) {
     var that = this
     wx.showModal({
       title: '取消活动',
@@ -153,7 +157,7 @@ Page({
   },
 
   // 调用云函数完成活动取消操作
-  cancelAct: function(e) {
+  cancelAct: function (e) {
     var that = this
 
     // 根据目前是否确认选择不同的取消函数
@@ -162,7 +166,7 @@ Page({
       funcName = 'delete_uncommitted_task'
     } else {
       funcName = 'delete_task'
-    }    
+    }
 
     wx.cloud.callFunction({
       name: funcName,
@@ -182,7 +186,7 @@ Page({
                 success(res) {
                   if (res.confirm) {
                     console.log('用户点击确定')
-                    wx.navigateBack({  // 返回上一级
+                    wx.navigateBack({ // 返回上一级
                       delta: 1,
                     })
                   }
@@ -233,9 +237,36 @@ Page({
       that.setData({
         msg: conversationList
       })
+      console.log(conversationList.length)
+      var number = conversationList.length
+      var chatList = that.data.chatList
+      var number_conversation = chatList.length
+      console.log(that.data.chatList)
+      console.log(conversationList)
+      for (let i = 0; i < number;i++){
+        console.log(conversationList[i])
+        for (let j = 0; j < number_conversation;j++){
+          console.log(chatList[j].openId)
+          console.log(conversationList[i].userProfile.userID.split('-').slice(0,-1).join('-'))
+          if (conversationList[i].userProfile.userID.split('-').slice(0,-1).join('-') == chatList[j].openId)
+          {
+            console.log('yes')
+            chatList[j].history =  conversationList[i].lastMessage.payload.text,
+            chatList[j].noti =  conversationList[i].unreadCount, 
+            chatList[j].time = new Date(conversationList[i].lastMessage.lastTime*1000).toTimeString().split(' ')[0]
+          }
+        }
+      }
+      console.log(chatList)
+      that.setData({
+        chatList:chatList
+      })
+        
+    
     })
-  },
   
+  },
+
   // 获取关于活动的信息
   loadData: function () {
     var that = this
@@ -300,9 +331,9 @@ Page({
                 return {
                   name: item.applicantNickName,
                   avatar: item.applicantUserPic,
-                  history: "报名",
-                  noti: 1,
-                  time: "最近",
+                  history: "",
+                  noti: NaN, 
+                  time: "",
                   openId: item.applicantId,
                 }
               }
@@ -349,6 +380,7 @@ Page({
     this.setData({
       taskId: parseInt(options.taskId)
     })
+    this.IMlogin()
   },
 
   /**
@@ -376,7 +408,13 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    var tim = app.globalData.tim
+    let promise = tim.logout();
+    promise.then(function (imResponse) {
+      console.log(imResponse.data); // 登出成功
+    }).catch(function (imError) {
+      console.warn('logout error:', imError);
+    });
   },
 
   /**

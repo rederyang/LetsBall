@@ -22,8 +22,48 @@ Page({
     appliedByUser: false,
     msg: [],
     status: 'true',
+    IMuserID:'',
+    IMUserSig:'',
+    unreadCount:0
   },
+  IMlogin: function (e) {
+    var that = this
+    const _SDKAPPID = 1400601709;
+    const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
+    var EXPIRETIME = 604800;
+    var SDKAPPID = _SDKAPPID;
+    var SECRETKEY = _SECRETKEY;
+    var userID = app.globalData.openId + '-' + that.data.taskId;
+    var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
+    var userSig = generator.genTestUserSig(userID);
+    console.log('IM userID')
+    console.log(userID)
+    console.log('IM userSig')
+    console.log(userSig)
+    this.setData({
+      IMuserID:userID,
+      IMUserSig:userSig
+    })
+    app.globalData.accountTid = userID
+    var tim = app.globalData.tim
+    let promise = tim.login({
+      userID: userID,
+      userSig: userSig
+    });
+    promise.then(function (imResponse) {
+      console.log(imResponse)
+      console.log('登录IM成功')
+      wx.setStorageSync('isImlogin', true)
+      app.globalData.isImLogin = true
+      tim.on(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
+      setTimeout(() => {
+        //拉取会话列表
+        that.initRecentContactList()
+      }, 1000);
+    })
 
+
+  },
   // 用户报名之后的动作
   applyAct: function(e) {
     var that = this
@@ -65,39 +105,7 @@ Page({
 
   // 开启聊天
   onChat: function(e) {
-    var that = this
-    if (!app.globalData.logged) {
-      that._wechatSign()
-    } else {
-      const _SDKAPPID = 1400601709;
-      const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
-      var EXPIRETIME = 604800;
-      var SDKAPPID = _SDKAPPID;
-      var SECRETKEY = _SECRETKEY;
-      var userID = app.globalData.openId + '-' + that.data.taskId;
-      var generator = new LibGenerateTestUserSig(SDKAPPID, SECRETKEY, EXPIRETIME);
-      var userSig = generator.genTestUserSig(userID);
-      console.log('IM userID')
-      console.log(userID)
-      console.log('IM userSig')
-      console.log(userSig)
-      app.globalData.accountTid = userID
-      var tim = app.globalData.tim
-      let promise = tim.login({
-        userID: userID,
-        userSig: userSig
-      });
-      promise.then(function (imResponse) {
-        console.log(imResponse)
-        console.log('登录IM成功')
-        wx.setStorageSync('isImlogin', true)
-        app.globalData.isImLogin = true
-        setTimeout(() => {
-          //拉取会话列表
-          that.initRecentContactList()
-        }, 1000);
-      })
-
+      var that = this
       wx.cloud.callFunction({
         name: "get_task_applicants",
         data: {
@@ -149,7 +157,7 @@ Page({
               var status = that.data.status
               console.log(status)
               wx.navigateTo({
-                url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+                url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
               })
             } else if (res.cancel) {
               console.log('用户点击取消')
@@ -164,11 +172,11 @@ Page({
         var status = that.data.status
         
         wx.navigateTo({
-          url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + userID + '&userSig' + userSig,
+          url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
         })
       }
     }
-  },
+  ,
 
   // 调用云函数完成活动取消操作
   cancelAct: function(cancelDetail) {
@@ -284,9 +292,11 @@ Page({
     console.log(imResponse)
     const conversationList = imResponse.data.conversationList;
     that.setData({
-      msg: conversationList
+      msg: conversationList,
+      unreadCount:conversationList[0].unreadCount
     })
   })
+
 },
 
   // 获取关于活动的信息
@@ -418,6 +428,8 @@ Page({
       taskId: parseInt(options.taskId)
     })
     console.log(this.data.taskId)
+    this.IMlogin()
+    app.globalData.tim.on(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
   },
 
   /**
@@ -431,6 +443,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.initRecentContactList()
     this.loadData()
   },
 
@@ -444,8 +457,19 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload: function () {
+  test:function(){
+    console.log('成功了！！！')
 
+  },
+  onUnload: function () {
+    var tim = app.globalData.tim
+    wx.$TUIKit.off(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
+    let promise = tim.logout();
+    promise.then(function (imResponse) {
+      console.log(imResponse.data); // 登出成功
+    }).catch(function (imError) {
+      console.warn('logout error:', imError);
+    });
   },
 
   /**

@@ -1,5 +1,0 @@
-/* pages/test/test.wxss */
-.tap {
-  margin-top: 20rpx;
-  font-size: 60rpx;
-}

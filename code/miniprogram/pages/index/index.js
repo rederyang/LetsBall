@@ -14,12 +14,6 @@ Page({
     })
   },
 
-  test: function(e) {
-    wx.navigateTo({
-      url: '../test/test',
-    })
-  },
-
   mine: function(e) {
     wx.switchTab({
       url: '../mine/mine',
