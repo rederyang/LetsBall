@@ -40,7 +40,7 @@
     "useCompilerPlugins": false
   },
   "appid": "wx7c72b9172bd3788e",
-  "projectname": "LetsBall",
+  "projectname": "LetsBall-main",
   "libVersion": "2.20.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {

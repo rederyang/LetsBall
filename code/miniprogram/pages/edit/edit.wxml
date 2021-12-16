@@ -2,7 +2,7 @@
 <view class="area">
   <view class="line-block">
     <view class="line-text">活动名称</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindNameChange" value="{{name}}"/>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindNameChange" value="{{name}}" />
   </view>
 
   <view class="line-block">
@@ -17,7 +17,7 @@
 
   <view class="line-block">
     <view class="line-text">开始时间</view>
-    <picker class="line-picker" mode="time" start="07:00" end="22:00" value="{{time}}" bindchange="bindTimeChange">
+    <picker class="line-picker" mode="time" value="{{time}}" bindchange="bindTimeChange">
       <view class="picker-view">
         <view class="time-view">{{time}}</view>
         <image class="picker-icon" src="cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/choose.png" />
@@ -27,12 +27,12 @@
 
   <view class="line-block">
     <view class="line-text">持续时长</view>
-    <input class="line-input" placeholder="30-200分钟" placeholder-style="color:#949494;" bindinput="bindDurationChange" value="{{duration}}"/>
+    <input class="line-input" placeholder="30-200分钟" placeholder-style="color:#949494;" bindinput="bindDurationChange" value="{{duration}}" />
   </view>
 
   <view class="line-block">
     <view class="line-text">活动地点</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindPlaceChange" value="{{place}}"/>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindPlaceChange" value="{{place}}" />
   </view>
 
   <view class="line-block">
@@ -77,7 +77,7 @@
 
   <view class="line-block">
     <view class="line-text">其他要求</view>
-    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" value="{{other}}"/>
+    <input class="line-input" placeholder="请输入" placeholder-style="color:#949494;" bindinput="bindOtherChange" value="{{other}}" />
   </view>
 
   <view class="subtitle">活动详情</view>
