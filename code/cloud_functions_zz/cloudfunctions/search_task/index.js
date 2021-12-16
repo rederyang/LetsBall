@@ -3,6 +3,7 @@ const cloud = require('wx-server-sdk')
 
 cloud.init({
   env: 'cloud2-0g1qpznn8481602d'
+  
 })
 
 // 云函数入口函数
@@ -14,7 +15,7 @@ exports.main = async (event, context) => {
   result.data = data
   /** 传递必要的参数 start */
 
-  if (event.Content == undefined) {
+  if (event.content == undefined) {
 
     result.errMsg = '未传必要参数，请重试'
     result.errCode = 1
@@ -22,7 +23,7 @@ exports.main = async (event, context) => {
 
   }
   console.log(event)
-  var key = event.Content.toString()
+  var key = event.content.toString()
   const db = cloud.database()
   const _ = db.command
   // 实例化数据库连接
@@ -42,10 +43,12 @@ exports.main = async (event, context) => {
       regexp: '.*'+key
     })
   },
-])).get()
+]).and([{
+  startTime: _.gt(new Date(Date.now()))
+}])).get()
 .then(res => {
-  var data = res.data
-  result.data = data
+  var tasks = res.data
+  data.tasks = tasks
   result.errMsg = "查完了"
   result.errCode = 0
 })

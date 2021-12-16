@@ -53,7 +53,7 @@ exports.main = async (event, context) => {
       result.data.taskId = query.taskId
       result.data.applicantNickNameStatus = query.applicantNickNameStatus
       result.data.applicantStatus = query.applicantStatus
-      result.data.askedCancelAnonyity  = query.askedCancelAnonyity
+      result.data.askedCancelAnonymity  = query.askedCancelAnonymity
       result.data.askedConfirm = query.askedConfirm
     }
   } catch (e) {
