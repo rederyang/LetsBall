@@ -11,7 +11,7 @@ exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
     /**判断前端参数是否传递正确 start */
-    if (event.taskId == undefined || event.applicantId == undefined) {
+    if (event.taskId == undefined || event.applicantId == undefined || event.status==undefined) {
         var result = {}
         result.errCode = 1
         result.errMsg = '前端参数传递错误，请重试'
@@ -23,6 +23,7 @@ exports.main = async (event, context) => {
 
     const db = cloud.database()
     const _ = db.command
+    if(event.status==true){
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
             _.and([{
@@ -34,6 +35,7 @@ exports.main = async (event, context) => {
         .update({
             data: {
                 applicantStatus: true,
+                askedConfirm: false,
             }
         })
         .then(res => {
@@ -51,6 +53,25 @@ exports.main = async (event, context) => {
         .then(res => {
             console.log(res)
         })
+    }
+    else{
+        await db.collection('CurrentTaskApplicantsInfo')
+        .where(
+            _.and([{
+                applicantId: _.eq(event.applicantId)
+            }, {
+                taskId: _.eq(event.taskId)
+            }])
+        )
+        .update({
+            data: {
+                askedConfirm: false,
+            }
+        })
+        .then(res => {
+            console.log(res)
+        })
+    }
     var result = {}
     result.errCode = 0
     result.errMsg = '发布者接收报名者成功'

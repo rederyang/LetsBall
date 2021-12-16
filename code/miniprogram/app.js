@@ -44,6 +44,7 @@ App({
         msgarr[newMsgForm] = [event.data[0]]
       }
       console.log(msgarr[newMsgForm])
+      that.globalData.newMsg=msgarr[newMsgForm]
       that.globalData.myMessages = msgarr
       // 这里引入了一个监听器 （因为小程序没有类似vuex的状态管理器 当global里面的数据变化时不能及时同步到聊天页面 因此 这个监听器可以emit一个方法 到需要更新会话数据的页面 在那里进行赋值）
       wx.event.emit('testFunc',that.globalData.myMessages,newMsgForm) // 详情页的函数
@@ -88,17 +89,18 @@ App({
       conversationList.forEach(e => {
         number = number + e.unreadCount
       })
-      wx.setStorageSync('number_msg', number)
-      if(number>0) {
-        wx.setTabBarBadge({
-          index: 2,
-          text: number.toString()
-        })
-      } else {
-        wx.hideTabBarRedDot({
-          index: 2
-        })
-      }
+      wx.setStorageSync('conversationList', conversationList)
+      console.log(conversationList)
+      // if(number>0) {
+      //   wx.setTabBarBadge({
+      //     index: 2,
+      //     text: number.toString()
+      //   })
+      // } else {
+      //   wx.hideTabBarRedDot({
+      //     index: 2
+      //   })
+      // }
       // 收到会话列表更新通知，可通过遍历 event.data 获取会话列表数据并渲染到页面
       // event.name - TIM.EVENT.CONVERSATION_LIST_UPDATED
       // event.data - 存储 Conversation 对象的数组 - [Conversation]
@@ -217,6 +219,7 @@ App({
     accountTid:'',
     isDetail:true,
     logged: false,
+    newMsg:'',
     userInfo: {
       avatarUrl: 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.png',
       nickName: '点击登录',

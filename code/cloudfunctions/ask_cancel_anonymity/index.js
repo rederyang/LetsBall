@@ -9,7 +9,7 @@ cloud.init({
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
-    if (event.taskId == undefined || event.applicantId == undefined || event.status==undefined) {
+    if (event.taskId == undefined || event.applicantId == undefined ) {
         var result = {}
         result.errCode = 1
         result.errMsg = '未传必要参数，请重试'
@@ -21,7 +21,6 @@ exports.main = async (event, context) => {
     const db = cloud.database()
     const _ = db.command
     var applicant
-    if(event.status==true){
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
             _.and([{
@@ -32,32 +31,13 @@ exports.main = async (event, context) => {
         )
         .update({
             data: {
-                applicantNickNameStatus: true,
-                askedCancelAnonymity:false,
+              askedCancelAnonymity:true,
             }
         })
         .then(res => {
             console.log(res)
         })
-    }
-    else{
-        await db.collection('CurrentTaskApplicantsInfo')
-        .where(
-            _.and([{
-                applicantId: _.eq(event.applicantId)
-            }, {
-                taskId: _.eq(event.taskId)
-            }])
-        )
-        .update({
-            data: {
-                askedCancelAnonymity:false,
-            }
-        })
-        .then(res => {
-            console.log(res)
-        })
-    }
+
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
             _.and([{
@@ -70,8 +50,7 @@ exports.main = async (event, context) => {
         .then(res => {
             applicant = res.data[0]
         })
-    
-        if (applicant == undefined) {
+    if (applicant == undefined) {
         var result = {}
         result.errCode = 2
         result.errMsg = '没有找到对应的数据'
@@ -81,7 +60,7 @@ exports.main = async (event, context) => {
     }
     var result = {}
     result.errCode = 0
-    result.errMsg = '更改报名者匿名状态成功'
+    result.errMsg = '更改报名者是否被要求取消匿名状态成功'
     var data = {}
     data.applicant=applicant
     result.data=data

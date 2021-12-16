@@ -109,7 +109,9 @@ exports.main = async (event, context) => {
         applicantNickName: event.applicantNickName,
         applicantUserPic: event.applicantUserPic,
         applicantAge: event.applicantAge,
-        applicantGender: event.applicantGender
+        applicantGender: event.applicantGender,
+        askedConfirm:false,
+        askedCancelAnonymity:false
     }
 
     db.collection('CurrentTaskApplicantsInfo')
