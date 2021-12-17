@@ -13,8 +13,8 @@
 对方请求你确认参加活动
 </view>
 <view class='tab-center-wrapper'>
-  <button class='tab-button-normal' bindtap="onRefuseFace">拒绝</button>
- <button class='tab-button-selected' bindtap="onConfirmFace">同意</button>
+  <button class='tab-button-normal' bindtap="onRefuseJoin">拒绝</button>
+ <button class='tab-button-selected' bindtap="onConfirmJoin">同意</button>
 </view>
 </view>
 
