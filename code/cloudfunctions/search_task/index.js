@@ -21,33 +21,44 @@ exports.main = async (event, context) => {
   /**判断前端参数是否传递正确 end */
   var key = event.content.toString()
   const db = cloud.database()
+  const MAX_LIMIT = 100
+  const countResult = await db.collection('CurrentTask').count()
+  const total = countResult.total
+  const batchTimes = Math.ceil(total / 100)
+  var tasks = []
+  var tasks_temp
   const _ = db.command
   // 实例化数据库连接
   console.log('.*' + key)
-  var tasks
-  await db.collection('CurrentTask')
-    .where(_.or([{
-        details: db.RegExp({
-          regexp: '.*' + key
-        })
-      },
-      {
-        taskName: db.RegExp({
-          regexp: '.*' + key
-        })
-      },
-      {
-        type: db.RegExp({
-          regexp: '.*' + key
-        })
-      },
-    ]).and([{
-      startTime: _.gt(new Date(Date.now()))
-    }]))
-    .get()
-    .then(res => {
-      tasks = res.data
-    })
+  for (let i = 0; i < batchTimes; i++) {
+    await db.collection('CurrentTask')
+      .skip(i * MAX_LIMIT)
+      .limit(MAX_LIMIT)
+      .where(_.or([{
+          details: db.RegExp({
+            regexp: key
+          })
+        },
+        {
+          taskName: db.RegExp({
+            regexp: key
+          })
+        },
+        {
+          type: db.RegExp({
+            regexp: key
+          })
+        },
+      ]).and([{
+        startTime: _.gt(new Date(Date.now()))
+      }]))
+      .get()
+      .then(res => {
+        tasks_temp=res.data
+        tasks=tasks.concat(tasks_temp)
+      })
+  }
+
   var result = {}
   result.errCode = 0
   result.errMsg = '查找完毕'

@@ -29,16 +29,8 @@ Page({
   },
 
   onTapSearch: function(event) {
-    wx.showModal({
-      title: '本功能开发中，敬请期待~',
-      confirmText: "好吧",
-      confirmColor: '#FE6559',
-      showCancel: false,
-    })
-    return
 
     var that = this
-    //TODO
     // 调用云函数进行搜索
 
     console.log("点击搜索按钮")
@@ -57,35 +49,11 @@ Page({
           } else if (res.cancel) {
             console.log('用户点击取消')
           }
+          return
         }
       })
-      return
     }
-    // that._search(that.data.searchWord)
-
-    // FAKE DATA
-    that.setData({
-      result: [
-        {
-          test: 12
-        },
-        {
-          test: 12
-        },
-        {
-          test: 12
-        },
-        {
-          test: 12
-        },
-        {},
-        {},
-        {},
-        {},
-        {}
-      ],
-    }
-    )
+    that._search(that.data.searchWord)
 
     // 变更状态，显示取消键
     that.setData({
@@ -165,20 +133,17 @@ Page({
   _search: async function(keyWord) {
     // 获取搜索到的活动
     try {
-      res = await wx.cloud.callFunction({
-        name: 'TODO',
+      var res = await wx.cloud.callFunction({
+        name: 'search_task',
         data: {
-          // TODO keyWord
+          content: keyWord
         },
       })
+      console.log(res)
       if (res.result.errCode == 0) { 
-        // TODO
-        let taskPub = res.result.data.publishedTasks
-        if (taskPub == undefined) {
-          taskPub = []
-        }
-        that.setData({
-          // TODO
+        console.log(res)
+        this.setData({
+          result: res.result.data.tasks
         })
       } else {
         wx.showModal({

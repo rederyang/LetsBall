@@ -2,7 +2,7 @@
 
 //用户登录IM系统
 import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
-
+import TIM from 'tim-wx-sdk';
 const app = getApp()
 
 Page({
@@ -55,7 +55,6 @@ Page({
       console.log('登录IM成功')
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
-      tim.on(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
       setTimeout(() => {
         //拉取会话列表
         that.initRecentContactList()
@@ -423,13 +422,16 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {    
+  onLoad: function (options) {   
+    var that  = this 
     this.setData({
       taskId: parseInt(options.taskId)
     })
     console.log(this.data.taskId)
     this.IMlogin()
-    app.globalData.tim.on(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
+    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
+      that.initRecentContactList()
+      })
   },
 
   /**
@@ -443,8 +445,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.initRecentContactList()
+    var that = this
+    that.initRecentContactList()
     this.loadData()
+    this.IMlogin()
+    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
+      that.initRecentContactList()
+      })
   },
 
   /**
@@ -457,13 +464,8 @@ Page({
   /**
    * 生命周期函数--监听页面卸载
    */
-  test:function(){
-    console.log('成功了！！！')
-
-  },
   onUnload: function () {
     var tim = app.globalData.tim
-    wx.$TUIKit.off(wx.$TUIKitEvent.CONVERSATION_LIST_UPDATED, this.test, this)
     let promise = tim.logout();
     promise.then(function (imResponse) {
       console.log(imResponse.data); // 登出成功

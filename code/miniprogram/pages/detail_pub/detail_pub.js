@@ -1,5 +1,6 @@
 // pages/detail_pub/detail_pub.js
 import LibGenerateTestUserSig from '../../debug/lib-generate-test-usersig-es.min.js'
+import TIM from 'tim-wx-sdk';
 const app = getApp()
 Page({
 
@@ -377,10 +378,14 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    var that = this
     this.setData({
       taskId: parseInt(options.taskId)
     })
     this.IMlogin()
+    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
+      that.initRecentContactList()
+      })
   },
 
   /**
@@ -395,6 +400,7 @@ Page({
    */
   onShow: function () {
     this.loadData()
+    this.IMlogin()
   },
 
   /**

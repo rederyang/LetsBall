@@ -1011,13 +1011,6 @@ Page({
     wx.event.off("testFunc")
     // 键盘消失
     wx.hideKeyboard()
-    var tim = app.globalData.tim
-    let promise = tim.logout();
-    promise.then(function (imResponse) {
-      // console.log(imResponse.data); // 登出成功
-    }).catch(function (imError) {
-      console.warn('logout error:', imError);
-    });
   },
 
   /**

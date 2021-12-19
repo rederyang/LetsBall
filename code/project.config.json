@@ -10,7 +10,7 @@
     "minified": true,
     "newFeature": true,
     "coverView": true,
-    "nodeModules": true,
+    "nodeModules": false,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -40,7 +40,7 @@
     "useCompilerPlugins": false
   },
   "appid": "wx7c72b9172bd3788e",
-  "projectname": "LetsBall",
+  "projectname": "LetsBall-cy",
   "libVersion": "2.20.1",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {

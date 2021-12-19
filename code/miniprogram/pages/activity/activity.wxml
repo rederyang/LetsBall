@@ -24,7 +24,7 @@
   </view>
   <view class="item-time">
     {{itemName.startTime}}
-    <view class="item-bubble">10</view>
+    <!-- <view class="item-bubble">10</view> -->
   </view>
   
 </view>

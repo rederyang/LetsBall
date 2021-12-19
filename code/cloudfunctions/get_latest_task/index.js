@@ -10,56 +10,49 @@ cloud.init({
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
 
-    /**判断前端参数是否传递正确  start */
-    if (event.num == undefined) {
-        var result = {}
-        result.errCode = 1
-        result.errMsg = '前端参数传递错误，请重试'
-        var data = {}
-        result.data = data
-        return result
-    }
-    /**判断前端参数是否传递正确  end */
-    var tasks=[]
+    // /**判断前端参数是否传递正确  start */
+    // if (event.num == undefined) {
+    //     var result = {}
+    //     result.errCode = 1
+    //     result.errMsg = '前端参数传递错误，请重试'
+    //     var data = {}
+    //     result.data = data
+    //     return result
+    // }
+    // /**判断前端参数是否传递正确  end */
+    var tasks = []
     var Num
     const db = cloud.database()
+    const MAX_LIMIT = 100
+    const _ = db.command
     var dataNum = await db.collection('CurrentTask').count()
-    console.log(dataNum)
-    console.log(event.num)
-    if (dataNum.total < event.num) {
-        Num = dataNum.total
-    } else {
-        Num = event.num
-    }
-    console.log(Num)
-    var j=0
-    console.log('当前时间')
-    console.log(new Date(Date.now()))
-    for(let i=1;i<=dataNum.total;i++){
+    const total = dataNum.total
+    var tasks_temp
+    const batchTimes = Math.ceil(total / MAX_LIMIT)
+    console.log(batchTimes)
+    for (let i = batchTimes-1; i >= 0; i--) {
         await db.collection('CurrentTask')
-        .skip(dataNum.total-i)
-        .limit(1)
-        .get()
-        .then(res=>{
-            console.log(res)
-            if((res.data[0].publisherQuitStatus==false)&&(res.data[0].startTime>(new Date(Date.now()))) ){
+            .skip(i * MAX_LIMIT)
+            .limit(MAX_LIMIT)
+            .where({
+                startTime: _.gt(new Date(Date.now()))
+            })
+            .get()
+            .then(res => {
                 console.log(res)
-                tasks.push(res.data[0])
-                j++
-            }
-        })
-        if(j==Num){
-            break
-        }
+                tasks_temp = res.data
+                tasks_temp.reverse()
+                tasks=tasks.concat(tasks_temp)
+            })
     }
-/*    await db.collection('CurrentTask')
-        .skip(dataNum.total - event.num)
-        .get()
-        .then(res => {
-            console.log(res)
-            tasks = res.data
-        })
-*/
+    /*    await db.collection('CurrentTask')
+            .skip(dataNum.total - event.num)
+            .get()
+            .then(res => {
+                console.log(res)
+                tasks = res.data
+            })
+    */
     var result = {}
     result.errCode = 0
     result.errMsg = '获取数据成功'
