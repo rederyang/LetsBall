@@ -233,9 +233,7 @@ Page({
     var that = this
     wx.cloud.callFunction({
       name: 'get_latest_task',
-      data: {
-        num: 5,
-      },
+      data: {},
       success: res => {
         console.log('查询最新任务成功，一共', res.result.data.tasks.length, '条。');
         if (res.result.errCode == 0) {
