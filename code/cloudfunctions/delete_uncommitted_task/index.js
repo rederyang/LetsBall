@@ -19,6 +19,26 @@ exports.main = async (event, context) => {
     }
 
     const db = cloud.database()
+    var exist = 1
+    await db.collection('CurrentTask')
+        .where({
+            taskId: event.taskId
+        })
+        .get()
+        .then(res => {
+            if (res.data.length == 0) {
+                exist = 0
+            }
+        })
+    if (exist == 0) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '传入的taskId在CurrentTask表中不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
+    
     await db.collection('CurrentTask')
         .where({
             taskId: event.taskId

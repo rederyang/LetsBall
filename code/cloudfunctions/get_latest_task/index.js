@@ -30,19 +30,23 @@ exports.main = async (event, context) => {
     var tasks_temp
     const batchTimes = Math.ceil(total / MAX_LIMIT)
     console.log(batchTimes)
-    for (let i = batchTimes-1; i >= 0; i--) {
+    for (let i = batchTimes - 1; i >= 0; i--) {
         await db.collection('CurrentTask')
             .skip(i * MAX_LIMIT)
             .limit(MAX_LIMIT)
-            .where({
-                startTime: _.gt(new Date(Date.now()))
-            })
+            .where(
+                _.and([{
+                    startTime: _.gt(new Date(Date.now()))
+                }, {
+                    publisherQuitStatus: _.eq(false)
+                }])
+            )
             .get()
             .then(res => {
                 console.log(res)
                 tasks_temp = res.data
                 tasks_temp.reverse()
-                tasks=tasks.concat(tasks_temp)
+                tasks = tasks.concat(tasks_temp)
             })
     }
     /*    await db.collection('CurrentTask')

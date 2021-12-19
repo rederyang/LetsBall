@@ -51,10 +51,14 @@ exports.main = async (event, context) => {
         },
       ]).and([{
         startTime: _.gt(new Date(Date.now()))
-      }]))
+      }]).and([{
+        publisherQuitStatus:_.eq(false)
+      }])
+      )
       .get()
       .then(res => {
         tasks_temp=res.data
+        tasks_temp.reverse()
         tasks=tasks.concat(tasks_temp)
       })
   }

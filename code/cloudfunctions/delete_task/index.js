@@ -28,6 +28,25 @@ exports.main = async (event, context) => {
     var task;
     //实例化数据库连接
     const db = cloud.database()
+    var exist = 1
+    await db.collection('CurrentTask')
+        .where({
+            taskId: event.taskId
+        })
+        .get()
+        .then(res => {
+            if (res.data.length == 0) {
+                exist = 0
+            }
+        })
+    if (exist == 0) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '传入的taskId在CurrentTask表中不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
     await db.collection('CurrentTask')
         .where({
             taskId: event.taskId
@@ -40,14 +59,6 @@ exports.main = async (event, context) => {
         .then(res => {
             console.log('更改取消状态成功')
             console.log(res)
-            if(res.stats.updated==0){
-                var result={}
-                result.errCode=2
-                result.errMsg='传入的taskId在CurrentTask表中不存在'
-                var data={}
-                result.data=data
-                return result
-            }
         })
     await db.collection('CurrentTask')
         .where({
@@ -60,68 +71,74 @@ exports.main = async (event, context) => {
 
     //删除info表中相应taskId处的记录
     await db.collection('CurrentTaskApplicantsInfo')
-    .where({
-        taskId:event.taskId
-    })
-    .remove()
-    .then(res=>{
-        console.log('删除info表中的记录数')
-        console.log(res.stats.removed)
-    })
+        .where({
+            taskId: event.taskId
+        })
+        .remove()
+        .then(res => {
+            console.log('删除info表中的记录数')
+            console.log(res.stats.removed)
+        })
 
     //User表中增加违约信息
     var currentdefault
     await db.collection('User')
-    .where({
-        openId:wxContext.OPENID
-    })
-    .get()
-    .then(res=>{
-        currentdefault=res.data[0].publisherDefaultedTasks
-    })
-    currentdefault.push(event.taskId)
-    await db.collection('User')
-    .where({
-        openId:wxContext.OPENID
-    })
-    .update({
-        data:{
-            publisherDefaultedTasks:currentdefault
+        .where({
+            openId: wxContext.OPENID
+        })
+        .get()
+        .then(res => {
+            currentdefault = res.data[0].publisherDefaultedTasks
+        })
+    var newcurrentdefault = []
+    for (let i = 0; i < currentdefault.length; i++) {
+        if (currentdefault[i] != event.taskId) {
+            newcurrentdefault.push(currentdefault[i])
         }
-    })
-    .then(res=>{
-        console.log(res)
-    })
+    }
+    newcurrentdefault.push(event.taskId)
+    await db.collection('User')
+        .where({
+            openId: wxContext.OPENID
+        })
+        .update({
+            data: {
+                publisherDefaultedTasks: newcurrentdefault
+            }
+        })
+        .then(res => {
+            console.log(res)
+        })
 
     //从User表中publishedTask中删除对应的任务
     var publishtasks
     await db.collection('User')
-    .where({
-        openId:wxContext.OPENID
-    })
-    .get()
-    .then(res=>{
-        console.log(res)
-        publishtasks=res.data[0].publishedTasks
-    })
-    var newpublishtasks=[]
-    for(let i=0;i<publishtasks.length;i++){
-        if(publishtasks[i]!=event.taskId){
+        .where({
+            openId: wxContext.OPENID
+        })
+        .get()
+        .then(res => {
+            console.log(res)
+            publishtasks = res.data[0].publishedTasks
+        })
+    var newpublishtasks = []
+    for (let i = 0; i < publishtasks.length; i++) {
+        if (publishtasks[i] != event.taskId) {
             newpublishtasks.push(publishtasks[i])
         }
     }
     await db.collection('User')
-    .where({
-        openId:wxContext.OPENID
-    })
-    .update({
-        data:{
-            publishedTasks:newpublishtasks
-        }
-    })
-    .then(res=>{
-        console.log(res)
-    })
+        .where({
+            openId: wxContext.OPENID
+        })
+        .update({
+            data: {
+                publishedTasks: newpublishtasks
+            }
+        })
+        .then(res => {
+            console.log(res)
+        })
 
     var result = {}
     result.errCode = 0
