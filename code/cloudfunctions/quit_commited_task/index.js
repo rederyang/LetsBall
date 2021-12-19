@@ -5,6 +5,7 @@ cloud.init({
     env: 'cloud2-0g1qpznn8481602d'
 })
 //报名者取消报名（确认步骤已完成）扣除User表中的credit，删除info表中的记录
+
 // 云函数入口函数
 exports.main = async (event, context) => {
     const wxContext = cloud.getWXContext()
@@ -23,6 +24,7 @@ exports.main = async (event, context) => {
     //实例化数据库连接
     const db = cloud.database()
     var credits
+    var userexist = 1
     //User表中的credit值减1
     await db.collection('User')
         .where({
@@ -31,16 +33,19 @@ exports.main = async (event, context) => {
         .get()
         .then(res => {
             if (res.data.length == 0) {
-                var result = {}
-                result.errCode = 2
-                result.errMsg = '该用户不存在'
-                var data = {}
-                result.data = data
-                return result
+                userexist = 0
             } else {
                 credits = res.data[0].credit - 1
             }
         })
+    if (userexist == 0) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '该用户不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
     await db.collection('User')
         .where({
             openId: event.applicantId
@@ -52,18 +57,34 @@ exports.main = async (event, context) => {
         })
         .then(res => {
             console.log(res)
-            if (res.stats.updated == 0) {
-                var result = {}
-                result.errCode = 3
-                result.errMsg = '用户的credit修改失败'
-                var data = {}
-                result.data = data
-                return result
-            }
         })
 
     //删除info表中的记录
     const _ = db.command
+    var exist = 1
+    await db.collection('CurrentTaskApplicantsInfo')
+        .where(
+            _.and([{
+                applicantId: _.eq(event.applicantId)
+            }, {
+                taskId: _.eq(event.taskId)
+            }])
+        )
+        .get()
+        .then(res => {
+            console.log(res)
+            if (res.data.length == 0) {
+                exist = 0
+            }
+        })
+    if (exist == 0) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '该用户的报名信息不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
             _.and([{
@@ -93,6 +114,7 @@ exports.main = async (event, context) => {
 
     //维护User表中作为报名者已违约的任务
     var applicantDefaultedTask
+    var newapplicantDefaultedTask=[]
     var user
     await db.collection('User')
         .where({
@@ -103,14 +125,20 @@ exports.main = async (event, context) => {
             console.log(res)
             applicantDefaultedTask = res.data[0].applicantDefaultedTasks
         })
-    applicantDefaultedTask.push(event.taskId)
+        var tasknum=applicantDefaultedTask.length
+        for (let i = 0; i < tasknum; i++) {
+            if (applicantDefaultedTask[i] != event.taskId) {
+                newapplicantDefaultedTask.push(applicantDefaultedTask[i])
+            }
+        }
+    newapplicantDefaultedTask.push(event.taskId)
     await db.collection('User')
         .where({
             openId: event.applicantId
         })
         .update({
             data: {
-                applicantDefaultedTasks: applicantDefaultedTask
+                applicantDefaultedTasks: newapplicantDefaultedTask
             }
         })
         .then(res => {
@@ -129,9 +157,9 @@ exports.main = async (event, context) => {
             applicantRegisteredTask = res.data[0].registeredTasks
         })
     var num = applicantRegisteredTask.length
-    registeredTasks=[]
-    for(let i=0;i<num;i++){
-        if(applicantRegisteredTask[i]!=event.taskId){
+    registeredTasks = []
+    for (let i = 0; i < num; i++) {
+        if (applicantRegisteredTask[i] != event.taskId) {
             registeredTasks.push(applicantRegisteredTask[i])
         }
     }

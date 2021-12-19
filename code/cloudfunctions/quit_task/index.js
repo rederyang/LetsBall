@@ -23,6 +23,30 @@ exports.main = async (event, context) => {
 
     const db = cloud.database()
     const _ = db.command
+    var exist = 1
+    await db.collection('CurrentTaskApplicantsInfo')
+        .where(
+            _.and([{
+                applicantId: _.eq(event.applicantId)
+            }, {
+                taskId: _.eq(event.taskId)
+            }])
+        )
+        .get()
+        .then(res => {
+            console.log(res)
+            if (res.data.length == 0) {
+                exist = 0
+            }
+        })
+    if (exist == 0) {
+        var result = {}
+        result.errCode = 2
+        result.errMsg = '该用户的报名信息不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
             _.and([{
