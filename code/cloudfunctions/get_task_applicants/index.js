@@ -20,6 +20,28 @@ exports.main = async (event, context) => {
     }
 
     /**判断前端是否传入正确的参数 end */
+    
+    //判断任务是否存在
+    var taskexist=1
+    await db.collection('CurrentTask')
+    .where({
+        taskId:db.command.in(event.taskId)
+    })
+    .get()
+    .then(res=>{
+        if(res.data.length==0){
+            taskexist=0
+        }
+    })
+    if(taskexist==0){
+        var result={}
+        result.errCode=2
+        result.errMsg='该任务不存在'
+        var data={}
+        result.data=data
+        return result
+    }
+
     var data={}
     var info
     const db=cloud.database()
