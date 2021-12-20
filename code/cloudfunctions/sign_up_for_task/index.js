@@ -69,18 +69,18 @@ exports.main = async (event, context) => {
     }
 
     //检测这个任务是否已经被取消
-    var isCancel=0
+    var isCancel = 0
     await db.collection('CurrentTask')
-    .where({
-        taskId:event.taskId
-    })
-    .get()
-    .then(res=>{
-        if(res.data.publisherQuitStatus==true){
-            isCancel=1
-        }
-    })
-    if(isCancel==1){
+        .where({
+            taskId: event.taskId
+        })
+        .get()
+        .then(res => {
+            if (res.data.publisherQuitStatus == true) {
+                isCancel = 1
+            }
+        })
+    if (isCancel == 1) {
         //该任务已经被取消
         var result = {}
         result.errCode = 4
