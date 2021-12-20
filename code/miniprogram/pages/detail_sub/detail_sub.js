@@ -94,6 +94,14 @@ Page({
             confirmColor: '#FE6559',
             showCancel: false,
           })
+        }else if(res.result.errCode == 4){
+          wx.showModal({
+            title: '抱歉',
+            content: '该活动已被发起者取消',
+            confirmText: "我知道了",
+            confirmColor: '#FE6559',
+            showCancel: false,
+          })
         }
       },
       fail: err => {
