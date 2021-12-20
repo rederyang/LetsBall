@@ -23,9 +23,74 @@ exports.main = async (event, context) => {
     }
     /**前端参数是否传递  end */
 
-    //检测这个报名信息是否已经存在
     const db = cloud.database()
     const _ = db.command
+
+    //检测要报名的任务是否存在
+    var taskexist = 1
+    await db.collection('CurrentTask')
+        .where({
+            taskId: event.taskId
+        })
+        .get()
+        .then(res => {
+            if (res.data.length == 0) {
+                taskexist = 0
+            }
+        })
+    if (taskexist == 0) {
+        var result = {}
+        result.errCode = 3
+        result.errMsg = '该任务不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
+
+    //检测这个报名者信息是否存在
+    var userexist = 1
+    await db.collection('User')
+        .where({
+            openId: event.applicantId
+        })
+        .get()
+        .then(res => {
+            if (res.data.length == 0) {
+                userexist = 0
+            }
+        })
+    if (userexist == 0) {
+        var result = {}
+        result.errCode = 3
+        result.errMsg = '该用户信息不存在'
+        var data = {}
+        result.data = data
+        return result
+    }
+
+    //检测这个任务是否已经被取消
+    var isCancel=0
+    await db.collection('CurrentTask')
+    .where({
+        taskId:event.taskId
+    })
+    .get()
+    .then(res=>{
+        if(res.data.publisherQuitStatus==true){
+            isCancel=1
+        }
+    })
+    if(isCancel==1){
+        //该任务已经被取消
+        var result = {}
+        result.errCode = 4
+        result.errMsg = '该任务已经被取消'
+        var data = {}
+        result.data = data
+        return result
+    }
+
+    //检测这个报名信息是否已经存在
     var flag = 0
     await db.collection('CurrentTaskApplicantsInfo')
         .where(
@@ -110,8 +175,8 @@ exports.main = async (event, context) => {
         applicantUserPic: event.applicantUserPic,
         applicantAge: event.applicantAge,
         applicantGender: event.applicantGender,
-        askedConfirm:false,
-        askedCancelAnonymity:false
+        askedConfirm: false,
+        askedCancelAnonymity: false
     }
 
     db.collection('CurrentTaskApplicantsInfo')
