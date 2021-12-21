@@ -646,7 +646,7 @@ Page({
         friendAvatarUrl = options.avatar
       } else { // 报名者未取匿
         friendNickname = '匿名用户'
-        friendAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'
+        friendAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg'
       }
     } else { // 如果当前用户是报名者
       friendAvatarUrl = options.avatar // 发布者总是要显示真实头像
@@ -654,7 +654,7 @@ Page({
       if (this.data.applicantNickNameStatus) { // 报名者已经取匿
         myAvatarUrl = app.globalData.userInfo.avatarUrl
       } else {
-        myAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/avatar.png'
+        myAvatarUrl = 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg'
       }
     }
 
@@ -962,6 +962,7 @@ Page({
   // 发送普通文本消息
   bindConfirm(e) {
     var that = this;
+    console.log(that.data.myMessages)
     if (that.data.is_lock) {
       that.setData({
         is_lock: false

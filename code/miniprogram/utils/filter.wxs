@@ -1,0 +1,16 @@
+
+/**
+ * 将时间戳(1570550400)格式转为 yyyy-MM-dd格式
+ */
+var formatDate = function (datetime) {
+  var date = getDate(datetime * 1000);
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  var hour = date.getHours();
+  var min  = date.getMinutes();
+  return year + "年" + month + "月" + day + "日" + hour + ":" + min;
+}
+module.exports = {
+  formatDate: formatDate
+}

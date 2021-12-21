@@ -111,7 +111,13 @@
 .chat-item{
   display: flex;
   margin-top: 46rpx;
-  margin-bottom: 46rpx;
+/*margin-bottom: 46rpx;*/
+}
+.message-time{
+  display: flex;
+  justify-content: flex-end;
+  color:#999999;
+  font-size: 20rpx;
 }
 .chat-item.flex-wrap{
   flex-direction: row-reverse;
