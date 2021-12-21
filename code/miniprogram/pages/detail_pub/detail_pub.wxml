@@ -70,7 +70,7 @@
           </view>
           <view class="chat_row">
             <view class="chat_gray">{{item.history}}</view>
-            <view class="chat_noti">{{item.noti}}</view>
+            <view class="chat_noti" wx:if="{{item.noti>0}}">{{item.noti}}</view>
           </view>
         </view>
       </view>
