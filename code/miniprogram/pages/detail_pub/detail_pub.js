@@ -375,6 +375,7 @@ Page({
                       openId: that.data.applicantsInfo[i].applicantId,
                       gender: 1,
                       userPic: that.data.applicantsInfo[i].applicantUserPic,
+                      cancelAno:that.data.applicantsInfo[i].applicantNickNameStatus
                     }
                   })
                   break
@@ -432,6 +433,7 @@ Page({
     let promise = tim.logout();
     promise.then(function (imResponse) {
       console.log(imResponse.data); // 登出成功
+      app.globalData.isImLogin = true
     }).catch(function (imError) {
       console.warn('logout error:', imError);
     });

@@ -54,6 +54,92 @@ Page({
       confirmText: '请求',
       success(res) {
         if (res.confirm) {
+          //如果报名者没有取匿，提醒发布者要不要请求对方取匿
+          if(that.data.applicantNickNameStatus==false){
+            wx.showModal({
+              title:'是否继续请求确认',
+              content:'对方没有取匿，直接请求对方最终确认可能会有风险，是否继续',
+              confirmText:'继续请求',
+              cancelText:'再想想',
+              cancelColor: '#81838F',
+              confirmColor: '#FE6559',
+              success(res){
+                if(res.confirm){
+                  wx.showLoading({
+                    title: '请稍等',
+                  })
+                  wx.cloud.callFunction({
+                    name: 'ask_applicant_confirm',
+                    data: {
+                      taskId: that.data.taskId,
+                      applicantId: that.data.applicantId
+                    },
+                    success: res => {
+                      if (res.result.errCode == 0) {
+                        console.log("成功发起请求：最终确认")
+                        wx.showModal({
+                          title: '请求成功！',
+                          content: '成功发起请求',
+                          confirmText: "我知道了",
+                          showCancel: false,
+                          //点击“我知道了”
+                          success(res) {
+                            if (res.confirm) {
+                              //向报名者发送一条消息
+                              that.setData({
+                                is_lock: false
+                              })
+                              var content = {
+                                text: "请您确认是否参加"
+                              };
+                              var tim = app.globalData.tim
+                              var options = {
+                                to: that.data.conversationID.slice(3), // 消息的接收方
+                                conversationType: TIM.TYPES.CONV_C2C, // 会话类型取值TIM.TYPES.CONV_C2C或TIM.TYPES.CONV_GROUP
+                                payload: content // 消息内容的容器
+                              }
+                              // // 发送文本消息，Web 端与小程序端相同
+                              // 1. 创建消息实例，接口返回的实例可以上屏
+                              let message = tim.createTextMessage(options)
+                              // 2. 发送消息
+                              let promise = tim.sendMessage(message)
+                              promise.then(function (imResponse) {
+                                // 发送成功
+                                var messageList = that.data.myMessages
+                                messageList.push(imResponse.data.message)
+                                that.setData({
+                                  is_lock: true,
+                                  myMessages: messageList
+                                })
+                                that.pageScrollToBottom()
+                              }).catch(function (imError) {
+                                // 发送失败
+                                console.warn('sendMessage error:', imError);
+                              })
+                            }
+                          }
+                        })
+                      } else {
+                        console.error('传参')
+                      }
+                    },
+                    fail: err => {
+                      wx.showModal({
+                        title: '云函数调用失败',
+                        confirmText: "我知道了",
+                        showCancel: false,
+                      })
+                      console.error('云函数调用失败', err)
+                    },
+                    complete: () => {
+                      wx.hideLoading()
+                    }
+                  })
+                }
+              }
+            })
+          }
+          else{
           wx.showLoading({
             title: '请稍等',
           })
@@ -125,6 +211,7 @@ Page({
             }
           })
         }
+      }
       }
     })
   },

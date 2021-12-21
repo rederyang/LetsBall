@@ -482,6 +482,7 @@ Page({
     let promise = tim.logout();
     promise.then(function (imResponse) {
       console.log(imResponse.data); // 登出成功
+      app.globalData.isImLogin = true
     }).catch(function (imError) {
       console.warn('logout error:', imError);
     });

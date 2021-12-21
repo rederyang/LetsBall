@@ -41,10 +41,12 @@
   <view class="subtitle">参与者</view>
   <view class="area_chat">
     <view class="chat_card">
-      <image class="avatar" src="{{subInfo.userPic}}"></image>
+      <image class="avatar" wx:if="{{subInfo.cancelAno}}" src="{{subInfo.userPic}}"></image>
+      <image class="avatar" wx:if="{{!subInfo.cancelAno}}" src="{{anoPic}}"></image>
       <view class="chat_content">
         <view class="chat_row">
-          <view class="chat_name">{{subInfo.nickName}}</view>
+          <view class="chat_name" wx:if="{{subInfo.cancelAno}}">{{subInfo.nickName}}</view>
+          <view class="chat_name" wx:if="{{!subInfo.cancelAno}}">{{anoName}}</view>
           <text class="user_badge">一般用户</text>
         </view>
         <view class="chat_row">
