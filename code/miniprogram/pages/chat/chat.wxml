@@ -63,7 +63,8 @@
         <image class='avatar' style="margin-left: 19rpx" mode= "scaleToFill" src="{{myAvatarUrl}}" wx:else></image>
         <view class='content'>{{item.payload.text}}</view>
       </view>
-      <view class='message-time' >{{filters.formatDate(item.time)}}</view>
+      <view class='message-out-time' wx:if="{{item.flow=='out'}}" >{{filters.formatDate(item.time)}}</view>
+      <view class='message-in-time' wx:if="{{item.flow=='in'}}" >{{filters.formatDate(item.time)}}</view>
     </view>
   </block>
 </view>

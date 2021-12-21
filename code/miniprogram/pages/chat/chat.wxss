@@ -113,9 +113,15 @@
   margin-top: 46rpx;
 /*margin-bottom: 46rpx;*/
 }
-.message-time{
+.message-out-time{
   display: flex;
   justify-content: flex-end;
+  color:#999999;
+  font-size: 20rpx;
+}
+.message-in-time{
+  display: flex;
+  justify-content:flex-start;
   color:#999999;
   font-size: 20rpx;
 }

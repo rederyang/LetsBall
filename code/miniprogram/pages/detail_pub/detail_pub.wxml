@@ -62,10 +62,12 @@
   <view class="area_chat">
     <view class="chat_line" wx:for="{{chatList}}" wx:for-index="idx" bindtap="onPickSub" data-openid="{{item.openId}}">
       <view class="chat_card">
-        <image class="avatar" src="{{item.avatar}}"></image>
+        <image class="avatar" wx:if="{{item.cancelAno}}" src="{{item.avatar}}"></image>
+        <image class="avatar" wx:if="{{!item.cancelAno}}" src="{{anoPic}}"></image>
         <view class="chat_content">
           <view class="chat_row">
-            <view class="chat_name">{{item.name}}</view>
+            <view class="chat_name" wx:if="{{item.cancelAno}}">{{item.name}}</view>
+            <view class="chat_name" wx:if="{{!item.cancelAno}}">{{anoName+idx}}</view>
             <text class="chat_gray">{{item.time}}</text>
           </view>
           <view class="chat_row">

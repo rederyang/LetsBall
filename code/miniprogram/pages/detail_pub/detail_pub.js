@@ -16,6 +16,8 @@ Page({
     applied: false,
     msg: [],
     status: 'false',
+    anoName:'匿名用户',
+    anoPic:'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg',
   },
   IMlogin: function (e) {
     console.log(app.globalData.isImLogin)
@@ -351,6 +353,7 @@ Page({
                   noti: NaN, 
                   time: "",
                   openId: item.applicantId,
+                  cancelAno:item.applicantNickNameStatus,
                 }
               }
             )
@@ -411,13 +414,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
+    this.loadData()
+    //this.IMlogin()
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
   },
 
   /**
