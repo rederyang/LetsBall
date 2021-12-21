@@ -22,12 +22,21 @@ Page({
     appliedByUser: false,
     msg: [],
     status: 'true',
-    IMuserID:'',
-    IMUserSig:'',
-    unreadCount:0
+    IMuserID: '',
+    IMUserSig: '',
+    unreadCount: 0
   },
   IMlogin: function (e) {
     var that = this
+    if (app.globalData.isImLogin == true){
+      that.initRecentContactList();
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+          that.initRecentContactList()
+        })
+      })
+      return;
+    }
     const _SDKAPPID = 1400601709;
     const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
     var EXPIRETIME = 604800;
@@ -41,8 +50,8 @@ Page({
     console.log('IM userSig')
     console.log(userSig)
     this.setData({
-      IMuserID:userID,
-      IMUserSig:userSig
+      IMuserID: userID,
+      IMUserSig: userSig
     })
     app.globalData.accountTid = userID
     var tim = app.globalData.tim
@@ -55,16 +64,20 @@ Page({
       console.log('登录IM成功')
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
-      setTimeout(() => {
-        //拉取会话列表
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         that.initRecentContactList()
-      }, 1000);
+      });
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+          that.initRecentContactList()
+        })
+      })
     })
 
 
   },
   // 用户报名之后的动作
-  applyAct: function(e) {
+  applyAct: function (e) {
     var that = this
     wx.cloud.callFunction({
       name: 'sign_up_for_task',
@@ -79,12 +92,11 @@ Page({
       success: res => {
         console.log(res)
         if (res.result.errCode == 0) {
-                that.setData({
-                  appliedByUser: true,
-                })
-                that.loadData()
-              }
-         else if (res.result.errCode == 1) {
+          that.setData({
+            appliedByUser: true,
+          })
+          that.loadData()
+        } else if (res.result.errCode == 1) {
           console.log('传参，妈的')
         } else if (res.result.errCode == 2) {
           wx.showModal({
@@ -111,82 +123,81 @@ Page({
   },
 
   // 开启聊天
-  onChat: function(e) {
-      var that = this
-      wx.cloud.callFunction({
-        name: "get_task_applicants",
-        data: {
-          taskId: [that.data.taskId]
-        },
-        success: res => {
-          if (res.result.errCode == 0) {
-            console.log(res)
-            // 首先需要不是空的
-            if (res.result.data.info.length > 0) {
-              that.setData({
-                applicantsInfo: res.result.data.info,
-              })
-            }
+  onChat: function (e) {
+    var that = this
+    wx.cloud.callFunction({
+      name: "get_task_applicants",
+      data: {
+        taskId: [that.data.taskId]
+      },
+      success: res => {
+        if (res.result.errCode == 0) {
+          console.log(res)
+          // 首先需要不是空的
+          if (res.result.data.info.length > 0) {
+            that.setData({
+              applicantsInfo: res.result.data.info,
+            })
+          }
+        }
+      }
+    })
+    var exist = 0;
+    if (that.data.applicantsInfo != undefined) {
+      console.log('打印报名信息')
+      console.log(that.data.applicantsInfo)
+      var num = that.data.applicantsInfo.length
+      for (let i = 0; i < num; i++) {
+        if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
+          exist = 1;
+          break;
+        }
+      }
+    }
+    if (exist == 0) {
+      wx.showModal({
+        title: '报名活动',
+        content: '确定要报名这个活动吗~',
+        confirmColor: '#FE6559',
+        cancelColor: '#81838F',
+        cancelText: '再想想',
+        confirmText: '报名',
+        success(res) {
+          if (res.confirm) {
+            console.log('用户点击确定')
+            that.applyAct()
+            console.log('打印e')
+            console.log(e)
+            console.log(that.data)
+            var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+            console.log(conversationid)
+            var avatar = that.data.pubInfo.userPic
+            var name = that.data.pubInfo.nickName
+            var status = that.data.status
+            console.log(status)
+            wx.navigateTo({
+              url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
+            })
+          } else if (res.cancel) {
+            console.log('用户点击取消')
           }
         }
       })
-      var exist = 0;
-      if (that.data.applicantsInfo != undefined) {
-        console.log('打印报名信息')
-        console.log(that.data.applicantsInfo)
-        var num = that.data.applicantsInfo.length
-        for (let i = 0; i < num; i++) {
-          if (that.data.applicantsInfo[i].applicantId == app.globalData.openId) {
-            exist = 1;
-            break;
-          }
-        }
-      }
-      if (exist == 0) {
-        wx.showModal({
-          title: '报名活动',
-          content: '确定要报名这个活动吗~',
-          confirmColor: '#FE6559',
-          cancelColor: '#81838F',
-          cancelText: '再想想',
-          confirmText: '报名',
-          success(res) {
-            if (res.confirm) {
-              console.log('用户点击确定')
-              that.applyAct()
-              console.log('打印e')
-              console.log(e)
-              console.log(that.data)
-              var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
-              console.log(conversationid)
-              var avatar = that.data.pubInfo.userPic
-              var name = that.data.pubInfo.nickName
-              var status = that.data.status
-              console.log(status)
-              wx.navigateTo({
-                url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
-              })
-            } else if (res.cancel) {
-              console.log('用户点击取消')
-            }
-          }
-        })
-      } else {
-        var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
-        console.log(conversationid)
-        var avatar = that.data.pubInfo.userPic
-        var name = that.data.pubInfo.nickName
-        var status = that.data.status
-        
-        wx.navigateTo({
-          url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
-        })
-      }
+    } else {
+      var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
+      console.log(conversationid)
+      var avatar = that.data.pubInfo.userPic
+      var name = that.data.pubInfo.nickName
+      var status = that.data.status
+
+      wx.navigateTo({
+        url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
+      })
     }
-  ,
+  },
 
   // 调用云函数完成活动取消操作
-  cancelAct: function(cancelDetail) {
+  cancelAct: function (cancelDetail) {
     var that = this
     wx.cloud.callFunction({
       name: cancelDetail.func,
@@ -250,7 +261,7 @@ Page({
   },
 
   // 取消
-  onCancel: function(e) {
+  onCancel: function (e) {
     var that = this
     if (that.data.confirmedByUser) {
       var title = '取消活动'
@@ -284,27 +295,27 @@ Page({
     })
   },
 
- //获取会话列表
- initRecentContactList() {
-  var that = this
-  //拉取会话列表
-  var tim = app.globalData.tim
-  let promise = tim.getConversationList();
-  if (!promise) {
-    console.log('获取会话列表出错，SDK not ready')
-    return
-  }
-  promise.then(function (imResponse) {
-    console.log('会话列表')
-    console.log(imResponse)
-    const conversationList = imResponse.data.conversationList;
-    that.setData({
-      msg: conversationList,
-      unreadCount:conversationList[0].unreadCount
+  //获取会话列表
+  initRecentContactList() {
+    var that = this
+    //拉取会话列表
+    var tim = app.globalData.tim
+    let promise = tim.getConversationList();
+    if (!promise) {
+      console.log('获取会话列表出错，SDK not ready')
+      return
+    }
+    promise.then(function (imResponse) {
+      console.log('会话列表')
+      console.log(imResponse)
+      const conversationList = imResponse.data.conversationList;
+      that.setData({
+        msg: conversationList,
+        unreadCount: conversationList[0].unreadCount
+      })
     })
-  })
 
-},
+  },
 
   // 获取关于活动的信息
   loadData: function () {
@@ -430,16 +441,15 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {   
-    var that  = this 
+  onLoad: function (options) {
     this.setData({
       taskId: parseInt(options.taskId)
     })
-    console.log(this.data.taskId)
+    this.setData({
+      taskId: parseInt(options.taskId)
+    })
+    this.loadData()
     this.IMlogin()
-    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
-      that.initRecentContactList()
-      })
   },
 
   /**
@@ -453,13 +463,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    var that = this
-    that.initRecentContactList()
-    this.loadData()
-    this.IMlogin()
-    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
-      that.initRecentContactList()
-      })
   },
 
   /**
@@ -505,7 +508,7 @@ Page({
 
   // 私有函数部分
   // 主动登录
-  _wechatSign: function(callback) {
+  _wechatSign: function (callback) {
     var that = this
     wx.showModal({
       title: '提示',
@@ -518,7 +521,7 @@ Page({
         if (res.confirm) {
           console.log('用户确认登录。')
           wx.getUserProfile({
-            desc: '用于更新和完善用户资料', 
+            desc: '用于更新和完善用户资料',
             success: (res) => {
               console.log("获取用户信息成功")
               console.log(res.userInfo)
@@ -541,7 +544,7 @@ Page({
   },
 
   // 添加用户进入数据库
-  _updateUser: function() {
+  _updateUser: function () {
     // 调用云函数 TODO 这里输入参数不应该有openid和age，因为前端拿不到
     wx.cloud.callFunction({
       name: 'wechat_sign',
