@@ -20,7 +20,7 @@ exports.main = async (event, context) => {
     }
 
     /**判断前端是否传入正确的参数 end */
-    
+    const db=cloud.database()
     //判断任务是否存在
     var taskexist=1
     await db.collection('CurrentTask')
@@ -44,7 +44,7 @@ exports.main = async (event, context) => {
 
     var data={}
     var info
-    const db=cloud.database()
+    
     await db.collection('CurrentTaskApplicantsInfo')
     .where({
         taskId:db.command.in(event.taskId)
