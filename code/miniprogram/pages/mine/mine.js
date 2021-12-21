@@ -8,6 +8,11 @@ Page({
    */
   data: {
     userInfo: {},
+    userMiniprogramData: {},
+    defaultCount: -1,
+    pubCount: -1,
+    subCount: -1,
+    credit: -1
   },
 
   onTapLogIn: function(e) {
@@ -42,10 +47,14 @@ Page({
    */
   onShow: function () {
     var that = this
+
+    // 设置用户微信相关信息
     that.setData({
       userInfo: app.globalData.userInfo,
     })
-    // console.log(that.data.userInfo)
+    
+    // 获取用户小程序相关信息
+    that._getUserMiniprogramData()
   },
 
   /**
@@ -146,4 +155,38 @@ Page({
       }
     })
   },
+
+  // 获取用户的小程序相关信息
+  _getUserMiniprogramData: function() {
+    var that = this
+    wx.cloud.callFunction({
+      name: 'get_user_detail',
+      data: {
+        openId: [app.globalData.openId],
+      },
+      success: res => {
+        // console.log(res)
+        if (res.result.errCode == 0 && res.result.data.users.length > 0) {
+          var userMiniprogramData = res.result.data.users[0]
+          // 根据userMiniProgramData得到发布、报名、违约次数
+          // console.log(Object.keys(userMiniprogramData))
+          if (Object.keys(userMiniprogramData).length > 0) {  // 如果得到用户小程序相关信息
+            that.setData({
+              pubCount: userMiniprogramData.publishedTasks.length,
+              subCount: userMiniprogramData.registeredTasks.length,
+              defaultCount: userMiniprogramData.applicantDefaultedTasks.length + userMiniprogramData.publisherDefaultedTasks.length,
+              credit: userMiniprogramData.credit,
+              userMiniprogramData: userMiniprogramData       
+            })
+          }
+        } else {
+          console.error('传参')
+        }
+        console.log(that.data)
+      },
+      fail: err => {
+        console.error('[accept_registration] 调用失败', err)
+      },
+    })
+  }
 })

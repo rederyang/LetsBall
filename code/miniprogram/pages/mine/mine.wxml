@@ -20,16 +20,16 @@
   <view class="userinfo-line">
     <view class="userinfo-stats">
       <view class="userinfo-stats-block">
-        <view class="userinfo-stats-value">中国大陆</view>
-        <view class="userinfo-stats-title">地区</view>        
+        <view class="userinfo-stats-title">已发布</view>
+        <view class="userinfo-stats-value">{{pubCount > 0 ? pubCount : '-'}}</view>        
       </view>
       <view class="userinfo-stats-block">
-        <view class="userinfo-stats-value">中文</view>
-        <view class="userinfo-stats-title">语言</view>        
+        <view class="userinfo-stats-title">已报名</view>
+        <view class="userinfo-stats-value">{{subCount > 0 ? subCount : '-'}}</view>        
       </view>
       <view class="userinfo-stats-block-tail">
-        <view class="userinfo-stats-value">在校人员</view>
-        <view class="userinfo-stats-title">身份</view>
+        <view class="userinfo-stats-title">已违约</view>
+        <view class="userinfo-stats-value">{{defaultCount > 0 ? defaultCount : '-'}}</view>
       </view>
     </view>
     <!-- <view class="item-time">{{user_info.time}}</view> -->
@@ -64,8 +64,8 @@
 </view> -->
 
 
-<!-- 
-<view class="tag-wrapper">
+
+<!-- <view class="tag-wrapper">
   <view class="tag-header">
     我的标签
   </view>
@@ -81,7 +81,7 @@
     <view class="tag-edit-button">编辑</view> 
   </view>
   </view>
-</view>
+</view> -->
 
 <view class="credit-wrapper">
   <view class="credit-header">
@@ -89,9 +89,9 @@
   </view>
   <view class='credit-content-wrapper'>
     <view class="credit-content">
-    <view class="credit-circle">良好</view>
+    <view class="credit-circle">{{credit < 0 ? '-' : (credit > 90 ? '优秀' : (credit > 80 ? '良好' : '一般'))}}</view>
   </view>
   </view>
-</view> -->
+</view>
 
 <view class="develop" bindtap="toIndex">管理员入口，非公莫入</view>
