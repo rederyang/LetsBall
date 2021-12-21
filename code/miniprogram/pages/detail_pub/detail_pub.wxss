@@ -195,6 +195,9 @@ page {
 
 .chat_gray {
   color: gray;
+  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .chat_noti {

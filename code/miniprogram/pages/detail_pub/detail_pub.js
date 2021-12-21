@@ -18,7 +18,17 @@ Page({
     status: 'false',
   },
   IMlogin: function (e) {
+    console.log(app.globalData.isImLogin)
     var that = this
+    if (app.globalData.isImLogin == true){
+      that.initRecentContactList();
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+          that.initRecentContactList()
+        })
+      })
+      return;
+    }
     const _SDKAPPID = 1400601709;
     const _SECRETKEY = 'a9e99edf47724b3f1d931709760e5288f0e826a752b5705f45e4cefe3546b15a';
     var EXPIRETIME = 604800;
@@ -42,10 +52,14 @@ Page({
       console.log('登录IM成功')
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
-      setTimeout(() => {
-        //拉取会话列表
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         that.initRecentContactList()
-      }, 1000);
+      });
+      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+          that.initRecentContactList()
+        })
+      })
     })
 
 
@@ -378,14 +392,11 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var that = this
     this.setData({
       taskId: parseInt(options.taskId)
     })
+    this.loadData()
     this.IMlogin()
-    app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function(event) {
-      that.initRecentContactList()
-      })
   },
 
   /**
@@ -399,8 +410,6 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.loadData()
-    this.IMlogin()
   },
 
   /**
