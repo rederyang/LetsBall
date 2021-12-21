@@ -1,5 +1,11 @@
 <!--pages/mine/mine.wxml-->
-<view class="background"></view>
+<!-- <view class="background"></view> -->
+
+<view class="header">
+  <!-- <image class="icon" src='/images/letsball_icon.png' mode='scaleToFill'></image> -->
+  <image class="icon" src='/images/letsball.png' mode='scaleToFill'></image>
+  <image class="bg_ware" src="/images/wave.gif" ></image>
+</view>
 
 <view class="userinfo-wrapper">
   <view class="userinfo-line">
