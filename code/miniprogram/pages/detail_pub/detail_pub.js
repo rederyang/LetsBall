@@ -82,8 +82,9 @@ Page({
         break
       }
     }
+    var firstApply='no'
     wx.navigateTo({
-      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&applicantId=' + openid + '&taskId=' + String(taskId),
+      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&applicantId=' + openid + '&taskId=' + String(taskId)+'&firstApply='+firstApply,
     })
   },
 

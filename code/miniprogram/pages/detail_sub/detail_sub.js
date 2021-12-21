@@ -142,7 +142,8 @@ Page({
         }
       }
     })
-    var exist = 0;
+    var exist = 0;//是否报过名
+    var firstApply='yes';//是否报过名，传入聊天页面
     if (that.data.applicantsInfo != undefined) {
       console.log('打印报名信息')
       console.log(that.data.applicantsInfo)
@@ -176,7 +177,7 @@ Page({
             var status = that.data.status
             console.log(status)
             wx.navigateTo({
-              url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
+              url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig+'&firstApply='+firstApply,
             })
           } else if (res.cancel) {
             console.log('用户点击取消')
@@ -184,6 +185,7 @@ Page({
         }
       })
     } else {
+      firstApply='no'
       var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
       console.log(conversationid)
       var avatar = that.data.pubInfo.userPic
@@ -191,7 +193,7 @@ Page({
       var status = that.data.status
 
       wx.navigateTo({
-        url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig,
+        url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig+'&firstApply='+firstApply,
       })
     }
   },

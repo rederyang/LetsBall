@@ -39,6 +39,7 @@ Page({
     applicantNickNameStatus: false, // 报名者是否取匿
     waitForConfirm: false, // 是否正在等待报名者确认参加
     waitForFace: false, // 是否正在等待报名者取匿
+    firstApply:'',//是否是第一次点进聊天页面
   },
 
   // 发布者请求对方最终确认
@@ -666,7 +667,8 @@ Page({
       isDetail: true,
       status: options.status == 'true',
       applicantId: subOpenId,
-      taskId: parseInt(options.taskId)
+      taskId: parseInt(options.taskId),
+      firstApply:options.firstApply,
     })
 
     console.log(this.data)
@@ -677,6 +679,45 @@ Page({
     })
 
     that.pageScrollToBottom()
+    
+    //报名者报名时候给发布者发一条消息
+    console.log(that.data)
+
+    if(that.data.asPub==false && that.data.firstApply=='yes'){
+      that.setData({
+        firstApply:'no'
+      })
+      that.setData({
+        is_lock: false
+      })
+      var content = {
+        text: "您好，我想报名这个活动"
+      };
+      var tim = app.globalData.tim
+      var options = {
+        to: that.data.conversationID.slice(3), // 消息的接收方
+        conversationType: TIM.TYPES.CONV_C2C, // 会话类型取值TIM.TYPES.CONV_C2C或TIM.TYPES.CONV_GROUP
+        payload: content // 消息内容的容器
+      }
+      // // 发送文本消息，Web 端与小程序端相同
+      // 1. 创建消息实例，接口返回的实例可以上屏
+      let message = tim.createTextMessage(options)
+      // 2. 发送消息
+      let promise = tim.sendMessage(message)
+      promise.then(function (imResponse) {
+        // 发送成功
+        var messageList = that.data.myMessages
+        messageList.push(imResponse.data.message)
+        that.setData({
+          is_lock: true,
+          myMessages: messageList
+        })
+        that.pageScrollToBottom()
+      }).catch(function (imError) {
+        // 发送失败
+        console.warn('sendMessage error:', imError);
+      })
+    }
 
     wx.event.on('testFunc', (e, newMsgForm) => {
       console.log('testFunc')
