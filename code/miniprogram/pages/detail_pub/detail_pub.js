@@ -65,10 +65,10 @@ Page({
       });
       setTimeout(function(){
         that.initRecentContactList()
-        app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+      },1000) ;
+      app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
           that.initRecentContactList()
-        })
-      },500) ;
+      });
     //   app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
     //     that.initRecentContactList()
     //     app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
