@@ -58,21 +58,27 @@ Page({
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         console.log(that.data.IMflag)
         if (that.data.IMflag==0){
-        that.initRecentContactList()
         that.setData({
           IMflag:1
         })
         }
       });
-      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+      setTimeout(function(){
+        that.initRecentContactList()
         app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
           that.initRecentContactList()
         })
-      })
-    })
+      },500) ;
+    //   app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+    //     that.initRecentContactList()
+    //     app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
+    //       that.initRecentContactList()
+    //     })
+    //   })
+    // })
 
 
-  },
+  })},
   // 确认报名者
   onPickSub: function (e) {
     var that = this

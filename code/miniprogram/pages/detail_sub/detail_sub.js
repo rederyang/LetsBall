@@ -64,14 +64,12 @@ Page({
       console.log('登录IM成功')
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
-      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+      setTimeout(function(){
         that.initRecentContactList()
-      });
-      app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
           that.initRecentContactList()
         })
-      })
+      },500) ;
     })
 
 
