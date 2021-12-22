@@ -311,10 +311,11 @@ Page({
       console.log('会话列表')
       console.log(imResponse)
       const conversationList = imResponse.data.conversationList;
+      if (conversationList.length>0){
       that.setData({
         msg: conversationList,
         unreadCount: conversationList[0].unreadCount
-      })
+      })}
     })
 
   },

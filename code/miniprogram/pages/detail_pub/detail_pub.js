@@ -18,6 +18,7 @@ Page({
     status: 'false',
     anoName:'匿名用户',
     anoPic:'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg',
+    IMflag:0
   },
   IMlogin: function (e) {
     console.log(app.globalData.isImLogin)
@@ -55,7 +56,13 @@ Page({
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
+        console.log(that.data.IMflag)
+        if (that.data.IMflag==0){
         that.initRecentContactList()
+        that.setData({
+          IMflag:1
+        })
+        }
       });
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
@@ -415,7 +422,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    this.loadData()
+    //this.loadData()
     //this.IMlogin()
   },
 
