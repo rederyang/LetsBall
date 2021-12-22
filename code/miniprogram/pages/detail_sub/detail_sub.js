@@ -122,6 +122,10 @@ Page({
 
   // 开启聊天
   onChat: function (e) {
+    if (!app.globalData.logged) {
+      this._wechatSign()
+      return;
+    } 
     var that = this
     wx.cloud.callFunction({
       name: "get_task_applicants",
