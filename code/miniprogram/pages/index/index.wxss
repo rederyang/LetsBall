@@ -1,5 +1,5 @@
 /* pages/index/index.wxss */
 .tap {
   margin-top: 20rpx;
-  font-size: 50rpx;
+  font-size: 70rpx;
 }

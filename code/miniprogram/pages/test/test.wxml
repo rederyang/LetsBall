@@ -1,0 +1,9 @@
+<!--pages/test/test.wxml-->
+<text bindtap="wechatSign" class="tap">wechatSign</text>
+<text bindtap="checkUser" class="tap">checkUser</text>
+<text bindtap="deleteTask" class="tap">deleteTask</text>
+<text bindtap="signUpForTask" class="tap">signUpForTask</text>
+<text bindtap="quitCommitedTask" class="tap">quitCommitedTask</text>
+<text bindtap="acceptRegistration" class="tap">acceptRegistration</text>
+<text bindtap="getCurrentTaskTime" class="tap">getCurrentTaskTime</text>
+<text bindtap="getTaskDetail" class="tap">getTaskDetail</text>
