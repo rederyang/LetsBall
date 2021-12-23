@@ -28,7 +28,7 @@ Page({
   },
   IMlogin: function (e) {
     var that = this
-    if (app.globalData.isImLogin == true){
+    if (app.globalData.isImLogin == true) {
       that.initRecentContactList();
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
@@ -64,18 +64,16 @@ Page({
       console.log('登录IM成功')
       wx.setStorageSync('isImlogin', true)
       app.globalData.isImLogin = true
-      setTimeout(function(){
+      setTimeout(function () {
         that.initRecentContactList()
-      },1000) ;
+      }, 1000);
       app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
-          that.initRecentContactList()
+        that.initRecentContactList()
       });
       // app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
       //   that.initRecentContactList()
       // })
     })
-
-
   },
   // 用户报名之后的动作
   applyAct: function (e) {
@@ -107,7 +105,7 @@ Page({
             confirmColor: '#FE6559',
             showCancel: false,
           })
-        }else if(res.result.errCode == 4){
+        } else if (res.result.errCode == 4) {
           wx.showModal({
             title: '抱歉',
             content: '该活动已被发起者取消',
@@ -128,7 +126,7 @@ Page({
     if (!app.globalData.logged) {
       this._wechatSign()
       return;
-    } 
+    }
     var that = this
     wx.cloud.callFunction({
       name: "get_task_applicants",
@@ -147,8 +145,8 @@ Page({
         }
       }
     })
-    var exist = 0;//是否报过名
-    var firstApply='yes';//是否报过名，传入聊天页面
+    var exist = 0; //是否报过名
+    var firstApply = 'yes'; //是否报过名，传入聊天页面
     if (that.data.applicantsInfo != undefined) {
       console.log('打印报名信息')
       console.log(that.data.applicantsInfo)
@@ -182,7 +180,7 @@ Page({
             var status = that.data.status
             console.log(status)
             wx.navigateTo({
-              url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig+'&firstApply='+firstApply,
+              url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig + '&firstApply=' + firstApply,
             })
           } else if (res.cancel) {
             console.log('用户点击取消')
@@ -190,7 +188,7 @@ Page({
         }
       })
     } else {
-      firstApply='no'
+      firstApply = 'no'
       var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
       console.log(conversationid)
       var avatar = that.data.pubInfo.userPic
@@ -198,7 +196,7 @@ Page({
       var status = that.data.status
 
       wx.navigateTo({
-        url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig+'&firstApply='+firstApply,
+        url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&userID=' + that.data.IMuserID + '&userSig' + that.data.IMuserSig + '&firstApply=' + firstApply,
       })
     }
   },
@@ -316,11 +314,12 @@ Page({
       console.log('会话列表')
       console.log(imResponse)
       const conversationList = imResponse.data.conversationList;
-      if (conversationList.length>0){
-      that.setData({
-        msg: conversationList,
-        unreadCount: conversationList[0].unreadCount
-      })}
+      if (conversationList.length > 0) {
+        that.setData({
+          msg: conversationList,
+          unreadCount: conversationList[0].unreadCount
+        })
+      }
     })
 
   },
