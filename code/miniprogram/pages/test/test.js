@@ -50,7 +50,7 @@ Page({
   signUpForTask: function(e) {
     let name = 'sign_up_for_task'
     let data = {
-      taskId: 19,
+      taskId: 80,
       applicantId: this.data.openId,
       applicantGender: 0,
       applicantNickName: 'Hippo',
@@ -90,6 +90,32 @@ Page({
     let name = 'get_task_detail'
     let data = {
       taskId: [19, 100],
+    }
+    this._callFunc(name, data)
+  },
+
+  getLatestTask: function(e) {
+    let name = 'get_latest_task'
+    let data = {
+      
+    }
+    this._callFunc(name, data)
+  },
+
+  getApplicantStatus: function(e) {
+    let name = 'get_applicant_status'
+    let data = {
+      taskId: 100,
+      applicantId: this.data.openId,
+    }
+    this._callFunc(name, data)
+  },
+
+  cancelAnonymity: function(e) {
+    let name = 'cancel_anonymity'
+    let data = {
+      taskId: 69,
+      applicantId: this.data.openId,
     }
     this._callFunc(name, data)
   },

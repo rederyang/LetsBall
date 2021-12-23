@@ -7,3 +7,6 @@
 <text bindtap="acceptRegistration" class="tap">acceptRegistration</text>
 <text bindtap="getCurrentTaskTime" class="tap">getCurrentTaskTime</text>
 <text bindtap="getTaskDetail" class="tap">getTaskDetail</text>
+<text bindtap="getLatestTask" class="tap">getLatestTask</text>
+<text bindtap="getApplicantStatus" class="tap">getApplicantStatus</text>
+<text bindtap="cancelAnonymity" class="tap">cancelAnonymity</text>
