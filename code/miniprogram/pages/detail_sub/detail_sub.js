@@ -147,7 +147,7 @@ Page({
     })
     var exist = 0; //是否报过名
     var firstApply = 'yes'; //是否报过名，传入聊天页面
-    if (that.data.applicantsInfo != undefined) {
+    if (that.data.applicantsInfo != undefined && that.data.applicantsInfo.length > 0) {
       console.log('打印报名信息')
       console.log(that.data.applicantsInfo)
       var num = that.data.applicantsInfo.length
@@ -158,7 +158,28 @@ Page({
         }
       }
     }
-    if (exist == 0) {
+    if (exist == 0) { 
+      var continueSignUP =1
+      //没有报过名，判断该活动是否满员
+      if (that.data.applicantsInfo != undefined && that.data.applicantsInfo.length > 0) {
+        if (that.data.applicantsInfo[0].isFull) {
+          continueSignUP = 0
+          wx.showModal({
+            title: '无法报名，该活动已满员',
+            confirmText: "我知道了",
+            confirmColor: '#FE6559',
+            showCancel: false,
+            success(res) {
+              if (res.confirm) {
+                wx.navigateBack({
+                  delta: 1,
+                })
+              }
+            }
+          })
+        }
+      }
+      if(continueSignUP==1){
       wx.showModal({
         title: '报名活动',
         content: '确定要报名这个活动吗~',
@@ -187,7 +208,8 @@ Page({
           }
         }
       })
-    } else {
+    }
+  } else {
       firstApply = 'no'
       var conversationid = 'C2C' + that.data.pubInfo.openId + '-' + that.data.taskId;
       console.log(conversationid)
