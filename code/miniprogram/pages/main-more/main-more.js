@@ -1,4 +1,7 @@
 // pages/main-more/main-more.js
+
+const app = getApp()
+
 Page({
   data: {
     keyWordSent: false,
@@ -18,14 +21,68 @@ Page({
     console.log(this.data.searchWord)
   },
 
-  onTapDetail: function(event) {
+  onTapDetail: function (event) {
     var taskId = event.currentTarget.dataset.taskid
     console.log("获取到任务id:" + String(taskId))
+    
+    // 如果没有登录，就直接进入报名者界面，正常显示满员与否
+    // if (!app.globalData.logged) {
+    //   wx.navigateTo({
+    //     url: '../detail_sub/detail_sub?TaskId=' + TaskId,
+    //   })
+    // } else if (app.globalData.taskPub.includes(TaskId)) {  // 否则需要判断用户是否是该任务的发起者
+    //   wx.navigateTo({
+    //     url: '../detail_pub/detail_pub?TaskId=' + TaskId,
+    //   })
+    // }
 
-    // 默认以报名者身份跳转
-    wx.navigateTo({
-      url: '../detail_sub/detail_sub?taskId=' + taskId,
+    // 判断是报名者还是发布者进行页面跳转
+    var publisherId
+
+    wx.cloud.callFunction({
+      
+      name: "get_task_detail",
+      data: {
+        taskId: [taskId],
+      },
+      success: res => {
+        if (res.result.errCode == 0) {
+          console.log(res.result)
+          publisherId=res.result.data.tasks[0].publisherId
+          console.log(publisherId)
+          console.log(app.globalData.openId)
+          if(publisherId==app.globalData.openId){
+            console.log('当前用户是发布者')
+            wx.navigateTo({
+              url: '../detail_pub/detail_pub?taskId=' + taskId,
+            })
+          }
+          else{
+            wx.navigateTo({
+              url: '../detail_sub/detail_sub?taskId=' + taskId,
+            })
+          }
+        } else if(res.data.errCode==1) {
+          console.log('传参')
+        } else{
+          console.log('该任务不存在')
+        }
+      },
+      fail:err=>{
+        console.error('[云函数] [get_task_detail] 调用失败', err)
+      }
     })
+
+    // console.log(isPublisher)
+    // if(isPublisher==0){
+    // wx.navigateTo({
+    //   url: '../detail_sub/detail_sub?taskId=' + taskId,
+    // })}
+    // else{
+    //   wx.navigateTo({
+    //     url: '../detail_pub/detail_pub?taskId=' + taskId,
+    //   })
+    // }
   },
 
   onTapSearch: function(event) {
@@ -172,10 +229,8 @@ Page({
     // 调用云函数
     try {
       var res = await wx.cloud.callFunction({
-        name: 'get_latest_task_v2',
+        name: 'get_latest_task',
         data: {
-          num1: num1,
-          num2: num2
         },
       })
       if (res.result.errCode == 0) {  
