@@ -76,7 +76,7 @@ exports.main = async (event, context) => {
         })
         .get()
         .then(res => {
-            if (res.data.publisherQuitStatus == true) {
+            if (res.data[0].publisherQuitStatus == true) {
                 isCancel = 1
             }
         })
@@ -85,6 +85,28 @@ exports.main = async (event, context) => {
         var result = {}
         result.errCode = 4
         result.errMsg = '该任务已经被取消'
+        var data = {}
+        result.data = data
+        return result
+    }
+
+    //检测这个任务是否已经满员
+    var isFull
+    await db.collection('CurrentTaskApplicantsInfo')
+    .where({
+        taskId:event.taskId
+    })
+    .get()
+    .then(res=>{
+        if(res.data.length>0){
+            isFull=res.data[0].isFull
+        }
+    })
+    
+    if(isFull){
+        var result = {}
+        result.errCode = 5
+        result.errMsg = '该任务已经满员'
         var data = {}
         result.data = data
         return result
