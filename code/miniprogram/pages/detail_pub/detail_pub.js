@@ -16,14 +16,14 @@ Page({
     applied: false,
     msg: [],
     status: 'false',
-    anoName:'匿名用户',
-    anoPic:'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg',
-    IMflag:0
+    anoName: '匿名用户',
+    anoPic: 'cloud://cloud2-0g1qpznn8481602d.636c-cloud2-0g1qpznn8481602d-1307703676/images/ano.jpeg',
+    IMflag: 0
   },
   IMlogin: function (e) {
     console.log(app.globalData.isImLogin)
     var that = this
-    if (app.globalData.isImLogin == true){
+    if (app.globalData.isImLogin == true) {
       that.initRecentContactList();
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
@@ -57,28 +57,21 @@ Page({
       app.globalData.isImLogin = true
       app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
         console.log(that.data.IMflag)
-        if (that.data.IMflag==0){
-        that.setData({
-          IMflag:1
-        })
+        if (that.data.IMflag == 0) {
+          that.setData({
+            IMflag: 1
+          })
         }
       });
-      setTimeout(function(){
+      setTimeout(function () {
         that.initRecentContactList()
-      },1000) ;
+      }, 1000);
       app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
-          that.initRecentContactList()
+        that.initRecentContactList()
       });
-    //   app.globalData.tim.on(TIM.EVENT.SDK_READY, function (event) {
-    //     that.initRecentContactList()
-    //     app.globalData.tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, function (event) {
-    //       that.initRecentContactList()
-    //     })
-    //   })
-    // })
 
-
-  })},
+    })
+  },
   // 确认报名者
   onPickSub: function (e) {
     var that = this
@@ -97,9 +90,9 @@ Page({
         break
       }
     }
-    var firstApply='no'
+    var firstApply = 'no'
     wx.navigateTo({
-      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&applicantId=' + openid + '&taskId=' + String(taskId)+'&firstApply='+firstApply,
+      url: '../chat/chat?conversationID=' + conversationid + '&avatar=' + avatar + '&name=' + name + '&status=' + status + '&applicantId=' + openid + '&taskId=' + String(taskId) + '&firstApply=' + firstApply,
     })
   },
 
@@ -274,28 +267,27 @@ Page({
       var number_conversation = chatList.length
       console.log(that.data.chatList)
       console.log(conversationList)
-      for (let i = 0; i < number;i++){
+      for (let i = 0; i < number; i++) {
         console.log(conversationList[i])
-        for (let j = 0; j < number_conversation;j++){
+        for (let j = 0; j < number_conversation; j++) {
           console.log(chatList[j].openId)
-          console.log(conversationList[i].userProfile.userID.split('-').slice(0,-1).join('-'))
-          if (conversationList[i].userProfile.userID.split('-').slice(0,-1).join('-') == chatList[j].openId)
-          {
+          console.log(conversationList[i].userProfile.userID.split('-').slice(0, -1).join('-'))
+          if (conversationList[i].userProfile.userID.split('-').slice(0, -1).join('-') == chatList[j].openId) {
             console.log('yes')
-            chatList[j].history =  conversationList[i].lastMessage.payload.text,
-            chatList[j].noti =  conversationList[i].unreadCount, 
-            chatList[j].time = new Date(conversationList[i].lastMessage.lastTime*1000).toTimeString().split(' ')[0]
+            chatList[j].history = conversationList[i].lastMessage.payload.text,
+              chatList[j].noti = conversationList[i].unreadCount,
+              chatList[j].time = new Date(conversationList[i].lastMessage.lastTime * 1000).toTimeString().split(' ')[0]
           }
         }
       }
       console.log(chatList)
       that.setData({
-        chatList:chatList
+        chatList: chatList
       })
-        
-    
+
+
     })
-  
+
   },
 
   // 获取关于活动的信息
@@ -363,10 +355,10 @@ Page({
                   name: item.applicantNickName,
                   avatar: item.applicantUserPic,
                   history: "",
-                  noti: NaN, 
+                  noti: NaN,
                   time: "",
                   openId: item.applicantId,
-                  cancelAno:item.applicantNickNameStatus,
+                  cancelAno: item.applicantNickNameStatus,
                 }
               }
             )
@@ -388,7 +380,7 @@ Page({
                       openId: that.data.applicantsInfo[i].applicantId,
                       gender: 1,
                       userPic: that.data.applicantsInfo[i].applicantUserPic,
-                      cancelAno:that.data.applicantsInfo[i].applicantNickNameStatus
+                      cancelAno: that.data.applicantsInfo[i].applicantNickNameStatus
                     }
                   })
                   break
@@ -428,15 +420,13 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    //this.loadData()
-    //this.IMlogin()
+    this.loadData()
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide: function () {
-  },
+  onHide: function () {},
 
   /**
    * 生命周期函数--监听页面卸载
