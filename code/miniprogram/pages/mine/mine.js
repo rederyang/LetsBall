@@ -23,9 +23,18 @@ Page({
   },
 
   toIndex: function(e) {
-    wx.navigateTo({
+    if(app.globalData.openId=='oxLgv4xWiY7m-O9smRhbFtr1OWhA'||app.globalData.openId=='oxLgv42LKttuU9Xt1g-J8MLzhWBw'||app.globalData.openId=='oxLgv45CH6C0OGbacZpkXfeBcWds'||app.globalData.openId=='oxLgv4yhSBCM-jyYFl8hzb1SAW5w')
+    {wx.navigateTo({
       url: '../index/index',
-    })
+    })}
+    else{
+      wx.showModal({
+        title: '抱歉，您没有权限',
+        confirmText: "我知道了",
+        confirmColor: '#FE6559',
+        showCancel: false,
+      })
+    }
   },
 
   /**

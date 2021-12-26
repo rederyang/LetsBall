@@ -13,7 +13,7 @@
 <view class="tab-wrapper">
 <view class='tab-center-wrapper'>
   <button class="{{status==0?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapNew">最新活动</button>
- <button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapHot">热门活动</button>
+ <!--button class="{{status==1?'tab-button-selected':'tab-button-normal'}}" bindtap="onTapHot">热门活动</button-->
 </view>
 
 <view class="tab-right-wrapper" bindtap="onTapMore">
